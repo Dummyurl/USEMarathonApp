@@ -13,4 +13,27 @@ import retrofit2.http.Query;
 public interface API {
 
 
+    @GET("api.php")
+    Call<JsonObject> sign_up(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("type") int type,
+            @Query("name") String name,
+            @Query("email") String email,
+            @Query("password") String password
+    );
+
+
+    @GET("api.php")
+    Call<JsonObject> sign_in(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("type") int type,
+            @Query("email") String email,
+            @Query("password") String password
+    );
+
+
+
+
 }

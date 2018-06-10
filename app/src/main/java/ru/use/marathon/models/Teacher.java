@@ -6,17 +6,16 @@ import android.content.SharedPreferences;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import retrofit2.Response;
 
 /**
- * Created by ilyas on 09-Jun-18.
+ * Created by ilyas on 10-Jun-18.
  */
 
-public class Student {
+public class Teacher {
 
-    public static final String PREF_NAME = "student";
+    public static final String PREF_NAME = "teacher";
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
@@ -26,25 +25,25 @@ public class Student {
     String name;
     String email;
     String token;
-    int teacher_id;
 
     private Context context;
     private JsonObject jsonObject;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
-    public Student(Context context, Response<JsonObject> response) {
+    public Teacher(Context context, Response<JsonObject> response) {
         this.context = context;
         jsonObject = response.body();
         sharedPreferences = context.getSharedPreferences(PREF_NAME,Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 
-    public Student(Context context) {
+    public Teacher(Context context) {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(PREF_NAME,Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
+
 
     public String getName(){
         return jsonObject.get("name").getAsString();
@@ -59,9 +58,9 @@ public class Student {
         editor.putInt(KEY_ID,id);
         editor.putString(KEY_NAME,name);
         editor.putString(KEY_EMAIL,email);
-        editor.putBoolean(IS_LOGGED_IN,true);
         editor.commit();
     }
+
 
     public HashMap<String,String> getData(){
         HashMap<String,String> data = new HashMap<>();
@@ -79,10 +78,5 @@ public class Student {
     public boolean isLoggedIn(){
         return sharedPreferences.getBoolean(IS_LOGGED_IN,false);
     }
-
-
-
-
-
 
 }

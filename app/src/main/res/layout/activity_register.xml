@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent">
+    tools:context="ru.use.marathon.activities.RegisterActivity">
+
+
 
     <EditText
-        android:id="@+id/s_email_et"
+        android:id="@+id/name_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Name"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/email_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
@@ -19,7 +32,7 @@
 
 
     <EditText
-        android:id="@+id/s_password_et"
+        android:id="@+id/password_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
@@ -29,20 +42,14 @@
         android:hint="Password"
         android:inputType="textPassword" />
 
+
     <Button
         android:layout_width="match_parent"
-        android:id="@+id/s_sign_in_btn"
+        android:id="@+id/sign_up_btn"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_height="wrap_content"
-        android:text="Sign in" />
+        android:text="Sign up" />
 
-    <TextView
-        android:id="@+id/s_sign_up_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="Don't have an account? Sign Up" />
 
 </LinearLayout>

@@ -15,13 +15,13 @@ public class AppController extends Application{
 
     private static AppController mInstance;
     private Retrofit retrofit;
-    private API api;
+    private static API api;
 
     public static synchronized Application getInstance() {
         return mInstance;
     }
 
-    public API getApi () { return api;}
+    public static API getApi () { return api;}
 
     @Override
     public void onCreate() {
