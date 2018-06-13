@@ -33,6 +33,24 @@ public interface API {
             @Query("password") String password
     );
 
+    @GET("api.php")
+    Call<JsonObject> get_collections(
+            @Query("v") int v,
+            @Query("method") String method
+    );
+
+
+
+    @GET("api.php")
+    Call<JsonObject> get_collection(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("qc_number") int qc_number
+
+    );
+
+
+
 
 
 

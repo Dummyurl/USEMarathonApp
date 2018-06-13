@@ -12,7 +12,9 @@
         android:roundIcon="@drawable/ic_marathon_logo_mini"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity">
+        <activity
+            android:name=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,8 +23,23 @@
         </activity>
         <activity
             android:name=".activities.LoginActivity"
-            android:theme="@style/AppTheme.NoBar"></activity>
-        <activity android:name=".activities.RegisterActivity"></activity>
+            android:theme="@style/AppTheme.NoBar" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.TestsByCollectionsActivity"
+            android:label="@string/title_activity_tests_by_variant_acitvity"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.TestsActivity"
+            android:label="@string/title_activity_tests_acitivty"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

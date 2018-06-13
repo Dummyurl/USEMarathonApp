@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">USE Marathon</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_tests_by_variant_acitvity">Tests collections</string>
+    <string name="title_activity_tests_acitivty">TestsAcitivty</string>
+    <string name="action_settings">Settings</string>
 </resources>
