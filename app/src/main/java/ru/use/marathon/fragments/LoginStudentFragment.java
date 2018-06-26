@@ -76,12 +76,14 @@ public class LoginStudentFragment extends Fragment {
                             teacher.login(false);
                             String name = student.getName();
                             int ID = student.getID();
-                            student.createSession(ID,name,email);
+                            student.createSession(ID,name,email,student.getImage(),student.getTeacher_id(),student.getTests_counter(),
+                                    student.getTest_time(),student.getAnswersCounter(),student.getAnswersWrongCounter());
+
                             startActivity(new Intent(getActivity().getApplicationContext(), MainActivity.class));
                             getActivity().finish();
 
                         }else{
-                            Toast.makeText(getActivity().getApplicationContext(), "Error..", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), "Wrong password!", Toast.LENGTH_SHORT).show();
                         }
                     }
 

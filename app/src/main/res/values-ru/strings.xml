@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ЕГЭ Марафон</string>
+    <string name="title_activity_tests_by_variant_acitvity">Варианты</string>
+    <string name="title_activity_tests_acitivty">Тесты</string>
+    <string name="title_activity_topics">По темам</string>
+</resources>

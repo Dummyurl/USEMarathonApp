@@ -37,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new LoginStudentFragment(), "Student");
-        adapter.addFragment(new LoginTeacherFragment(), "Teacher");
+        adapter.addFragment(new LoginStudentFragment(), "Для ученика");
+        adapter.addFragment(new LoginTeacherFragment(), "Для учителя");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 

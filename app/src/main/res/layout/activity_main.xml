@@ -21,8 +21,8 @@
 
             <Spinner
                 android:id="@+id/dropdown_menu"
-                style="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar"
                 android:layout_width="wrap_content"
+
                 android:layout_height="match_parent" />
 
         </android.support.v7.widget.Toolbar>
@@ -30,10 +30,10 @@
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
         android:id="@+id/use_container"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_height="match_parent"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>
 

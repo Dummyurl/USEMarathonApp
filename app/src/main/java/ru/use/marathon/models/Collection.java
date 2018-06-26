@@ -1,7 +1,10 @@
 package ru.use.marathon.models;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,14 +16,13 @@ import retrofit2.Response;
  * Created by ilyas on 12-Jun-18.
  */
 
-public class Collection implements Serializable {
+public class Collection  {
 
-    //todo change to JSONObject;
-    private JsonObject object;
+    private  JsonObject object;
 
     public Collection(Response<JsonObject> response){
         object = response.body();
-
+        Gson gson = new Gson();
     }
 
     private JsonArray getCollectionArray(){
@@ -104,6 +106,8 @@ public class Collection implements Serializable {
         }
         return answers;
     }
+
+
 
     public String getCreatedAt(int i) {
         return getCollectionArray().get(i).getAsJsonObject().get("created_at").getAsString();

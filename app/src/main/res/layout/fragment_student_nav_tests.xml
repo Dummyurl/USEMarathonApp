@@ -9,18 +9,20 @@
         android:id="@+id/by_variants"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="By variants" />
+        android:layout_margin="5dp"
+        android:background="@drawable/button_default"
+        android:padding="10dp"
+        android:text="По вариантам"
+        android:textColor="@android:color/background_light" />
 
     <Button
         android:id="@+id/by_topics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="By topics" />
-
-    <Button
-        android:id="@+id/by_tasks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="By tasks" />
+        android:layout_margin="5dp"
+        android:background="@drawable/button_default"
+        android:padding="10dp"
+        android:text="По темам"
+        android:textColor="@android:color/background_light" />
 
 </LinearLayout>

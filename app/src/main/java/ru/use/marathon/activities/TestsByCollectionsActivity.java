@@ -52,8 +52,9 @@ public class TestsByCollectionsActivity extends AppCompatActivity {
         ItemClickSupport.addTo(collectionsRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                position++;
                 Intent view = new Intent(TestsByCollectionsActivity.this,TestsActivity.class);
+                view.putExtra("tag","var");
+                position++;
                 view.putExtra("collection_number",position);
                 startActivity(view);
             }

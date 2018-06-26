@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.use.marathon.R;
 import ru.use.marathon.activities.TestsByCollectionsActivity;
+import ru.use.marathon.activities.TopicsActivity;
 
 /**
  * Created by ilyas on 10-Jun-18.
@@ -27,8 +28,6 @@ public class SNavTestsFragment extends Fragment {
     @BindView(R.id.by_topics)
     Button by_topics;
 
-    @BindView(R.id.by_tasks)
-    Button by_tasks;
 
     Unbinder unbinder;
 
@@ -49,6 +48,13 @@ public class SNavTestsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), TestsByCollectionsActivity.class));
+            }
+        });
+
+        by_topics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), TopicsActivity.class));
             }
         });
 

@@ -58,14 +58,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="SAVE ANSWER" />
+                android:textColor="@android:color/white"
+                android:background="@drawable/button_default"
+                android:text="Ответить" />
 
             <Button
-                android:id="@+id/skip_answer_btn"
+                android:id="@+id/show_hint_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="SKIP" />
+                android:background="@null"
+                android:text="Показать подсказку" />
 
         </LinearLayout>
 
@@ -74,13 +77,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
-
-            <Button
-                android:id="@+id/show_hint_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:text="Show hint" />
 
             <TextView
                 android:id="@+id/hint_txt"

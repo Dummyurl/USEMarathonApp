@@ -23,6 +23,8 @@ import butterknife.ButterKnife;
 import ru.use.marathon.R;
 import ru.use.marathon.fragments.navigation.student.SNavHomeFragment;
 import ru.use.marathon.fragments.navigation.student.SNavTestsFragment;
+import ru.use.marathon.fragments.navigation.student.SNavTheoryFragment;
+import ru.use.marathon.fragments.navigation.teacher.TNavHomeFragment;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Teacher;
 
@@ -41,24 +43,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         final Student student = new Student(this);
         final Teacher teacher = new Teacher(this);
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if(student.isLoggedIn() && !teacher.isLoggedIn()){
 
-           menu.add("Home");
-           menu.add("Tests");
-           menu.add("Theory");
+           menu.add("Главная");
+           menu.add("Тесты");
+           menu.add("Теория");
+           ft.add(R.id.use_container, new SNavTestsFragment());
+           ft.commit();
+
 
         }else if(!student.isLoggedIn() && teacher.isLoggedIn()) {
             //teacher
-            menu.add("Home");
-            menu.add("Tasks");
-            menu.add("Theory");
-            menu.add("Live");
-            menu.add("Rating");
+            menu.add("Главная");
+            menu.add("Теория");
+//            menu.add("Трансляции");
+//            menu.add("Rating");
 
         }else{
             startActivity(new Intent(MainActivity.this,LoginActivity.class));
@@ -66,25 +72,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        //todo make changeable and flexible
-        ft.add(R.id.use_container, new SNavTestsFragment());
-        ft.commit();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,menu);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.spinner_item,menu);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         dropdown_menu_spinner.setAdapter(adapter);
         dropdown_menu_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                if(student.isLoggedIn() && !teacher.isLoggedIn()){
 
-                if(i == 0) {
-                    transaction.replace(R.id.use_container, new SNavHomeFragment()).commit();
-                    transaction.addToBackStack(null);
-                }else{
-                    transaction.replace(R.id.use_container, new SNavTestsFragment()).commit();
+                    if(i == 0) {
+                        transaction.replace(R.id.use_container, new SNavHomeFragment()).commit();
+
+                    }else if(i == 1){
+                        transaction.replace(R.id.use_container, new SNavTestsFragment()).commit();
+
+                    }else if(i == 2){
+                        transaction.replace(R.id.use_container,new SNavTheoryFragment()).commit();
+
+                    }
+
+                }else if(!student.isLoggedIn() && teacher.isLoggedIn()){
+
+                    if(i == 0) {
+                        transaction.replace(R.id.use_container, new TNavHomeFragment()).commit();
+
+                    }else if(i == 1){
+                        transaction.replace(R.id.use_container,new SNavTheoryFragment()).commit();
+                    }
+
                 }
+
+
             }
 
             @Override

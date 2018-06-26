@@ -57,6 +57,7 @@ public class Teacher {
 
         editor.putInt(KEY_ID,id);
         editor.putString(KEY_NAME,name);
+        editor.putBoolean(IS_LOGGED_IN,true);
         editor.putString(KEY_EMAIL,email);
         editor.commit();
     }

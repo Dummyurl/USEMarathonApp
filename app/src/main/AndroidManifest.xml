@@ -7,9 +7,9 @@
     <application
         android:name=".AppController"
         android:allowBackup="true"
-        android:icon="@drawable/ic_marathon_logo_mini"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_marathon_logo_mini"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -39,7 +39,16 @@
         <activity
             android:name=".activities.TestsActivity"
             android:label="@string/title_activity_tests_acitivty"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.TopicsActivity"
+            android:label="@string/title_activity_topics"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

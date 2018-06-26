@@ -14,7 +14,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
-        android:hint="Email"
+        android:hint="Логин"
         android:inputType="textEmailAddress" />
 
 
@@ -26,16 +26,18 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
-        android:hint="Password"
+        android:hint="Пароль"
         android:inputType="textPassword" />
 
     <Button
-        android:layout_width="match_parent"
         android:id="@+id/s_sign_in_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:background="@drawable/button_default"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_height="wrap_content"
-        android:text="Sign in" />
+        android:text="Войти" />
 
     <TextView
         android:id="@+id/s_sign_up_btn"
@@ -43,6 +45,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Don't have an account? Sign Up" />
+        android:text="Нет аккаунта? Создайте новый!" />
 
 </LinearLayout>

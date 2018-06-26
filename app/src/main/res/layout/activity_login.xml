@@ -16,8 +16,9 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:adjustViewBounds="false"
-            app:srcCompat="@drawable/ic_marathon_logo_mini" />
+            android:adjustViewBounds="true"
+            android:src="@mipmap/logo"
+            app:srcCompat="@mipmap/logo" />
     </LinearLayout>
 
     <LinearLayout
@@ -29,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="USE MARATHON"
+            android:text="ЕГЭ МАРАФОН"
             android:textColor="@android:color/black"
             android:textSize="24sp"
             android:textStyle="bold" />

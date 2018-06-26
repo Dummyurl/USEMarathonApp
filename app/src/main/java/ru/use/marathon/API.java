@@ -40,6 +40,27 @@ public interface API {
     );
 
 
+    @GET("api.php")
+    Call<JsonObject> get_topics(
+            @Query("v") int v,
+            @Query("method") String method
+    );
+
+
+
+    @GET("api.php")
+    Call<JsonObject> get_solved_tests_by_topic(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("user_id") int userid
+    );
+
+    @GET("api.php")
+    Call<JsonObject> get_collection_by_topics(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("topic_id") int topic_ids
+    );
 
     @GET("api.php")
     Call<JsonObject> get_collection(
@@ -47,6 +68,15 @@ public interface API {
             @Query("method") String method,
             @Query("qc_number") int qc_number
 
+    );
+
+
+
+
+    @GET("api.php")
+    Call<JsonObject> get_theory_topics(
+            @Query("v") int v,
+            @Query("method") String method
     );
 
 

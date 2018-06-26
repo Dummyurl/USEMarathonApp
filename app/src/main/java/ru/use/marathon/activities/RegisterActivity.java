@@ -50,31 +50,35 @@ public class RegisterActivity extends AppCompatActivity {
                 final String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                AppController.getApi().sign_up(1,"sign_up",post,name,email,password).enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        new Success(response);
-                        if(success()){
-                            if(post == 1){
-                                Teacher t = new Teacher(getApplicationContext(),response);
-                                t.createSession(t.getID(),name,email);
-                            }else{
-                                Student s = new Student(getApplicationContext(),response);
-                                s.createSession(s.getID(),name,email);
+                if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
+                    AppController.getApi().sign_up(1, "sign_up", post, name, email, password).enqueue(new Callback<JsonObject>() {
+                        @Override
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            new Success(response);
+                            if (success()) {
+                                if (post == 1) {
+                                    Teacher t = new Teacher(getApplicationContext(), response);
+                                    t.createSession(t.getID(), name, email);
+                                } else {
+                                    Student s = new Student(getApplicationContext(), response);
+                                    s.createFirstSession(s.getID(), name, email); // todo if sign up, image will crush
+                                }
+
+                                Intent i = new Intent(RegisterActivity.this, MainActivity.class);
+                                startActivity(i);
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Не получилось :(", Toast.LENGTH_SHORT).show();
                             }
-
-                            Intent i = new Intent(RegisterActivity.this,MainActivity.class);
-                            startActivity(i);
-                        }else{
-                            Toast.makeText(RegisterActivity.this, "Sorry", Toast.LENGTH_SHORT).show();
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-                        Toast.makeText(RegisterActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+                            Toast.makeText(RegisterActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else{
+                    Toast.makeText(RegisterActivity.this, "Введите все данные", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
