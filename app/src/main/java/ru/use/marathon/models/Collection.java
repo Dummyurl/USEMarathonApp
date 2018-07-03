@@ -22,7 +22,6 @@ public class Collection  {
 
     public Collection(Response<JsonObject> response){
         object = response.body();
-        Gson gson = new Gson();
     }
 
     private JsonArray getCollectionArray(){

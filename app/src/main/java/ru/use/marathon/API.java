@@ -80,6 +80,13 @@ public interface API {
     );
 
 
+    @GET("api.php")
+    Call<JsonObject> get_all_feed(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("type") int type
+    );
+
 
 
 

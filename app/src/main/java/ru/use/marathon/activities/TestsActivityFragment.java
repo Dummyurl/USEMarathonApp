@@ -1,8 +1,10 @@
 package ru.use.marathon.activities;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,17 +36,19 @@ import ru.use.marathon.models.answers.StudentAnswers;
 
 public class TestsActivityFragment extends Fragment {
 
-
+    public static final String TAG  = TestsActivityFragment.class.getSimpleName();
     Collection collection;
-    int page;
+    int page, max_page;
     int answer_type;
 
     @BindView(R.id.content_text)
     TextView content_tv;
     @BindView(R.id.answers_radio_group)
     RadioGroup rg_container;
-    @BindView(R.id.show_hint_btn) Button show_hint_btn;
-    @BindView(R.id.hint_txt) TextView hint_txt;
+    @BindView(R.id.show_hint_btn)
+    Button show_hint_btn;
+    @BindView(R.id.hint_txt)
+    TextView hint_txt;
 
     @BindView(R.id.answers_container)
     LinearLayout answers_container;
@@ -58,16 +62,28 @@ public class TestsActivityFragment extends Fragment {
     CheckBox[] cb_answers;
     EditText enter_answer_et;
     StudentAnswers studentAnswers;
+    AbstractAnswer abstractAnswer;
+
 
     public TestsActivityFragment() {
     }
 
-    public static TestsActivityFragment newInstance(int page, Collection collection) {
+    public static TestsActivityFragment newInstance(int page, int pages_amount) {
         TestsActivityFragment fragment = new TestsActivityFragment();
         Bundle args = new Bundle();
         args.putInt("page", page);
+        args.putInt("max_page", pages_amount);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        page = getArguments().getInt("page");
+        max_page = getArguments().getInt("max_page");
+
     }
 
     @Override
@@ -77,36 +93,36 @@ public class TestsActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tests_activity, container, false);
         ButterKnife.bind(this, view);
 
-
-        page = getArguments().getInt("page");
         Collections collections = new Collections(getActivity().getApplicationContext());
         collection = collections.getCollection();
 
         studentAnswers = new StudentAnswers(getActivity().getApplicationContext());
 
-        int p = page + 1;
-        ((TestsActivity) getActivity())
-                .setActionBarTitle("Задание № " + p);
-
         final boolean[] flag = {false};
         show_hint_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hint_txt.setText("Не доступно.");
-                if(!flag[0]){
+                hint_txt.setText("Not available.");
+                if (!flag[0]) {
                     hint_txt.setVisibility(View.VISIBLE);
                     flag[0] = true;
-                }else{
+                } else {
                     hint_txt.setVisibility(View.INVISIBLE);
                 }
             }
         });
 
+
+
         if (collection != null) {
+            ((TestsActivity) getActivity())
+                    .setActionBarTitle("Task № " + collection.getTaskNumber(page))
+            ;
 
             content_tv.setText(collection.getContent(page));
             answers = collection.getAnswers(page);
             answer_type = collection.getAnswerType(page);
+
 
             if (answer_type == Constants.RADIO_BUTTON_TYPE) {
 
@@ -132,7 +148,7 @@ public class TestsActivityFragment extends Fragment {
 
                 rg_container.setVisibility(View.GONE);
                 enter_answer_et = new EditText(getActivity().getApplicationContext());
-                enter_answer_et.setHint("Введите ответ");
+                enter_answer_et.setHint("Write an answer");
                 answers_container.addView(enter_answer_et);
             }
         }
@@ -140,15 +156,14 @@ public class TestsActivityFragment extends Fragment {
         save_ans_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                abstractAnswer = new AbstractAnswer(getActivity().getApplicationContext());
+                abstractAnswer.savePage(page);
 
-                AbstractAnswer abstractAnswer = new AbstractAnswer(getActivity().getApplicationContext());
                 Student student = new Student(getActivity().getApplicationContext());
-                HashMap<String,String> sdata =  student.getStatistics();
-
+                HashMap<String, String> sdata = student.getStatistics();
 
                 List<String> ra = collection.getRightAnswers(page);
 
-                //todo make checkbox type
                 if (answer_type == Constants.RADIO_BUTTON_TYPE) {
 
                     RadioButton radioButton = (RadioButton) rg_container.findViewById(rg_container.getCheckedRadioButtonId());
@@ -167,36 +182,44 @@ public class TestsActivityFragment extends Fragment {
 
                     Log.i("RADIO_BTN_ARRAY", Arrays.toString(ram));
 
-                    if(abstractAnswer.isRight()){
-                        student.setStatistics(Integer.valueOf(sdata.get(student.KEY_TESTS_COUNTER)) + 1,
-                                              Double.valueOf(sdata.get(student.KEY_TESTS_TIME)) + 1.354,
-                                Integer.valueOf(sdata.get(student.KEY_ANSWERS_COUNTER)) + 1,
-                                Integer.valueOf(sdata.get(student.KEY_WRONG_ANSWERS_COUNTER)));
-                    } else{
-                        student.setStatistics(Integer.valueOf(sdata.get(student.KEY_TESTS_COUNTER)) + 1,
-                                Double.valueOf(sdata.get(student.KEY_TESTS_TIME)) + 1.354,
-                                Integer.valueOf(sdata.get(student.KEY_ANSWERS_COUNTER)),
-                                Integer.valueOf(sdata.get(student.KEY_WRONG_ANSWERS_COUNTER)) + 1);
+                    if (abstractAnswer.isRight()) {
+                        Toast.makeText(getActivity().getApplicationContext(), "true!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "false!", Toast.LENGTH_SHORT).show();
                     }
 
                 } else if (answer_type == Constants.TEXT_TYPE) {
 
-                    abstractAnswer.saveET(ra.get(0),enter_answer_et.getText().toString());
-                    if(abstractAnswer.isRight()){
-                        student.setStatistics(Integer.valueOf(sdata.get(student.KEY_TESTS_COUNTER)) + 1,
-                                Double.valueOf(sdata.get(student.KEY_TESTS_TIME)) + 1.354,
-                                Integer.valueOf(sdata.get(student.KEY_ANSWERS_COUNTER)) + 1,
-                                Integer.valueOf(sdata.get(student.KEY_WRONG_ANSWERS_COUNTER)));
-                    } else{
-                        student.setStatistics(Integer.valueOf(sdata.get(student.KEY_TESTS_COUNTER)) + 1,
-                                Double.valueOf(sdata.get(student.KEY_TESTS_TIME)) + 1.354,
-                                Integer.valueOf(sdata.get(student.KEY_ANSWERS_COUNTER)),
-                                Integer.valueOf(sdata.get(student.KEY_WRONG_ANSWERS_COUNTER)) + 1);
-                    }
+                    abstractAnswer.saveET(ra.get(0), enter_answer_et.getText().toString());
 
+                    if (abstractAnswer.isRight()) {
+                        Toast.makeText(getActivity().getApplicationContext(), "true!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "false!", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (answer_type == Constants.CHECK_BOX_TYPE) {
+                    int count = answers_container.getChildCount();
+                    View v = null;
+                    List<Integer> uam = new ArrayList<>();
+                    List<Integer> ram = new ArrayList<>();
+
+                    for (int i = 0; i < count; i++) {
+                        v = answers_container.getChildAt(i);
+                        CheckBox cb = (CheckBox) v;
+                        if (cb.isChecked()) uam.add(i);
+                    }
+                    for (int i = 0; i < ra.size(); i++) ram.add(Integer.valueOf(ra.get(i)) - 1);
+
+                    abstractAnswer.saveCB(ram, uam);
+
+                    if (abstractAnswer.isRight()) {
+                        Toast.makeText(getActivity().getApplicationContext(), "true!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "false!", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
-                passData(abstractAnswer);
+
             }
         });
 
@@ -205,10 +228,19 @@ public class TestsActivityFragment extends Fragment {
 
 
     public interface OnDataPass {
-        public void onDataPass(AbstractAnswer data);
+        public void onDataPass(AbstractAnswer data,int page);
     }
 
     OnDataPass dataPasser;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("abstract_answer",abstractAnswer);
+        outState.putString("a","a");
+        Log.d("TestsFragment","onSaveInstanceState " + page);
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -216,19 +248,38 @@ public class TestsActivityFragment extends Fragment {
         dataPasser = (OnDataPass) context;
     }
 
-    public void passData(AbstractAnswer data) {
-        dataPasser.onDataPass(data);
+    public void passData(AbstractAnswer data,int page) {
+        dataPasser.onDataPass(data,page);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.d("TestsFragment","onPause " + page);
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("TestsFragment","onDestroyView " + page);
+
+        if(abstractAnswer!=null){
+            passData(abstractAnswer,page);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Log.d("TestsFragment","onStart " + page);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        Toast.makeText(getActivity().getApplicationContext(), "onResume", Toast.LENGTH_SHORT).show();
+
+
+        Log.d("TestsFragment","onResume " + page);
     }
 }

@@ -42,6 +42,7 @@ public class TestsActivity extends AppCompatActivity implements TestsActivityFra
     String tag = "";
     StudentAnswers studentAnswers;
     List<AbstractAnswer> abstractAnswers;
+    ArrayList<Integer> test_numbers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class TestsActivity extends AppCompatActivity implements TestsActivityFra
         tag = getIntent().getStringExtra("tag");
         studentAnswers = new StudentAnswers(getApplicationContext());
         abstractAnswers = new ArrayList<>();
+        test_numbers = new ArrayList<>();
 
         if(tag.equals("var")){
             collection_number = getIntent().getIntExtra("collection_number",0);
@@ -66,7 +68,11 @@ public class TestsActivity extends AppCompatActivity implements TestsActivityFra
             tests_amount = collection.size();
             MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),collection);
             viewPager.setAdapter(adapter);
+            for (int i = 0; i < tests_amount; i++) {
+                test_numbers.add(collection.getTaskNumber(i));
+            }
         }
+
     }
 
     private void variants_data() {
@@ -80,6 +86,10 @@ public class TestsActivity extends AppCompatActivity implements TestsActivityFra
                 tests_amount = collection.size();
                 MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),collection);
                 viewPager.setAdapter(adapter);
+
+                for (int i = 0; i < collection.size(); i++) {
+                    test_numbers.add(collection.getTaskNumber(i));
+                }
             }
 
             @Override
@@ -104,7 +114,8 @@ public class TestsActivity extends AppCompatActivity implements TestsActivityFra
     }
 
     @Override
-    public void onDataPass(AbstractAnswer abstractAnswer) {
+    public void onDataPass(AbstractAnswer abstractAnswer,int page) {
+
         if(abstractAnswer!=null){
             abstractAnswers.add(abstractAnswer);
         }
@@ -123,9 +134,11 @@ public class TestsActivity extends AppCompatActivity implements TestsActivityFra
             this.collection = collection;
         }
 
+
+
         @Override
         public Fragment getItem(int position) {
-            return TestsActivityFragment.newInstance(position,collection);
+            return TestsActivityFragment.newInstance(position, tests_amount);
         }
 
         @Override
