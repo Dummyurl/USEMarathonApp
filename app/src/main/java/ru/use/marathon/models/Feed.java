@@ -6,19 +6,19 @@ import com.google.gson.JsonObject;
 import retrofit2.Response;
 
 /**
- * Created by ilyas on 14-Jun-18.
+ * Created by ilyas on 02-Jul-18.
  */
 
-public class TheoryTopics {
+public class Feed {
 
     JsonObject js;
 
-    public TheoryTopics(Response<JsonObject> response) {
+    public Feed(Response<JsonObject> response) {
         js = response.body();
     }
 
     public JsonArray getData(){
-        return js.get("theory").getAsJsonArray();
+        return js.get("feed").getAsJsonArray();
     }
 
     public int size(){
@@ -29,17 +29,23 @@ public class TheoryTopics {
         return getData().get(i).getAsJsonObject().get("id").getAsInt();
     }
 
-    public int getIcon(int i){
-        return getData().get(i).getAsJsonObject().get("icon").getAsInt();
-    }
-
     public String getTitle(int i){
         return getData().get(i).getAsJsonObject().get("title").getAsString();
     }
 
+    public String getImage(int i){
+        return getData().get(i).getAsJsonObject().get("image").getAsString();
+    }
 
     public String getContent(int i){
         return getData().get(i).getAsJsonObject().get("content").getAsString();
     }
 
+//    public String getText(int i){
+//        return getData().get(i).getAsJsonObject().get("text").getAsString();
+//    }
+
+    public String getCreatedAt(int i){
+        return getData().get(i).getAsJsonObject().get("created_at").getAsString();
+    }
 }

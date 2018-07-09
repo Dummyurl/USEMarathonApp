@@ -88,6 +88,37 @@ public interface API {
     );
 
 
+    @GET("api.php")
+    Call<JsonObject> getFeedTextById(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("id") int id
+    );
+
+
+    @GET("api.php")
+    Call<JsonObject> updateRegToken(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("reg_token") String token,
+            @Query("uid") int user_id,
+            @Query("utype") int user_type
+    );
+
+
+
+    @GET("api.php")
+    Call<JsonObject> getChatRooms(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("uid") int user_id,
+            @Query("utype") int user_type
+    );
+
+
+
+
+
 
 
 

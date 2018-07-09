@@ -1,5 +1,7 @@
 package ru.use.marathon.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +16,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.use.marathon.Constants;
 import ru.use.marathon.R;
+import ru.use.marathon.fragments.navigation.student.SNavChatFragment;
 import ru.use.marathon.fragments.navigation.student.SNavFeedFragment;
 import ru.use.marathon.fragments.navigation.student.SNavProfileFragment;
 import ru.use.marathon.fragments.navigation.student.SNavTestsFragment;
@@ -22,12 +26,14 @@ import ru.use.marathon.fragments.navigation.student.SNavTheoryFragment;
 import ru.use.marathon.fragments.navigation.teacher.TNavHomeFragment;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Teacher;
+import ru.use.marathon.utils.BottomNavigationViewHelper;
 
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bnv;
 
+    BroadcastReceiver mRegistrationBroadcastReceiver;
 
     ArrayList<String> menu = new ArrayList<>();
 
@@ -50,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this,LoginActivity.class));
             finish();
         }
+        BottomNavigationViewHelper.disableShiftMode(bnv);
+
+
 
         bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -68,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                             transaction.replace(R.id.use_container,new SNavTheoryFragment()).commit();
                             break;
                         case R.id.action_chat:
-                            Toast.makeText(MainActivity.this, "Not now!", Toast.LENGTH_SHORT).show();
+                            transaction.replace(R.id.use_container,new SNavChatFragment()).commit();
                             break;
                         case R.id.action_profile:
                             transaction.replace(R.id.use_container, new SNavProfileFragment()).commit();

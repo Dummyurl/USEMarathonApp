@@ -36,7 +36,7 @@ import ru.use.marathon.models.Student;
  * Created by ilyas on 10-Jun-18.
  */
 
-public class SNavHomeFragment extends Fragment {
+public class SNavProfileFragment extends Fragment {
 
     Unbinder unbinder;
 
@@ -55,7 +55,7 @@ public class SNavHomeFragment extends Fragment {
     @BindView(R.id.piechart)
     PieChart pieChart;
 
-    public SNavHomeFragment() {
+    public SNavProfileFragment() {
     }
 
     @Override
@@ -66,6 +66,7 @@ public class SNavHomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_student_nav_home, parent, false);
         unbinder = ButterKnife.bind(this, view);
 
@@ -87,8 +88,8 @@ public class SNavHomeFragment extends Fragment {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
 
-        entries.add(new PieEntry((int)Integer.valueOf(data.get(s.KEY_TESTS_COUNTER)) - Integer.valueOf(data.get(s.KEY_WRONG_ANSWERS_COUNTER)),"Right answers"));
-        entries.add(new PieEntry((int)Integer.valueOf(data.get(s.KEY_WRONG_ANSWERS_COUNTER)),"Wrong answers"));
+        entries.add(new PieEntry(Integer.valueOf(data.get(s.KEY_ANSWERS_COUNTER)),"Right answers"));
+        entries.add(new PieEntry(Integer.valueOf(data.get(s.KEY_WRONG_ANSWERS_COUNTER)),"Wrong answers"));
 
         PieDataSet pieDataSet = new PieDataSet(entries,"");
         PieData data1 = new PieData();
@@ -98,7 +99,6 @@ public class SNavHomeFragment extends Fragment {
         d.setText("");
         pieChart.setDescription(d);
         pieChart.setData(data1);
-
 
         if (logout != null) {
             logout.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,7 @@
 package ru.use.marathon.activities;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -63,6 +64,7 @@ public class TestsActivityFragment extends Fragment {
     EditText enter_answer_et;
     StudentAnswers studentAnswers;
     AbstractAnswer abstractAnswer;
+    ViewPager parentView;
 
 
     public TestsActivityFragment() {
@@ -93,6 +95,7 @@ public class TestsActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tests_activity, container, false);
         ButterKnife.bind(this, view);
 
+        parentView = (ViewPager) getActivity().findViewById(R.id.tests_viewpager_container);
         Collections collections = new Collections(getActivity().getApplicationContext());
         collection = collections.getCollection();
 
@@ -102,7 +105,7 @@ public class TestsActivityFragment extends Fragment {
         show_hint_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hint_txt.setText("Not available.");
+                hint_txt.setText("Не доступно.");
                 if (!flag[0]) {
                     hint_txt.setVisibility(View.VISIBLE);
                     flag[0] = true;
@@ -116,7 +119,7 @@ public class TestsActivityFragment extends Fragment {
 
         if (collection != null) {
             ((TestsActivity) getActivity())
-                    .setActionBarTitle("Task № " + collection.getTaskNumber(page))
+                    .setActionBarTitle("Задание № " + collection.getTaskNumber(page))
             ;
 
             content_tv.setText(collection.getContent(page));
@@ -130,6 +133,8 @@ public class TestsActivityFragment extends Fragment {
                 rg_answers = new RadioButton[answers.size()];
                 for (int i = 0; i < answers.size(); i++) {
                     rg_answers[i] = new RadioButton(getActivity().getApplicationContext());
+                    rg_answers[i].setTextColor(Color.BLACK);
+                    //todo correct radiobtn
                     rg_answers[i].setText(answers.get(i));
                     rg_container.addView(rg_answers[i]);
                 }
@@ -140,6 +145,7 @@ public class TestsActivityFragment extends Fragment {
                 cb_answers = new CheckBox[answers.size()];
                 for (int i = 0; i < answers.size(); i++) {
                     cb_answers[i] = new CheckBox(getActivity().getApplicationContext());
+                    cb_answers[i].setTextColor(Color.BLACK);
                     cb_answers[i].setText(answers.get(i));
                     answers_container.addView(cb_answers[i]);
                 }
@@ -148,7 +154,8 @@ public class TestsActivityFragment extends Fragment {
 
                 rg_container.setVisibility(View.GONE);
                 enter_answer_et = new EditText(getActivity().getApplicationContext());
-                enter_answer_et.setHint("Write an answer");
+                enter_answer_et.setTextColor(Color.BLACK);
+                enter_answer_et.setHint("Введите ответ");
                 answers_container.addView(enter_answer_et);
             }
         }
@@ -182,20 +189,36 @@ public class TestsActivityFragment extends Fragment {
 
                     Log.i("RADIO_BTN_ARRAY", Arrays.toString(ram));
 
+
+                    HashMap<String,String> stats = student.getStatistics();
+                    int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
+                    int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
+                    int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
+
                     if (abstractAnswer.isRight()) {
-                        Toast.makeText(getActivity().getApplicationContext(), "true!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+
+                        student.setStatistics(tests_counter + 1,0,answer_counter +1 ,answer_wrong_counter);
                     } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "false!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                        student.setStatistics(tests_counter + 1,0,answer_counter,answer_wrong_counter + 1);
                     }
 
                 } else if (answer_type == Constants.TEXT_TYPE) {
 
                     abstractAnswer.saveET(ra.get(0), enter_answer_et.getText().toString());
 
+                    HashMap<String,String> stats = student.getStatistics();
+                    int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
+                    int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
+                    int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
+
                     if (abstractAnswer.isRight()) {
-                        Toast.makeText(getActivity().getApplicationContext(), "true!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+                        student.setStatistics(tests_counter + 1,0,answer_counter +1 ,answer_wrong_counter);
                     } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "false!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                        student.setStatistics(tests_counter + 1,0,answer_counter,answer_wrong_counter + 1);
                     }
                 } else if (answer_type == Constants.CHECK_BOX_TYPE) {
                     int count = answers_container.getChildCount();
@@ -212,13 +235,23 @@ public class TestsActivityFragment extends Fragment {
 
                     abstractAnswer.saveCB(ram, uam);
 
+                    HashMap<String,String> stats = student.getStatistics();
+                    int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
+                    int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
+                    int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
+
                     if (abstractAnswer.isRight()) {
-                        Toast.makeText(getActivity().getApplicationContext(), "true!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+                        student.setStatistics(tests_counter + 1,0,answer_counter +1 ,answer_wrong_counter);
                     } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "false!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                        student.setStatistics(tests_counter + 1,0,answer_counter,answer_wrong_counter + 1);
                     }
                 }
+                if(parentView.getCurrentItem() == max_page-1){
 
+                }else
+                    parentView.setCurrentItem(parentView.getCurrentItem() + 1);
 
             }
         });

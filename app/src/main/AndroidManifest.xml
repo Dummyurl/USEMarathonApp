@@ -3,6 +3,14 @@
     package="ru.use.marathon">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission
+        android:name="ru.use.marathon.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="ru.use.marathon.permission.C2D_MESSAGE" />
 
     <application
         android:name=".AppController"
@@ -37,6 +45,26 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.use.marathon.activities.MainActivity" />
         </activity>
+
+        <service android:name=".service.MessagingService">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".service.AppFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_marathon_logo_mini" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
         <activity
             android:name=".activities.TestsActivity"
             android:label="@string/title_activity_tests_acitivty"
@@ -53,6 +81,33 @@
         <activity
             android:name=".activities.TheoryContentActivity"
             android:label="@string/title_activity_theory_content"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.FeedContentActivity"
+            android:label="@string/title_activity_feed_content"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.ResultsActivity"
+            android:label="@string/title_activity_results"
+            android:parentActivityName=".activities.TestsByCollectionsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.TestsByCollectionsActivity" />
+        </activity>
+        <activity
+            android:name=".activities.ChatRoomActivity"
+            android:label="@string/title_activity_chat_room"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

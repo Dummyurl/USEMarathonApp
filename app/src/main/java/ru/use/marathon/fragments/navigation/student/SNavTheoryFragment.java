@@ -1,5 +1,6 @@
 package ru.use.marathon.fragments.navigation.student;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,8 +20,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
+import ru.use.marathon.activities.TheoryContentActivity;
 import ru.use.marathon.adapters.TheoryTopicsAdapter;
 import ru.use.marathon.models.TheoryTopics;
+import ru.use.marathon.utils.ItemClickSupport;
 
 /**
  * Created by ilyas on 14-Jun-18.
@@ -31,6 +34,7 @@ public class SNavTheoryFragment extends Fragment {
     Unbinder unbinder;
     @BindView(R.id.theory_rv)
     RecyclerView theory_rv;
+    TheoryTopics topics;
 
     @Nullable
     @Override
@@ -43,13 +47,25 @@ public class SNavTheoryFragment extends Fragment {
         AppController.getApi().get_theory_topics(1,"get_theory_topics").enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                TheoryTopics t = new TheoryTopics(response);
-                theory_rv.setAdapter(new TheoryTopicsAdapter(t));
+                topics = new TheoryTopics(response);
+                theory_rv.setAdapter(new TheoryTopicsAdapter(topics));
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
 
+            }
+        });
+
+        ItemClickSupport.addTo(theory_rv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Intent i = new Intent(getActivity(), TheoryContentActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                i.putExtra("id",topics.getId(position));
+                i.putExtra("title",topics.getTitle(position));
+                i.putExtra("content",topics.getContent(position));
+                startActivity(i);
             }
         });
 
@@ -60,6 +76,6 @@ public class SNavTheoryFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+//        unbinder.unbind();
     }
 }

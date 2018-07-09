@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">USE Marathon</string>
     <string name="title_activity_main2">Main2Activity</string>
-    <string name="title_activity_tests_by_variant_acitvity">Tests collections</string>
+    <string name="title_activity_tests_by_variant_acitvity">По вариантам</string>
     <string name="title_activity_tests_acitivty">TestsAcitivty</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_topics">By Topics</string>
+    <string name="title_activity_topics">По темам</string>
     <string name="title_activity_theory_content">TheoryContentActivity</string>
+    <string name="title_activity_feed_content">FeedContentActivity</string>
+    <string name="title_activity_results">ResultsActivity</string>
+    <string name="title_activity_chat_room">ChatRoomActivity</string>
+
 </resources>
