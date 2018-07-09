@@ -128,9 +128,22 @@ public class SNavChatFragment extends Fragment{
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 
+                int id = roomArrayList.get(position).getId();
+                String title = roomArrayList.get(position).getTitle();
+                String name =  roomArrayList.get(position).getName();
+                String time = roomArrayList.get(position).getTimestamp();
+                String message = roomArrayList.get(position).getLastMessage();
+
+                roomArrayList.remove(position);
+                roomArrayList.add(position,new ChatRoom(id,0,title,name,time,"",message));
+
+                recyclerView.getAdapter().notifyDataSetChanged();
+
                 Intent i = new Intent(getActivity(), ChatRoomActivity.class);
-                i.putExtra("title",roomArrayList.get(position).getTitle());
+                i.putExtra("title",title);
+                i.putExtra("chat_id",id);
                 startActivity(i);
+
             }
         });
 
@@ -183,6 +196,5 @@ public class SNavChatFragment extends Fragment{
             }
         });
     }
-
 
 }

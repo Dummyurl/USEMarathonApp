@@ -116,6 +116,29 @@ public interface API {
     );
 
 
+    @GET("api.php")
+    Call<JsonObject> getMessages(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("chat_id") String chat_id,
+            @Query("uid") String user_id,
+            @Query("utype") int user_type
+    );
+
+
+    @GET("api.php")
+    Call<JsonObject> sendMsg(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("msg") String msg,
+            @Query("cht_id") int cht_id,
+            @Query("uid") String user_id,
+            @Query("utype") int user_type,
+            @Query("name") String user_name
+    );
+
+
+
 
 
 

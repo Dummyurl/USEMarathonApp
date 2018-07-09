@@ -42,7 +42,7 @@ public class MessagingService extends FirebaseMessagingService {
             try {
                 Map<String, String> params = remoteMessage.getData();
                 JSONObject object = new JSONObject(params);
-                handleDataMessage(object,remoteMessage.getNotification().getBody());
+                handleDataMessage(object,remoteMessage.getNotification().getBody(),remoteMessage);
 
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e.getMessage());
@@ -52,19 +52,35 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
 
-    private void handleDataMessage(JSONObject json,String message) throws JSONException {
+    private void handleDataMessage(JSONObject json,String message, RemoteMessage remoteMessage) throws JSONException {
         String name = json.getString("name");
         String timestamp = json.getString("timestamp");
         String chat_id = json.getString("chat_id");
+        String uid = json.getString("uid");
+        int ut = json.getInt("ut");
 
         if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
             Intent pushNotification = new Intent(Constants.PUSH_NOTIFICATION);
             pushNotification.putExtra("message",message);
             pushNotification.putExtra("chat_id",chat_id);
             pushNotification.putExtra("name",name);
+            pushNotification.putExtra("uid",uid);
+            pushNotification.putExtra("ut",ut);
             pushNotification.putExtra("timestamp",timestamp);
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+        }else{
+            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+            resultIntent.putExtra("message", message);
+
+            showNotificationMessage(getApplicationContext(), remoteMessage.getNotification().getTitle(), message, timestamp, resultIntent);
         }
     }
+
+    private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent) {
+        notificationUtils = new NotificationUtils(context);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        notificationUtils.showNotificationMessage(title, message, timeStamp, intent);
+    }
+
 
 }
