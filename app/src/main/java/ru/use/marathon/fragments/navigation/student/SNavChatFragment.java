@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -34,6 +38,7 @@ import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.Constants;
 import ru.use.marathon.R;
+import ru.use.marathon.activities.AllUsersActivity;
 import ru.use.marathon.activities.ChatRoomActivity;
 import ru.use.marathon.adapters.chat.ChatRoomsAdapter;
 import ru.use.marathon.models.Student;
@@ -63,6 +68,10 @@ public class SNavChatFragment extends Fragment{
 
     @BindView(R.id.chat_rooms_rv)
     RecyclerView recyclerView;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.chat_constr)
+    ConstraintLayout layout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +85,8 @@ public class SNavChatFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_student_chat,container,false);
         ButterKnife.bind(this,view);
 
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layout.setLayoutParams(layoutParams);
         student = new Student(getActivity().getApplicationContext());
 
         HashMap<String,String> stu_data = student.getData();
@@ -111,6 +122,14 @@ public class SNavChatFragment extends Fragment{
             }
         };
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity().getApplicationContext(), AllUsersActivity.class);
+                i.putExtra("type",1);
+                startActivity(i);
+            }
+        });
 
         return view;
     }
@@ -120,6 +139,9 @@ public class SNavChatFragment extends Fragment{
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(getActivity().getApplicationContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
+        int resId = R.anim.layout_animation_fall_down;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity().getApplicationContext(), resId);
+        recyclerView.setLayoutAnimation(animation);
         adapter = new ChatRoomsAdapter(getActivity().getApplicationContext(),roomArrayList);
         recyclerView.setAdapter(adapter);
         getChatRooms(user_id);
@@ -142,11 +164,21 @@ public class SNavChatFragment extends Fragment{
                 Intent i = new Intent(getActivity(), ChatRoomActivity.class);
                 i.putExtra("title",title);
                 i.putExtra("chat_id",id);
-                startActivity(i);
+                startActivityForResult(i,100);
+
 
             }
         });
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 100){
+            roomArrayList.clear();
+            getChatRooms(user_id);
+        }
     }
 
     @Override
@@ -186,8 +218,8 @@ public class SNavChatFragment extends Fragment{
         AppController.getApi().updateRegToken(1,"updateToken",FirebaseInstanceId.getInstance().getToken(),user_id,utype).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                new Success(response);
-                Toast.makeText(getActivity().getApplicationContext(), success() ? "ok": "not ok", Toast.LENGTH_SHORT).show();
+//                new Success(response);
+//                Toast.makeText(getActivity().getApplicationContext(), success() ? "ok": "not ok", Toast.LENGTH_SHORT).show();
             }
 
             @Override

@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
@@ -46,7 +48,9 @@ public class TestsByCollectionsActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 4);
         collectionsRecyclerView.setLayoutManager(mLayoutManager);
-
+        int resId = R.anim.grid_layout_animation_from_bottom;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
+        collectionsRecyclerView.setLayoutAnimation(animation);
         gatherData();
 
         ItemClickSupport.addTo(collectionsRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {

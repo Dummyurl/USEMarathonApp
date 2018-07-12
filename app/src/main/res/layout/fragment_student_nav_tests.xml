@@ -3,26 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="top|center_vertical|center"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
     <Button
         android:id="@+id/by_variants"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:background="@drawable/button_default"
+        android:layout_weight="1"
+        android:background="@null"
+        android:gravity="center"
         android:padding="10dp"
-        android:text="По вариантам"
-        android:textColor="@android:color/background_light" />
+        android:text="По вариантам" />
 
     <Button
         android:id="@+id/by_topics"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:background="@drawable/button_default"
+
+        android:layout_weight="1"
+        android:background="@null"
         android:padding="10dp"
-        android:text="По темам"
-        android:textColor="@android:color/background_light" />
+        android:text="По темам" />
 
 </LinearLayout>

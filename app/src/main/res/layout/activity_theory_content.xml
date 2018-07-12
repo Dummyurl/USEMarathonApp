@@ -25,10 +25,10 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/theory_item_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+     <WebView
+         android:layout_width="match_parent"
+         android:id="@+id/web_theory_container"
+         android:layout_height="match_parent"/>
 
         <Button
             android:id="@+id/goto_tests_btn"

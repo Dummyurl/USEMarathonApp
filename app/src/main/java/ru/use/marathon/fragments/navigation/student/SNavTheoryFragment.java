@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.google.gson.JsonObject;
 
@@ -43,7 +45,9 @@ public class SNavTheoryFragment extends Fragment {
         ButterKnife.bind(this,view);
 
         theory_rv.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-
+        int resId = R.anim.layout_animation_fall_down;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity().getApplicationContext(), resId);
+        theory_rv.setLayoutAnimation(animation);
         AppController.getApi().get_theory_topics(1,"get_theory_topics").enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -65,6 +69,7 @@ public class SNavTheoryFragment extends Fragment {
                 i.putExtra("id",topics.getId(position));
                 i.putExtra("title",topics.getTitle(position));
                 i.putExtra("content",topics.getContent(position));
+                i.putExtra("topics_id",topics.getIcon(position));
                 startActivity(i);
             }
         });

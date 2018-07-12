@@ -47,7 +47,6 @@ public interface API {
     );
 
 
-
     @GET("api.php")
     Call<JsonObject> get_solved_tests_by_topic(
             @Query("v") int v,
@@ -69,8 +68,6 @@ public interface API {
             @Query("qc_number") int qc_number
 
     );
-
-
 
 
     @GET("api.php")
@@ -106,7 +103,6 @@ public interface API {
     );
 
 
-
     @GET("api.php")
     Call<JsonObject> getChatRooms(
             @Query("v") int v,
@@ -137,12 +133,44 @@ public interface API {
             @Query("name") String user_name
     );
 
+    @GET("api.php")
+    Call<JsonObject> getAllUsers(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("type") int type
+    );
 
 
+    @GET("api.php")
+    Call<JsonObject> createChat(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("title") String title,
+            @Query("uid") String user_id,
+            @Query("utype") int user_type
+    );
 
 
+    @GET("api.php")
+    Call<JsonObject> addChatMember(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("chat_id") String chat_id,
+            @Query("uid") String user_id,
+            @Query("utype") int user_type
+    );
 
+    @GET("api.php")
+    Call<JsonObject> sendStat(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("uid") int uid,
+            @Query("qu_id") int qu_id,
+            @Query("time") int time,
+            @Query("ra") int ra,
+            @Query("c_id") int collection_id
 
+    );
 
 
 }

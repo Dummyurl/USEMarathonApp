@@ -36,6 +36,10 @@ public class Rooms {
         return getData().get(i).getAsJsonObject().get("chat_id").getAsInt();
     }
 
+    public int getChatId(){
+        return js.get("chat_room_id").getAsInt();
+    }
+
     public String getTitle(int i){
         return getData().get(i).getAsJsonObject().get("title").getAsString();
     }

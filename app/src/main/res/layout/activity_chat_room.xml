@@ -28,6 +28,13 @@
         android:layout_height="match_parent">
 
 
+        <ProgressBar
+            android:id="@+id/chat_messages_progress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_messages_rv"
             android:layout_width="match_parent"
@@ -73,6 +80,14 @@
                 android:textColor="@color/colorPrimary" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/chat_messages_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/chat_messages_progress"
+            android:layout_centerHorizontal="true"
+            android:text="TextView" />
 
 
     </RelativeLayout>

@@ -112,6 +112,15 @@ public class Student {
         data.put(KEY_WRONG_ANSWERS_COUNTER, String.valueOf(sharedPreferences.getInt(KEY_WRONG_ANSWERS_COUNTER,0)));
         return data;
     }
+
+    public void deleteStat(){
+        editor.remove(KEY_TESTS_COUNTER);
+        editor.remove(KEY_WRONG_ANSWERS_COUNTER);
+        editor.remove(KEY_TESTS_TIME);
+        editor.remove(KEY_ANSWERS_COUNTER);
+        editor.commit();
+
+    }
     public void createFirstSession(int id,String name, String email){
         editor.putInt(KEY_ID,id);
         editor.putString(KEY_NAME,name);

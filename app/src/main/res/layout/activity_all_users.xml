@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/all_users_layout"
     android:layout_height="match_parent"
-    tools:context="ru.use.marathon.activities.ResultsActivity">
+    tools:context="ru.use.marathon.activities.AllUsersActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,32 +21,19 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
+        android:id="@+id/all_users_rv"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"/>
 
-
-        <TextView
-            android:id="@+id/result_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:text="10 правильных из 11"
-            android:textColor="@android:color/background_dark"
-            android:textSize="24sp" />
-
-        <Button
-            android:id="@+id/result_return_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/result_score"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="11dp"
-            android:text="Вернуться" />
-
-    </RelativeLayout>
+    <Button
+        android:id="@+id/create_chat_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="create chat"
+        app:layout_anchor="@+id/all_users_rv"
+        app:layout_anchorGravity="bottom|center" />
 
 </android.support.design.widget.CoordinatorLayout>

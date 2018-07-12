@@ -66,7 +66,7 @@ public class TestsActivity extends AppCompatActivity implements TestsActivityFra
             Collections collections = new Collections(getApplicationContext());
             collection = collections.getCollection();
             tests_amount = collection.size();
-            MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),collection);
+            MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),collection,-1);
             viewPager.setAdapter(adapter);
             for (int i = 0; i < tests_amount; i++) {
                 test_numbers.add(collection.getTaskNumber(i));
@@ -84,7 +84,7 @@ public class TestsActivity extends AppCompatActivity implements TestsActivityFra
                 collection = new Collection(response);
                 collections.saveCollection(collection);
                 tests_amount = collection.size();
-                MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),collection);
+                MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),collection,collection_number);
                 viewPager.setAdapter(adapter);
 
                 for (int i = 0; i < collection.size(); i++) {
@@ -128,17 +128,19 @@ public class TestsActivity extends AppCompatActivity implements TestsActivityFra
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
         Collection collection;
+        int cn ;
 
-        public MyFragmentPagerAdapter(FragmentManager fm, Collection collection) {
+        public MyFragmentPagerAdapter(FragmentManager fm, Collection collection,int cn) {
             super(fm);
             this.collection = collection;
+            this.cn = cn;
         }
 
 
 
         @Override
         public Fragment getItem(int position) {
-            return TestsActivityFragment.newInstance(position, tests_amount);
+            return TestsActivityFragment.newInstance(position, tests_amount,cn);
         }
 
         @Override

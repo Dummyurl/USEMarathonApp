@@ -1,7 +1,11 @@
 package ru.use.marathon.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -19,6 +23,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,21 +32,29 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ru.use.marathon.AppController;
 import ru.use.marathon.Constants;
 import ru.use.marathon.R;
 import ru.use.marathon.models.Collection;
 import ru.use.marathon.models.Collections;
 import ru.use.marathon.models.Student;
+import ru.use.marathon.models.Success;
 import ru.use.marathon.models.answers.AbstractAnswer;
 import ru.use.marathon.models.answers.StudentAnswers;
+
+import static ru.use.marathon.models.Success.success;
 
 
 public class TestsActivityFragment extends Fragment {
 
-    public static final String TAG  = TestsActivityFragment.class.getSimpleName();
+    public static final String TAG = TestsActivityFragment.class.getSimpleName();
     Collection collection;
-    int page, max_page;
+    int page, max_page,cn;
     int answer_type;
+    Student student;
 
     @BindView(R.id.content_text)
     TextView content_tv;
@@ -66,15 +80,22 @@ public class TestsActivityFragment extends Fragment {
     AbstractAnswer abstractAnswer;
     ViewPager parentView;
 
+    //STOPWATCH
+    @BindView(R.id.stopwatch)
+    TextView stopwatch_txt;
+    private int seconds = 0;
+    private boolean startRun;
+
 
     public TestsActivityFragment() {
     }
 
-    public static TestsActivityFragment newInstance(int page, int pages_amount) {
+    public static TestsActivityFragment newInstance(int page, int pages_amount,int cn) {
         TestsActivityFragment fragment = new TestsActivityFragment();
         Bundle args = new Bundle();
         args.putInt("page", page);
         args.putInt("max_page", pages_amount);
+        args.putInt("cn",cn);
         fragment.setArguments(args);
         return fragment;
     }
@@ -85,6 +106,7 @@ public class TestsActivityFragment extends Fragment {
 
         page = getArguments().getInt("page");
         max_page = getArguments().getInt("max_page");
+        cn = getArguments().getInt("cn");
 
     }
 
@@ -95,26 +117,196 @@ public class TestsActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tests_activity, container, false);
         ButterKnife.bind(this, view);
 
+        student = new Student(getActivity().getApplicationContext());
+
         parentView = (ViewPager) getActivity().findViewById(R.id.tests_viewpager_container);
         Collections collections = new Collections(getActivity().getApplicationContext());
         collection = collections.getCollection();
 
+        startRun = true;
+
         studentAnswers = new StudentAnswers(getActivity().getApplicationContext());
 
-        final boolean[] flag = {false};
-        show_hint_btn.setOnClickListener(new View.OnClickListener() {
+        initHint();
+        setupUI();
+        initStopwatch();
+
+
+        save_ans_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hint_txt.setText("Не доступно.");
-                if (!flag[0]) {
-                    hint_txt.setVisibility(View.VISIBLE);
-                    flag[0] = true;
-                } else {
-                    hint_txt.setVisibility(View.INVISIBLE);
+                abstractAnswer = new AbstractAnswer(getActivity().getApplicationContext());
+                abstractAnswer.savePage(page);
+
+                Student student = new Student(getActivity().getApplicationContext());
+                HashMap<String, String> sdata = student.getStatistics();
+
+                boolean isCorrectAnswer = false;
+
+                List<String> ra = collection.getRightAnswers(page);
+
+                if (answer_type == Constants.RADIO_BUTTON_TYPE) {
+
+                    RadioButton radioButton = (RadioButton) rg_container.findViewById(rg_container.getCheckedRadioButtonId());
+                    int i = rg_container.indexOfChild(radioButton);
+                    Log.i("RADIO_BTN_INDEX", String.valueOf(i));
+                    Log.i("RA_INDEX", String.valueOf(ra.get(0)));
+
+                    int rai = Integer.valueOf(ra.get(0));
+                    int[] ram = new int[answers.size()];
+                    for (int j = 0; j < ram.length; j++) ram[j] = 0;
+                    for (int j = 0; j < ram.length; j++) {
+                        if (j == rai - 1) ram[j] = 1;
+                        if (j == i) ram[j] = -1;
+                    }
+                    abstractAnswer.saveRadioBtn(ram);
+
+                    Log.i("RADIO_BTN_ARRAY", Arrays.toString(ram));
+
+
+                    HashMap<String, String> stats = student.getStatistics();
+                    int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
+                    int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
+                    int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
+                    double seconds_stat = Double.parseDouble(stats.get(student.KEY_TESTS_TIME));
+
+                    if (abstractAnswer.isRight()) {
+                        isCorrectAnswer = true;
+
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+
+                        student.setStatistics(tests_counter + 1, seconds_stat + seconds, answer_counter + 1, answer_wrong_counter);
+                    } else {
+                        isCorrectAnswer = false;
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                        student.setStatistics(tests_counter + 1, seconds_stat + seconds, answer_counter, answer_wrong_counter + 1);
+                    }
+
+                } else if (answer_type == Constants.TEXT_TYPE) {
+
+                    abstractAnswer.saveET(ra.get(0), enter_answer_et.getText().toString());
+
+                    HashMap<String, String> stats = student.getStatistics();
+                    int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
+                    int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
+                    int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
+                    double seconds_stat = Double.parseDouble(stats.get(student.KEY_TESTS_TIME));
+                    if (abstractAnswer.isRight()) {
+                        isCorrectAnswer = true;
+
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+                        student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter + 1, answer_wrong_counter);
+                    } else {
+                        isCorrectAnswer = false;
+
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                        student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter, answer_wrong_counter + 1);
+                    }
+                } else if (answer_type == Constants.CHECK_BOX_TYPE) {
+                    int count = answers_container.getChildCount();
+                    View v = null;
+                    List<Integer> uam = new ArrayList<>();
+                    List<Integer> ram = new ArrayList<>();
+
+                    for (int i = 0; i < count; i++) {
+                        v = answers_container.getChildAt(i);
+                        CheckBox cb = (CheckBox) v;
+                        if (cb.isChecked()) uam.add(i);
+                    }
+                    for (int i = 0; i < ra.size(); i++) ram.add(Integer.valueOf(ra.get(i)) - 1);
+
+                    abstractAnswer.saveCB(ram, uam);
+
+                    HashMap<String, String> stats = student.getStatistics();
+                    int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
+                    int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
+                    int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
+                    double seconds_stat = Double.parseDouble(stats.get(student.KEY_TESTS_TIME));
+
+                    if (abstractAnswer.isRight()) {
+                        isCorrectAnswer = true;
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+                        student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter + 1, answer_wrong_counter);
+                    } else {
+                        isCorrectAnswer = false;
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                        student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter, answer_wrong_counter + 1);
+                    }
                 }
+                startRun = false;
+                seconds = 0;
+                sendStatToServer(isCorrectAnswer);
+
+
+                if (parentView.getCurrentItem() == max_page - 1) {
+//                    AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+//                    b.setTitle("Завершить тест?");
+//                    b.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent i1 = new Intent(getActivity(),ResultsActivity.class);
+                            startActivity(i1);
+                            getActivity().finish();
+//                            dialogInterface.dismiss();
+//                        }
+//                    });
+//                    b.setCancelable(false);
+//                    AlertDialog d = b.create();
+//                    d.show();
+                } else {
+                    parentView.setCurrentItem(parentView.getCurrentItem() + 1);
+
+                }
+
+
+
             }
         });
 
+        return view;
+    }
+
+    private void sendStatToServer(boolean isCorrectAnswer) {
+        HashMap<String,String> user_data = student.getData();
+        int id = Integer.parseInt(user_data.get(student.KEY_ID));
+
+        AppController.getApi().sendStat(1,"setStats",id,collection.getId(page),seconds,isCorrectAnswer?1:0,1).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                new Success(response);
+                Toast.makeText(getActivity().getApplicationContext(), success()?"ok":"not ok", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void initStopwatch() {
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                int minutes = (seconds % 3600) / 60;
+                int secs = seconds % 60;
+
+                String time = String.format("%02d:%02d", minutes, secs);
+
+                stopwatch_txt.setText(time);
+
+                if (startRun) {
+                    seconds++;
+                }
+
+                handler.postDelayed(this, 100);
+            }
+        });
+
+    }
+
+    private void setupUI() {
 
 
         if (collection != null) {
@@ -160,108 +352,27 @@ public class TestsActivityFragment extends Fragment {
             }
         }
 
-        save_ans_btn.setOnClickListener(new View.OnClickListener() {
+    }
+
+    private void initHint() {
+        final boolean[] flag = {false};
+        show_hint_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                abstractAnswer = new AbstractAnswer(getActivity().getApplicationContext());
-                abstractAnswer.savePage(page);
-
-                Student student = new Student(getActivity().getApplicationContext());
-                HashMap<String, String> sdata = student.getStatistics();
-
-                List<String> ra = collection.getRightAnswers(page);
-
-                if (answer_type == Constants.RADIO_BUTTON_TYPE) {
-
-                    RadioButton radioButton = (RadioButton) rg_container.findViewById(rg_container.getCheckedRadioButtonId());
-                    int i = rg_container.indexOfChild(radioButton);
-                    Log.i("RADIO_BTN_INDEX", String.valueOf(i));
-                    Log.i("RA_INDEX", String.valueOf(ra.get(0)));
-
-                    int rai = Integer.valueOf(ra.get(0));
-                    int[] ram = new int[answers.size()];
-                    for (int j = 0; j < ram.length; j++) ram[j] = 0;
-                    for (int j = 0; j < ram.length; j++) {
-                        if (j == rai - 1) ram[j] = 1;
-                        if (j == i) ram[j] = -1;
-                    }
-                    abstractAnswer.saveRadioBtn(ram);
-
-                    Log.i("RADIO_BTN_ARRAY", Arrays.toString(ram));
-
-
-                    HashMap<String,String> stats = student.getStatistics();
-                    int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
-                    int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
-                    int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
-
-                    if (abstractAnswer.isRight()) {
-                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
-
-                        student.setStatistics(tests_counter + 1,0,answer_counter +1 ,answer_wrong_counter);
-                    } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
-                        student.setStatistics(tests_counter + 1,0,answer_counter,answer_wrong_counter + 1);
-                    }
-
-                } else if (answer_type == Constants.TEXT_TYPE) {
-
-                    abstractAnswer.saveET(ra.get(0), enter_answer_et.getText().toString());
-
-                    HashMap<String,String> stats = student.getStatistics();
-                    int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
-                    int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
-                    int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
-
-                    if (abstractAnswer.isRight()) {
-                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
-                        student.setStatistics(tests_counter + 1,0,answer_counter +1 ,answer_wrong_counter);
-                    } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
-                        student.setStatistics(tests_counter + 1,0,answer_counter,answer_wrong_counter + 1);
-                    }
-                } else if (answer_type == Constants.CHECK_BOX_TYPE) {
-                    int count = answers_container.getChildCount();
-                    View v = null;
-                    List<Integer> uam = new ArrayList<>();
-                    List<Integer> ram = new ArrayList<>();
-
-                    for (int i = 0; i < count; i++) {
-                        v = answers_container.getChildAt(i);
-                        CheckBox cb = (CheckBox) v;
-                        if (cb.isChecked()) uam.add(i);
-                    }
-                    for (int i = 0; i < ra.size(); i++) ram.add(Integer.valueOf(ra.get(i)) - 1);
-
-                    abstractAnswer.saveCB(ram, uam);
-
-                    HashMap<String,String> stats = student.getStatistics();
-                    int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
-                    int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
-                    int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
-
-                    if (abstractAnswer.isRight()) {
-                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
-                        student.setStatistics(tests_counter + 1,0,answer_counter +1 ,answer_wrong_counter);
-                    } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
-                        student.setStatistics(tests_counter + 1,0,answer_counter,answer_wrong_counter + 1);
-                    }
+                hint_txt.setText("Не доступно.");
+                if (!flag[0]) {
+                    hint_txt.setVisibility(View.VISIBLE);
+                    flag[0] = true;
+                } else {
+                    hint_txt.setVisibility(View.INVISIBLE);
                 }
-                if(parentView.getCurrentItem() == max_page-1){
-
-                }else
-                    parentView.setCurrentItem(parentView.getCurrentItem() + 1);
-
             }
         });
-
-        return view;
     }
 
 
     public interface OnDataPass {
-        public void onDataPass(AbstractAnswer data,int page);
+        public void onDataPass(AbstractAnswer data, int page);
     }
 
     OnDataPass dataPasser;
@@ -269,9 +380,9 @@ public class TestsActivityFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("abstract_answer",abstractAnswer);
-        outState.putString("a","a");
-        Log.d("TestsFragment","onSaveInstanceState " + page);
+        outState.putSerializable("abstract_answer", abstractAnswer);
+        outState.putString("a", "a");
+        Log.d("TestsFragment", "onSaveInstanceState " + page);
     }
 
 
@@ -281,23 +392,23 @@ public class TestsActivityFragment extends Fragment {
         dataPasser = (OnDataPass) context;
     }
 
-    public void passData(AbstractAnswer data,int page) {
-        dataPasser.onDataPass(data,page);
+    public void passData(AbstractAnswer data, int page) {
+        dataPasser.onDataPass(data, page);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("TestsFragment","onPause " + page);
+        Log.d("TestsFragment", "onPause " + page);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d("TestsFragment","onDestroyView " + page);
+        Log.d("TestsFragment", "onDestroyView " + page);
 
-        if(abstractAnswer!=null){
-            passData(abstractAnswer,page);
+        if (abstractAnswer != null) {
+            passData(abstractAnswer, page);
         }
     }
 
@@ -305,7 +416,7 @@ public class TestsActivityFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        Log.d("TestsFragment","onStart " + page);
+        Log.d("TestsFragment", "onStart " + page);
     }
 
     @Override
@@ -313,6 +424,6 @@ public class TestsActivityFragment extends Fragment {
         super.onResume();
 
 
-        Log.d("TestsFragment","onResume " + page);
+        Log.d("TestsFragment", "onResume " + page);
     }
 }

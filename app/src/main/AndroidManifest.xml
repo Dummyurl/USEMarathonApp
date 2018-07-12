@@ -114,6 +114,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.use.marathon.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.AllUsersActivity"
+            android:label="@string/title_activity_all_users"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

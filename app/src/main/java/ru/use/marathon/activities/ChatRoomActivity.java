@@ -12,9 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 
@@ -41,13 +44,18 @@ import ru.use.marathon.utils.NotificationUtils;
 
 public class ChatRoomActivity extends AppCompatActivity {
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.chat_messages_rv)
     RecyclerView chat_messages_rv;
     @BindView(R.id.chat_message_write_et)
     EditText write_msg;
     @BindView(R.id.chat_message_send_btn)
     Button send_btn;
+    @BindView(R.id.chat_messages_progress)
+    ProgressBar progressBar;
+    @BindView(R.id.chat_messages_status)
+    TextView status;
 
     String title;
     int chat_id;
@@ -58,7 +66,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
 
-    String user_id,user_name;
+    String user_id, user_name;
     int user_type;
 
     @Override
@@ -70,7 +78,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         title = getIntent().getStringExtra("title");
-        chat_id = getIntent().getIntExtra("chat_id",0);
+        chat_id = getIntent().getIntExtra("chat_id", 0);
 
         getSupportActionBar().setTitle(title);
 
@@ -80,36 +88,46 @@ public class ChatRoomActivity extends AppCompatActivity {
         student = new Student(this);
         teacher = new Teacher(this);
 
-        if(student.isLoggedIn() && !teacher.isLoggedIn()){
-            HashMap<String,String> user_data = student.getData();
+        if (student.isLoggedIn() && !teacher.isLoggedIn()) {
+            HashMap<String, String> user_data = student.getData();
             user_id = user_data.get(student.KEY_ID);
             user_name = user_data.get(student.KEY_NAME);
             user_type = 0;
-        }else if(!student.isLoggedIn() && teacher.isLoggedIn()) {
-            HashMap<String,String> user_data = teacher.getData();
+        } else if (!student.isLoggedIn() && teacher.isLoggedIn()) {
+            HashMap<String, String> user_data = teacher.getData();
             user_id = user_data.get(teacher.KEY_ID);
             user_name = user_data.get(teacher.KEY_NAME);
-            user_type  = 1;
+            user_type = 1;
         }
 
 
+        progressBar.setVisibility(View.VISIBLE);
+        status.setVisibility(View.VISIBLE);
+        status.setText("Загрузка сообщений..");
         fetchMessages();
 
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(Constants.PUSH_NOTIFICATION)){
+                if (intent.getAction().equals(Constants.PUSH_NOTIFICATION)) {
+                    if(messageArrayList.isEmpty()){
+                        adapter = new ChatMessagesAdapter(messageArrayList,user_id,user_type);
+                        chat_messages_rv.setAdapter(adapter);
+                    }
+
                     String name = intent.getStringExtra("name");
                     String chat_id = intent.getStringExtra("chat_id");
                     String message = intent.getStringExtra("message");
                     String timestamp = intent.getStringExtra("timestamp");
                     String uid = intent.getStringExtra("uid");
-                    int ut = intent.getIntExtra("ut",-1);
+                    int ut = intent.getIntExtra("ut", -1);
 
-                    messageArrayList.add(new Message(message,name,timestamp,uid,ut,chat_id));
+                    messageArrayList.add(new Message(message, name, timestamp, uid, ut, chat_id));
                     adapter.notifyDataSetChanged();
                     chat_messages_rv.scrollToPosition(adapter.getItemCount() - 1);
+                    status.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
         };
@@ -127,7 +145,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String message) {
-        AppController.getApi().sendMsg(1,"sendMsg",message,chat_id,user_id,user_type,user_name).enqueue(new Callback<JsonObject>() {
+        AppController.getApi().sendMsg(1, "sendMsg", message, chat_id, user_id, user_type, user_name).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
@@ -140,6 +158,25 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent();
+        setResult(100,i);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.home){
+            Intent i = new Intent();
+            setResult(100,i);
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+
+    }
 
     @Override
     public void onResume() {
@@ -156,7 +193,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     }
 
     private void fetchMessages() {
-        AppController.getApi().getMessages(1,"getMessages",String.valueOf(chat_id),user_id,user_type).enqueue(new Callback<JsonObject>() {
+        AppController.getApi().getMessages(1, "getMessages", String.valueOf(chat_id), user_id, user_type).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 MessagesResponse messagesResponse = new MessagesResponse(response);
@@ -172,9 +209,15 @@ public class ChatRoomActivity extends AppCompatActivity {
 
                     messageArrayList.add(message);
                 }
-                adapter = new ChatMessagesAdapter(messageArrayList,user_id,user_type);
-                chat_messages_rv.setAdapter(adapter);
-                chat_messages_rv.scrollToPosition(adapter.getItemCount() - 1);
+                if (messageArrayList.isEmpty()) {
+                    status.setText("Нет сообщений");
+                } else {
+                    adapter = new ChatMessagesAdapter(messageArrayList, user_id, user_type);
+                    chat_messages_rv.setAdapter(adapter);
+                    chat_messages_rv.scrollToPosition(adapter.getItemCount() - 1);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    status.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -182,8 +225,8 @@ public class ChatRoomActivity extends AppCompatActivity {
 
             }
         });
-    }
 
+    }
 
 
 }

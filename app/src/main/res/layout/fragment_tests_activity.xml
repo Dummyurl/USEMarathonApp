@@ -78,6 +78,13 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+
+            <TextView
+                android:id="@+id/stopwatch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
             <TextView
                 android:id="@+id/hint_txt"
                 android:layout_width="match_parent"
