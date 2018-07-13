@@ -9,6 +9,6 @@
     <string name="title_activity_feed_content">FeedContentActivity</string>
     <string name="title_activity_results">ResultsActivity</string>
     <string name="title_activity_chat_room">ChatRoomActivity</string>
-    <string name="title_activity_all_users">AllUsersActivity</string>
+    <string name="title_activity_all_users">Choose user to create chat</string>
 
 </resources>

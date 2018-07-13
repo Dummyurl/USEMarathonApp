@@ -21,19 +21,28 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:id="@+id/all_users_rv"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/create_chat_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="create chat"
-        app:layout_anchor="@+id/all_users_rv"
-        app:layout_anchorGravity="bottom|center" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/all_users_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/create_chat_btn" />
+
+        <Button
+            android:id="@+id/create_chat_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="create chat" />
+
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

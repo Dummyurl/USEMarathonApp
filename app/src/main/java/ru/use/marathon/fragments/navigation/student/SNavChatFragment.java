@@ -70,8 +70,6 @@ public class SNavChatFragment extends Fragment{
     RecyclerView recyclerView;
     @BindView(R.id.fab)
     FloatingActionButton fab;
-    @BindView(R.id.chat_constr)
-    ConstraintLayout layout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,8 +83,6 @@ public class SNavChatFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_student_chat,container,false);
         ButterKnife.bind(this,view);
 
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layout.setLayoutParams(layoutParams);
         student = new Student(getActivity().getApplicationContext());
 
         HashMap<String,String> stu_data = student.getData();

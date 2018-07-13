@@ -73,7 +73,7 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
         holder.image.setFillColor(getRandomMaterialColor("400"));
         holder.image_text.setText(rooms.getTitle().substring(0,1));
         holder.image_text.setAllCaps(true);
-        holder.image_text.setTextColor(getRandomMaterialColor("400"));
+        holder.image_text.setTextColor(Color.WHITE);
 
         holder.title.setText(rooms.getTitle());
 

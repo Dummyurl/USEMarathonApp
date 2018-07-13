@@ -152,6 +152,15 @@ public interface API {
 
 
     @GET("api.php")
+    Call<JsonObject> leaveChat(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("chat_id") String chat_id,
+            @Query("uid") String user_id,
+            @Query("utype") int user_type
+    );
+
+    @GET("api.php")
     Call<JsonObject> addChatMember(
             @Query("v") int v,
             @Query("method") String method,
@@ -159,6 +168,14 @@ public interface API {
             @Query("uid") String user_id,
             @Query("utype") int user_type
     );
+
+    @GET("api.php")
+    Call<JsonObject> getChatMembers(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("chat_id") String chat_id
+    );
+
 
     @GET("api.php")
     Call<JsonObject> sendStat(

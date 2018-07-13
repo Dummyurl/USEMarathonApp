@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -44,6 +46,7 @@ import ru.use.marathon.utils.NotificationUtils;
 
 public class ChatRoomActivity extends AppCompatActivity {
 
+    public static final String TAG = ChatRoomActivity.class.getSimpleName();
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.chat_messages_rv)
@@ -78,7 +81,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         title = getIntent().getStringExtra("title");
-        chat_id = getIntent().getIntExtra("chat_id", 0);
+        chat_id = getIntent().getIntExtra("chat_id", -1);
 
         getSupportActionBar().setTitle(title);
 
@@ -111,8 +114,12 @@ public class ChatRoomActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(Constants.PUSH_NOTIFICATION)) {
-                    if(messageArrayList.isEmpty()){
-                        adapter = new ChatMessagesAdapter(messageArrayList,user_id,user_type);
+
+                    Log.d(TAG, "messageArrayList before: " + messageArrayList.toString());
+                    Log.d(TAG, "messageArrayList SIZE before: " + messageArrayList.size());
+
+                    if (messageArrayList.isEmpty()) {
+                        adapter = new ChatMessagesAdapter(messageArrayList, user_id, user_type);
                         chat_messages_rv.setAdapter(adapter);
                     }
 
@@ -128,6 +135,9 @@ public class ChatRoomActivity extends AppCompatActivity {
                     chat_messages_rv.scrollToPosition(adapter.getItemCount() - 1);
                     status.setVisibility(View.INVISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
+
+                    Log.d(TAG, "messageArrayList after: " + messageArrayList.toString());
+                    Log.d(TAG, "messageArrayList SIZE after: " + messageArrayList.size());
                 }
             }
         };
@@ -162,20 +172,33 @@ public class ChatRoomActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent i = new Intent();
-        setResult(100,i);
+        setResult(100, i);
         finish();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.home){
+        if (item.getItemId() == R.id.home) {
             Intent i = new Intent();
-            setResult(100,i);
+            setResult(100, i);
             finish();
+        } else if(item.getItemId() == R.id.action_chat_info){
+            Intent i = new Intent(ChatRoomActivity.this,ChatDetailsActivity.class);
+            i.putExtra("title",title);
+            i.putExtra("chat_id",chat_id);
+
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chat_room, menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -196,6 +219,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         AppController.getApi().getMessages(1, "getMessages", String.valueOf(chat_id), user_id, user_type).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
                 MessagesResponse messagesResponse = new MessagesResponse(response);
                 for (int i = 0; i < messagesResponse.getData().size(); i++) {
                     Message message = new Message(
@@ -218,11 +242,16 @@ public class ChatRoomActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.INVISIBLE);
                     status.setVisibility(View.GONE);
                 }
+
+                Log.d(TAG, "messageArrayList: " + messageArrayList.toString());
+                Log.d(TAG, "messageArrayList SIZE: " + messageArrayList.size());
+
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                progressBar.setVisibility(View.INVISIBLE);
+                status.setText("Нет сообщений");
             }
         });
 

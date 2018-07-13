@@ -123,6 +123,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.use.marathon.activities.MainActivity" />
         </activity>
+        <activity android:name=".activities.ChatDetailsActivity"
+            android:theme="@style/AppTheme.NoBar"
+            android:label="Детали чата">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.ChatRoomActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,8 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import butterknife.BindInt;
 import butterknife.BindView;
@@ -41,6 +44,8 @@ import ru.use.marathon.utils.ItemClickSupport;
 
 public class AllUsersActivity extends AppCompatActivity {
 
+    public static final String TAG = AllUsersActivity.class.getSimpleName();
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.all_users_rv)
@@ -54,9 +59,10 @@ public class AllUsersActivity extends AppCompatActivity {
     private Teacher teacher;
     private Student student;
     String user_id = "";
-    int local_user_type;
+    int local_user_type,layout_type,chat_id;
 
     String pos = "", id = "";
+    Set<Integer> positions;
 
 
     @Override
@@ -69,6 +75,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
         teacher = new Teacher(this);
         student = new Student(this);
+        positions = new HashSet<>();
         HashMap<String,String> user_data;
         if(student.isLoggedIn() && !teacher.isLoggedIn()){
             user_data = student.getData();
@@ -81,6 +88,8 @@ public class AllUsersActivity extends AppCompatActivity {
         }
 
         user_type = getIntent().getIntExtra("type", -1);
+        layout_type = getIntent().getIntExtra("layout_type",-1);
+        chat_id = getIntent().getIntExtra("chat_id",-1);
         usersArrayList = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -92,16 +101,27 @@ public class AllUsersActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 pos = intent.getStringExtra("pos");
                 id = intent.getStringExtra("id");
+                Toast.makeText(AllUsersActivity.this, "pos and id: " + pos + "_"+ id, Toast.LENGTH_SHORT).show();
+                positions.add(Integer.valueOf(id));
+                Log.d(TAG, "onReceive(): positions array: " + positions.toString());
             }
         };
 
+        if(layout_type == -1 ){
+            create_chat_btn.setText("Создать чат");
+            getSupportActionBar().setTitle("Создание чата");
+        }else{
+            create_chat_btn.setText("Добавить в чат");
+            getSupportActionBar().setTitle("Добавление в чат");
+        }
         create_chat_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        initButton();
+                        if(layout_type == -1) initButton();
+                        else initAddMemberButton();
                     }
                 });
 
@@ -110,6 +130,50 @@ public class AllUsersActivity extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("selected_user"));
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        positions.clear();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        positions.clear();
+    }
+
+
+
+    private void initAddMemberButton() {
+        int[] p = new int[positions.size()];
+        int counter = 0;
+        for(Integer i : positions){
+            p[counter] = i;
+            counter++;
+        }
+        for (int i = 0; i < p.length; i++) {
+            if(chat_id != -1){
+                AppController.getApi().addChatMember(1,"addChatMember",String.valueOf(chat_id),String.valueOf(p[i]),0).enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        //todo notify user about response from server
+                        Toast.makeText(AllUsersActivity.this, "Пользователь добавлен!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        Toast.makeText(AllUsersActivity.this, "Что-то пошло не так, а именно:" + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }else{
+                create_chat_btn.setError("Error! Try again later");
+                Toast.makeText(this, "Error. Please try again later..", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void initButton() {

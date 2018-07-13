@@ -52,7 +52,7 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.UsersV
     }
 
     @Override
-    public void onBindViewHolder(UsersViewHolder holder, final int position) {
+    public void onBindViewHolder(final UsersViewHolder holder, final int position) {
         usersArrayList.get(position);
 
         if(!usersArrayList.get(position).getImage().isEmpty())
@@ -65,6 +65,24 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.UsersV
             holder.select.setVisibility(View.VISIBLE);
             holder.select_teacher.setVisibility(View.GONE);
             holder.select.setChecked(usersArrayList.get(position).isSelected());
+
+            holder.select.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(usersArrayList.get(position).isSelected()){
+                        holder.select.setChecked(false);
+                        usersArrayList.get(position).setSelected(false);
+                    }else{
+                        holder.select.setChecked(true);
+                        usersArrayList.get(position).setSelected(true);
+                        Intent i = new Intent("selected_user");
+                        i.putExtra("id",String.valueOf(usersArrayList.get(position).getId()));
+                        i.putExtra("pos",String.valueOf(position));
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(i);
+                    }
+                }
+            });
+
 
         }else{
             holder.select.setVisibility(View.GONE);
@@ -100,6 +118,8 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.UsersV
                 }
             });
         }
+
+
 
     }
 

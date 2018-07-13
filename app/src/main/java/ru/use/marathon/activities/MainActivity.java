@@ -37,20 +37,27 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> menu = new ArrayList<>();
 
+    String NAV_TAG = "a";
+    int user_type;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        NAV_TAG = getIntent().getStringExtra("bnv_tag");
+
+
         final Student student = new Student(this);
         final Teacher teacher = new Teacher(this);
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if(student.isLoggedIn() && !teacher.isLoggedIn()){
-
+            user_type = 0;
             ft.add(R.id.use_container,new SNavFeedFragment()).commit();
         }else if(!student.isLoggedIn() && teacher.isLoggedIn()) {
+            user_type = 1;
             ft.add(R.id.use_container,new TNavHomeFragment()).commit();
         }else{
             startActivity(new Intent(MainActivity.this,LoginActivity.class));
@@ -59,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationViewHelper.disableShiftMode(bnv);
 
 
+//
+//        if(NAV_TAG.equals("chat")){
+//            if(user_type == 0)
+//            ft.replace(R.id.use_container,new SNavChatFragment()).commit();
+//            //todo complete with teacher
+//        }
 
         bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

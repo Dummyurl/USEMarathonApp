@@ -82,6 +82,14 @@ public class Student {
         return jsonObject.get(KEY_WRONG_ANSWERS_COUNTER).getAsInt();
     }
 
+    public int UID(){
+        return sharedPreferences.getInt(KEY_ID,-1);
+    }
+    public String NAME(){
+        return sharedPreferences.getString(KEY_NAME,"");
+    }
+
+
     public void createSession(int id, String name,String email,String image,int teacher_id, int tests_counter, double tests_time,int answers_counter,int answers_wrong_counter) {
         editor.putInt(KEY_ID,id);
         editor.putString(KEY_NAME,name);
