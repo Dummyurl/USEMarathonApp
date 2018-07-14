@@ -1,4 +1,4 @@
-package ru.use.marathon.fragments.navigation.student;
+package ru.use.marathon.fragments.navigation;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,29 +6,23 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,27 +35,22 @@ import ru.use.marathon.R;
 import ru.use.marathon.activities.AllUsersActivity;
 import ru.use.marathon.activities.ChatRoomActivity;
 import ru.use.marathon.adapters.chat.ChatRoomsAdapter;
-import ru.use.marathon.models.Student;
-import ru.use.marathon.models.Success;
+import ru.use.marathon.fragments.AbstractFragment;
 import ru.use.marathon.models.chat.ChatRoom;
 import ru.use.marathon.models.chat.Rooms;
 import ru.use.marathon.utils.ItemClickSupport;
 import ru.use.marathon.utils.NotificationUtils;
 
-import static ru.use.marathon.models.Success.success;
-
 /**
  * Created by ilyas on 06-Jul-18.
  */
 
-public class SNavChatFragment extends Fragment{
+public class ChatFragment extends AbstractFragment{
 
-    public static final String TAG = SNavChatFragment.class.getSimpleName();
+    public static final String TAG = ChatFragment.class.getSimpleName();
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
-    Student student;
-    int user_id,utype = 0;
-    String user_name;
+    int user_id,utype;
 
     ArrayList<ChatRoom> roomArrayList;
     ChatRoomsAdapter adapter;
@@ -70,6 +59,8 @@ public class SNavChatFragment extends Fragment{
     RecyclerView recyclerView;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.rv_status)
+    TextView status;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,13 +71,11 @@ public class SNavChatFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_student_chat,container,false);
+        View view = inflater.inflate(R.layout.fragment_chat,container,false);
         ButterKnife.bind(this,view);
 
-        student = new Student(getActivity().getApplicationContext());
-
-        HashMap<String,String> stu_data = student.getData();
-        user_id = Integer.parseInt(stu_data.get(student.KEY_ID));
+        utype = userType();
+        user_id = id();
 
         updateToken(user_id);
 
@@ -122,7 +111,11 @@ public class SNavChatFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity().getApplicationContext(), AllUsersActivity.class);
-                i.putExtra("type",1);
+                if(utype == STUDENT){
+                    i.putExtra("type",1);
+                }else if(utype == TEACHER){
+                    i.putExtra("type",0);
+                }
                 startActivity(i);
             }
         });
@@ -131,6 +124,7 @@ public class SNavChatFragment extends Fragment{
     }
 
     private void initRecyclerView() {
+        status.setVisibility(View.INVISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(getActivity().getApplicationContext(), DividerItemDecoration.VERTICAL);
@@ -140,7 +134,10 @@ public class SNavChatFragment extends Fragment{
         recyclerView.setLayoutAnimation(animation);
         adapter = new ChatRoomsAdapter(getActivity().getApplicationContext(),roomArrayList);
         recyclerView.setAdapter(adapter);
+
+        showLoadDialog(getContext(),"Пожалуйста подожите","Грузим сообщения..");
         getChatRooms(user_id);
+        closeLoadDialog();
 
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
@@ -192,13 +189,19 @@ public class SNavChatFragment extends Fragment{
     }
 
     private void getChatRooms(int user_id) {
-        AppController.getApi().getChatRooms(1,"getChatRooms",user_id,0).enqueue(new Callback<JsonObject>() {
+        AppController.getApi().getChatRooms(1,"getChatRooms",user_id,utype).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Rooms rooms = new Rooms(response);
                 for (int i = 0; i < rooms.size(); i++) {
                     ChatRoom cr = new ChatRoom(rooms.getChatId(i),0,rooms.getTitle(i),rooms.getName(i),rooms.getTimestamp(i),"",rooms.getLastMessage(i));
                     roomArrayList.add(cr);
+                }
+                if(roomArrayList.size() > 0){
+                    status.setVisibility(View.GONE);
+                }else{
+                    status.setText("Нажмите на + чтобы создать первый чат!");
+                    status.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
             }

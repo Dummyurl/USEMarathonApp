@@ -41,32 +41,50 @@
         android:layout_marginRight="10dp"
         android:gravity="center" />
 
-    <TextView
-        android:id="@+id/statistics"
+    <RelativeLayout
+        android:id="@+id/teacher_relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:visibility="gone">
+
+    </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/student_relative"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/statistics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/piechart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/logout" />
+            android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_margin="10dp"
-            android:background="@drawable/button_default"
-            android:textColor="@android:color/background_light"
-            android:text="Выйти" />
     </RelativeLayout>
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+        <!---->
+        <!---->
+
+    <!--</LinearLayout>-->
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_default"
+        android:text="Выйти"
+        android:textColor="@android:color/background_light" />
 
 </LinearLayout>

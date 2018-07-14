@@ -1,11 +1,18 @@
 package ru.use.marathon.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,6 +53,7 @@ public class LoginStudentFragment extends Fragment {
     TextView sign_up;
 
 
+
     public LoginStudentFragment() {
     }
 
@@ -64,34 +72,7 @@ public class LoginStudentFragment extends Fragment {
         sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-                AppController.getApi().sign_in(1,"sign_in",0,email,password).enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        new Success(response);
-                        if(success()){
-                            Student student = new Student(getActivity().getApplicationContext(),response);
-                            Teacher teacher = new Teacher(getActivity().getApplicationContext());
-                            teacher.login(false);
-                            String name = student.getName();
-                            int ID = student.getID();
-                            student.createSession(ID,name,email,student.getImage(),student.getTeacher_id(),student.getTests_counter(),
-                                    student.getTest_time(),student.getAnswersCounter(),student.getAnswersWrongCounter());
-
-                            startActivity(new Intent(getActivity().getApplicationContext(), MainActivity.class));
-                            getActivity().finish();
-
-                        }else{
-                            Toast.makeText(getActivity().getApplicationContext(), "Wrong password!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Bad error..", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                login();
             }
         });
 
@@ -104,7 +85,117 @@ public class LoginStudentFragment extends Fragment {
             }
         });
 
+        emailEditText.addTextChangedListener(new MyTextWatcher(emailEditText));
+        passwordEditText.addTextChangedListener(new MyTextWatcher(passwordEditText));
         return view;
+    }
+
+
+    public void login(){
+
+
+        final String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+
+        if (!checkEmail() && !checkPassword()) {
+
+
+            AppController.getApi().sign_in(1, "sign_in", 0, email, password).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    new Success(response);
+                    if (success()) {
+                        Student student = new Student(getActivity().getApplicationContext(), response);
+                        Teacher teacher = new Teacher(getActivity().getApplicationContext());
+                        teacher.login(false);
+                        String name = student.getName();
+                        int ID = student.getID();
+                        student.createSession(ID, name, email, student.getImage(), student.getTeacher_id(), student.getTests_counter(),
+                                student.getTest_time(), student.getAnswersCounter(), student.getAnswersWrongCounter());
+
+                        startActivity(new Intent(getActivity().getApplicationContext(), MainActivity.class));
+                        getActivity().finish();
+
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Неверный пароль");
+                        builder.setMessage("Введен неверный пароль. Попробуйте еще раз..");
+                        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Bad error..", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+    }
+
+    public boolean checkEmail(){
+        String text = emailEditText.getText().toString().trim();
+        if (text.isEmpty() || !isValidEmail(text)) {
+            emailEditText.setError("Неверный email");
+            requestFocus(emailEditText);
+            return false;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean checkPassword(){
+        String password = passwordEditText.getText().toString().trim();
+        if(password.length() <= 5){
+            passwordEditText.setError("Пароль должен содержать минимум 5 символов");
+            requestFocus(passwordEditText);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+
+    private class MyTextWatcher implements TextWatcher {
+
+        private View view;
+        private MyTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+                case R.id.s_email_et:
+                    checkEmail();
+                    break;
+                case R.id.s_password_et:
+                    checkPassword();
+                    break;
+            }
+        }
+
     }
 
     @Override

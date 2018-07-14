@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +41,7 @@ import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Teacher;
 import ru.use.marathon.models.Users;
 import ru.use.marathon.models.UsersResponse;
+import ru.use.marathon.models.chat.ChatIdResponse;
 import ru.use.marathon.models.chat.Rooms;
 import ru.use.marathon.utils.ItemClickSupport;
 
@@ -120,8 +123,12 @@ public class AllUsersActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(layout_type == -1) initButton();
-                        else initAddMemberButton();
+                        if(!id.isEmpty() && !pos.isEmpty()){
+                            if(layout_type == -1) initButton();
+                            else initAddMemberButton();
+                        }else{
+                            Toast.makeText(AllUsersActivity.this, "Нельзя создать чат, не выбрав участника", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
@@ -182,6 +189,7 @@ public class AllUsersActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         final EditText input = new EditText(getApplicationContext());
+        input.setTextColor(Color.BLACK);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -197,13 +205,13 @@ public class AllUsersActivity extends AppCompatActivity {
                     AppController.getApi().createChat(1, "createChatRoom", title[0], user_id, local_user_type).enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                            Rooms rooms = new Rooms(response);
-                            final String chat_id = String.valueOf(rooms.getChatId());
+                            ChatIdResponse response1 = new ChatIdResponse(response);
+                            final String chat_id = response1.getChatId();
                             AppController.getApi().addChatMember(1, "addChatMember", chat_id, id, user_type).enqueue(new Callback<JsonObject>() {
                                 @Override
                                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                                    Intent i = new Intent(AllUsersActivity.this,ChatRoomActivity.class);
-                                   i.putExtra("chat_id",chat_id);
+                                   i.putExtra("chat_id",Integer.valueOf(chat_id));
                                    i.putExtra("title",title[0]);
                                    startActivity(i);
                                    finish();
@@ -229,6 +237,12 @@ public class AllUsersActivity extends AppCompatActivity {
         builder.create().show();
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.users_menu,menu);
+        return true;
+    }
 
     private void initUsersList() {
 

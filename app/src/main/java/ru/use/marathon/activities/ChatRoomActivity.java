@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +24,6 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -36,8 +33,6 @@ import ru.use.marathon.AppController;
 import ru.use.marathon.Constants;
 import ru.use.marathon.R;
 import ru.use.marathon.adapters.chat.ChatMessagesAdapter;
-import ru.use.marathon.fragments.navigation.student.SNavFeedFragment;
-import ru.use.marathon.fragments.navigation.teacher.TNavHomeFragment;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Teacher;
 import ru.use.marathon.models.chat.Message;
@@ -155,7 +150,19 @@ public class ChatRoomActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String message) {
-        AppController.getApi().sendMsg(1, "sendMsg", message, chat_id, user_id, user_type, user_name).enqueue(new Callback<JsonObject>() {
+//        AppController.getApi().sendMsg(1, "sendMsg", message, chat_id, user_id, user_type, user_name).enqueue(new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//
+//            }
+//        });
+
+        AppController.getApi().sendMsg(1,"sendMsg",message,chat_id,user_id,user_type,user_name).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
@@ -233,7 +240,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
                     messageArrayList.add(message);
                 }
-                if (messageArrayList.isEmpty()) {
+                if (messageArrayList.size() < 0) {
                     status.setText("Нет сообщений");
                 } else {
                     adapter = new ChatMessagesAdapter(messageArrayList, user_id, user_type);

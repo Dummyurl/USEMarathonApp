@@ -1,7 +1,6 @@
 package ru.use.marathon.activities;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,14 +15,14 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ru.use.marathon.Constants;
 import ru.use.marathon.R;
-import ru.use.marathon.fragments.navigation.student.SNavChatFragment;
-import ru.use.marathon.fragments.navigation.student.SNavFeedFragment;
-import ru.use.marathon.fragments.navigation.student.SNavProfileFragment;
+import ru.use.marathon.fragments.navigation.ChatFragment;
+import ru.use.marathon.fragments.navigation.FeedFragment;
+import ru.use.marathon.fragments.navigation.ProfileFragment;
 import ru.use.marathon.fragments.navigation.student.SNavTestsFragment;
-import ru.use.marathon.fragments.navigation.student.SNavTheoryFragment;
+import ru.use.marathon.fragments.navigation.TheoryFragment;
 import ru.use.marathon.fragments.navigation.teacher.TNavHomeFragment;
+import ru.use.marathon.fragments.navigation.teacher.TNavTestsFragment;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Teacher;
 import ru.use.marathon.utils.BottomNavigationViewHelper;
@@ -55,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
         if(student.isLoggedIn() && !teacher.isLoggedIn()){
             user_type = 0;
-            ft.add(R.id.use_container,new SNavFeedFragment()).commit();
+            ft.add(R.id.use_container,new FeedFragment()).commit();
         }else if(!student.isLoggedIn() && teacher.isLoggedIn()) {
             user_type = 1;
-            ft.add(R.id.use_container,new TNavHomeFragment()).commit();
+            ft.add(R.id.use_container,new FeedFragment()).commit();
         }else{
             startActivity(new Intent(MainActivity.this,LoginActivity.class));
             finish();
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //        if(NAV_TAG.equals("chat")){
 //            if(user_type == 0)
-//            ft.replace(R.id.use_container,new SNavChatFragment()).commit();
+//            ft.replace(R.id.use_container,new ChatFragment()).commit();
 //            //todo complete with teacher
 //        }
 
@@ -81,32 +80,38 @@ public class MainActivity extends AppCompatActivity {
                 if(student.isLoggedIn() && !teacher.isLoggedIn()){
                     switch (item.getItemId()) {
                         case R.id.action_feed:
-                            transaction.replace(R.id.use_container,new SNavFeedFragment()).commit();
+                            transaction.replace(R.id.use_container,new FeedFragment()).commit();
                             break;
                         case R.id.action_tests:
                             transaction.replace(R.id.use_container, new SNavTestsFragment()).commit();
                             break;
                         case R.id.action_theory:
-                            transaction.replace(R.id.use_container,new SNavTheoryFragment()).commit();
+                            transaction.replace(R.id.use_container,new TheoryFragment()).commit();
                             break;
                         case R.id.action_chat:
-                            transaction.replace(R.id.use_container,new SNavChatFragment()).commit();
+                            transaction.replace(R.id.use_container,new ChatFragment()).commit();
                             break;
                         case R.id.action_profile:
-                            transaction.replace(R.id.use_container, new SNavProfileFragment()).commit();
+                            transaction.replace(R.id.use_container, new ProfileFragment()).commit();
                             break;
 
                     }
                 }else if(!student.isLoggedIn() && teacher.isLoggedIn()) {
                     switch (item.getItemId()) {
+                        case R.id.action_profile:
+                            transaction.replace(R.id.use_container, new ProfileFragment()).commit();
+                            break;
                         case R.id.action_feed:
-                            transaction.replace(R.id.use_container, new TNavHomeFragment()).commit();
+                            transaction.replace(R.id.use_container, new FeedFragment()).commit();
                             break;
                         case R.id.action_tests:
-                            Toast.makeText(MainActivity.this, "not available", Toast.LENGTH_SHORT).show();
+                            transaction.replace(R.id.use_container, new TNavTestsFragment()).commit();
                             break;
                         case R.id.action_theory:
-                            Toast.makeText(MainActivity.this, "not available", Toast.LENGTH_SHORT).show();
+                            transaction.replace(R.id.use_container,new TheoryFragment()).commit();
+                            break;
+                        case R.id.action_chat:
+                            transaction.replace(R.id.use_container,new ChatFragment()).commit();
                             break;
                     }
                 }

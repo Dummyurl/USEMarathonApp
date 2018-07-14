@@ -7,7 +7,6 @@
     tools:context="ru.use.marathon.activities.RegisterActivity">
 
 
-
     <EditText
         android:id="@+id/name_et"
         android:layout_width="match_parent"
@@ -16,7 +15,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
-        android:hint="Name"
+        android:hint="Имя"
         android:inputType="textPersonName" />
 
     <EditText
@@ -39,7 +38,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
-        android:hint="Password"
+        android:hint="Пароль"
         android:inputType="textPassword" />
 
 

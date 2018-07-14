@@ -190,4 +190,43 @@ public interface API {
     );
 
 
+    //CREATE TASK
+
+
+    @GET("api.php")
+    Call<JsonObject> create_qu(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("subject") String subject,
+            @Query("topic_id") int topic_id,
+            @Query("task_num") int task_number,
+            @Query("ans_type") int answer_type
+    );
+
+
+    @GET("api.php")
+    Call<JsonObject> add_qu_content(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("qu_id") int qu_id,
+            @Query("text") String content
+    );
+
+
+
+    @GET("api.php")
+    Call<JsonObject> add_qu_ans(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("qu_id") int qu_id,
+            @Query("text") String content
+    );
+
+    @GET("api.php")
+    Call<JsonObject> add_qu_right_ans(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("qu_id") int qu_id,
+            @Query("ans_id") String content
+    );
 }

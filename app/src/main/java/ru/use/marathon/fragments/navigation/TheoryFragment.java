@@ -1,4 +1,4 @@
-package ru.use.marathon.fragments.navigation.student;
+package ru.use.marathon.fragments.navigation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,7 +31,7 @@ import ru.use.marathon.utils.ItemClickSupport;
  * Created by ilyas on 14-Jun-18.
  */
 
-public class SNavTheoryFragment extends Fragment {
+public class TheoryFragment extends Fragment {
 
     Unbinder unbinder;
     @BindView(R.id.theory_rv)

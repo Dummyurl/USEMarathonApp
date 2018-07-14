@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ru.use.marathon.activities.theorycontentActivity">
+
+    <item
+        android:id="@+id/saved"
+        android:checkable="true"
+        android:enabled="true"
+        android:icon="@drawable/ic_star"
+        android:orderInCategory="100"
+        android:title="Saved"
+        app:showAsAction="always" />
+</menu>

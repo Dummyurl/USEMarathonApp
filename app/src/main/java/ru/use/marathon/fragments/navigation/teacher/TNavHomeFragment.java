@@ -18,7 +18,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.use.marathon.R;
 import ru.use.marathon.activities.LoginActivity;
-import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Teacher;
 
 /**
@@ -51,7 +50,7 @@ public class TNavHomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_teacher_nav_home,container,false);
+        View view = inflater.inflate(R.layout.fragment_teacher_tests,container,false);
         ButterKnife.bind(this,view);
 
         final Teacher s = new Teacher(getActivity().getApplicationContext());

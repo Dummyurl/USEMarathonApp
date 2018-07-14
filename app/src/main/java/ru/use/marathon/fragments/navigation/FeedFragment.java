@@ -1,10 +1,8 @@
-package ru.use.marathon.fragments.navigation.student;
+package ru.use.marathon.fragments.navigation;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +25,7 @@ import ru.use.marathon.AppController;
 import ru.use.marathon.R;
 import ru.use.marathon.activities.FeedContentActivity;
 import ru.use.marathon.adapters.FeedAdapter;
+import ru.use.marathon.fragments.AbstractFragment;
 import ru.use.marathon.models.Feed;
 import ru.use.marathon.utils.ItemClickSupport;
 
@@ -34,7 +33,7 @@ import ru.use.marathon.utils.ItemClickSupport;
  * Created by ilyas on 02-Jul-18.
  */
 
-public class SNavFeedFragment extends Fragment {
+public class FeedFragment extends AbstractFragment {
 
 
 ////    @BindView(R.id.feed_pb)
@@ -45,13 +44,14 @@ public class SNavFeedFragment extends Fragment {
     @BindView(R.id.feed_container)
     RecyclerView recyclerView;
 
-//    ProgressBar feed_pb;
+    @BindView(R.id.feed_pb)
+    ProgressBar feed_pb;
 
     @BindView(R.id.feed_error_log)
     TextView feed_error;
     Feed feed;
 
-    public SNavFeedFragment() {
+    public FeedFragment() {
 
     }
 
@@ -63,10 +63,10 @@ public class SNavFeedFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_student_nav_feed, container, false);
+        View view = inflater.inflate(R.layout.fragment_feed, container, false);
         unbinder = ButterKnife.bind(this,view);
 
-//        feed_pb.setVisibility(View.VISIBLE);
+        feed_pb.setVisibility(View.VISIBLE);
 
 
         recyclerView.setHasFixedSize(true);
@@ -108,7 +108,7 @@ public class SNavFeedFragment extends Fragment {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 feed = new Feed(response);
                 recyclerView.setAdapter(new FeedAdapter(feed));
-
+                feed_pb.setVisibility(View.GONE);
             }
 
             @Override

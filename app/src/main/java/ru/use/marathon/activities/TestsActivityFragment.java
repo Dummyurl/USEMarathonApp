@@ -239,20 +239,20 @@ public class TestsActivityFragment extends Fragment {
 
 
                 if (parentView.getCurrentItem() == max_page - 1) {
-//                    AlertDialog.Builder b = new AlertDialog.Builder(getContext());
-//                    b.setTitle("Завершить тест?");
-//                    b.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
+                    AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+                    b.setTitle("Завершить тест?");
+                    b.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
                             Intent i1 = new Intent(getActivity(),ResultsActivity.class);
                             startActivity(i1);
                             getActivity().finish();
-//                            dialogInterface.dismiss();
-//                        }
-//                    });
-//                    b.setCancelable(false);
-//                    AlertDialog d = b.create();
-//                    d.show();
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    b.setCancelable(false);
+                    AlertDialog d = b.create();
+                    d.show();
                 } else {
                     parentView.setCurrentItem(parentView.getCurrentItem() + 1);
 
@@ -300,7 +300,7 @@ public class TestsActivityFragment extends Fragment {
                     seconds++;
                 }
 
-                handler.postDelayed(this, 100);
+                handler.postDelayed(this, 1000);
             }
         });
 

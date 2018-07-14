@@ -1,11 +1,17 @@
 package ru.use.marathon.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.preference.Preference;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -43,6 +49,10 @@ public class RegisterActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         final int post = getIntent().getIntExtra("post",-1);
 
+        emailEditText.addTextChangedListener(new MyTextWatcher(emailEditText));
+        nameEditText.addTextChangedListener(new MyTextWatcher(nameEditText));
+        passwordEditText.addTextChangedListener(new MyTextWatcher(passwordEditText));
+
         sign_up_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,7 +60,8 @@ public class RegisterActivity extends AppCompatActivity {
                 final String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
+                if(checkEmail() || !checkPassword() || !validateName()) {
+
                     AppController.getApi().sign_up(1, "sign_up", post, name, email, password).enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -67,7 +78,16 @@ public class RegisterActivity extends AppCompatActivity {
                                 Intent i = new Intent(RegisterActivity.this, MainActivity.class);
                                 startActivity(i);
                             } else {
-                                Toast.makeText(RegisterActivity.this, "Не получилось :(", Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder b = new AlertDialog.Builder(RegisterActivity.this);
+                                b.setTitle("Ошибка");
+                                b.setMessage("Произошла непредвиденная ошибка. Повторите действие позднее");
+                                b.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+
                             }
                         }
 
@@ -81,5 +101,74 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+    }
+    private boolean validateName() {
+        if (nameEditText.getText().toString().trim().isEmpty()) {
+            requestFocus(nameEditText);
+            return false;
+        }
+        return true;
+    }
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+    }
+    public boolean checkEmail(){
+        String text = emailEditText.getText().toString().trim();
+        if (text.isEmpty() || !isValidEmail(text)) {
+            emailEditText.setError("Неверный email");
+            requestFocus(emailEditText);
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public boolean checkPassword(){
+        String password = passwordEditText.getText().toString().trim();
+        if(password.length() <= 5){
+            passwordEditText.setError("Пароль должен содержать минимум 5 символов");
+            requestFocus(passwordEditText);
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    private static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private class MyTextWatcher implements TextWatcher {
+
+        private View view;
+        private MyTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+                case R.id.email_et:
+                    checkEmail();
+                    break;
+                case R.id.password_et:
+                    checkPassword();
+                    break;
+                case R.id.name_et:
+                    validateName();
+                    break;
+            }
+        }
+
     }
 }

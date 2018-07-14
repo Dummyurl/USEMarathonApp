@@ -11,7 +11,18 @@
         android:id="@+id/chat_rooms_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layoutAnimation="@anim/layout_animation_fall_down" />
+        android:layoutAnimation="@anim/layout_animation_fall_down"/>
+
+
+    <TextView
+        android:id="@+id/rv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:gravity="center_vertical"
+
+        android:text="TextView"
+        android:textColor="@android:color/background_dark" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
