@@ -78,6 +78,8 @@ public class AllUsersActivity extends AppCompatActivity {
 
 
         // тестируем контроль версий
+        // действительно классно
+
 
         teacher = new Teacher(this);
         student = new Student(this);
