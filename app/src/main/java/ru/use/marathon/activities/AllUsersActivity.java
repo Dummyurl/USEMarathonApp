@@ -76,6 +76,9 @@ public class AllUsersActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        // тестируем контроль версий
+
         teacher = new Teacher(this);
         student = new Student(this);
         positions = new HashSet<>();
