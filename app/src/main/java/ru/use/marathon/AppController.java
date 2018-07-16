@@ -2,6 +2,9 @@ package ru.use.marathon;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -27,6 +30,7 @@ public class AppController extends Application{
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        Fabric.with(this, new Crashlytics());
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

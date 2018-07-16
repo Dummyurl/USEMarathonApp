@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
@@ -90,6 +91,7 @@ public class ProfileFragment extends AbstractFragment {
             teacher_relative.setVisibility(View.VISIBLE);
 
         }
+
 
         if (logout != null) {
             logout.setOnClickListener(new View.OnClickListener() {
