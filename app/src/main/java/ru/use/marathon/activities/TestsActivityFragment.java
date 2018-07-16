@@ -233,9 +233,9 @@ public class TestsActivityFragment extends Fragment {
                         student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter, answer_wrong_counter + 1);
                     }
                 }
+                sendStatToServer(isCorrectAnswer);
                 startRun = false;
                 seconds = 0;
-                sendStatToServer(isCorrectAnswer);
 
 
                 if (parentView.getCurrentItem() == max_page - 1) {
@@ -269,8 +269,8 @@ public class TestsActivityFragment extends Fragment {
     private void sendStatToServer(boolean isCorrectAnswer) {
         HashMap<String,String> user_data = student.getData();
         int id = Integer.parseInt(user_data.get(student.KEY_ID));
-
-        AppController.getApi().sendStat(1,"setStats",id,collection.getId(page),seconds,isCorrectAnswer?1:0,1).enqueue(new Callback<JsonObject>() {
+        int c = isCorrectAnswer? 1 : 0;
+        AppController.getApi().sendStat(1,"setStats",id,collection.getId(page),seconds,c,0).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 new Success(response);

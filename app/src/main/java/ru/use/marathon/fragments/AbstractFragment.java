@@ -61,7 +61,7 @@ public class AbstractFragment extends Fragment {
         }
     }
 
-    public int id() {
+    public int user_id() {
         int ut = userType();
         if (ut == STUDENT) {
             return Integer.valueOf(user_data.get(student.KEY_ID));

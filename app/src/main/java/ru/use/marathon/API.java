@@ -89,7 +89,7 @@ public interface API {
     Call<JsonObject> getFeedTextById(
             @Query("v") int v,
             @Query("method") String method,
-            @Query("id") int id
+            @Query("user_id") int id
     );
 
 
@@ -228,5 +228,32 @@ public interface API {
             @Query("method") String method,
             @Query("qu_id") int qu_id,
             @Query("ans_id") String content
+    );
+
+
+    //TEACHER PROFILE
+
+    @GET("api.php")
+    Call<JsonObject> getTeachersStudents(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("teacher_id") int teacher_id
+    );
+
+
+    @GET("api.php")
+    Call<JsonObject> getUserInfo(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("user_id") String user_id,
+            @Query("utype") int user_type
+    );
+
+
+    @GET("api.php")
+    Call<JsonObject> getStats(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("user_id") String user_id
     );
 }

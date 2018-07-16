@@ -2,8 +2,6 @@ package ru.use.marathon.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -39,14 +37,11 @@ public class ResultsActivity extends AppCompatActivity {
         String all_tests = stu.get(student.KEY_TESTS_COUNTER);
         String right = stu.get(student.KEY_ANSWERS_COUNTER);
         String wrong = stu.get(student.KEY_WRONG_ANSWERS_COUNTER);
-        int time = Integer.valueOf(stu.get(student.KEY_TESTS_TIME));
-
-        int minutes = (time % 3600) / 60;
-        int secs = time % 60;
-        String t =  String.format("%02d:%02d", minutes, secs);
+        Float time = Float.valueOf(stu.get(student.KEY_TESTS_TIME)); //todo examine error
 
 
-        score.setText(right + " правильных из " + all_tests + "\n\n" + "Время, затраченное на тест: " + t);
+
+        score.setText(right + " правильных из " + all_tests);
 
         student.deleteStat();
 

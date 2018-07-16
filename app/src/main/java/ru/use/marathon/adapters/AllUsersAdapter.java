@@ -112,7 +112,7 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.UsersV
                     }
                     usersArrayList.get(position).setSelected(radioButton.isSelected());
                         Intent i = new Intent("selected_user");
-                    i.putExtra("id",String.valueOf(usersArrayList.get(position).getId()));
+                    i.putExtra("user_id",String.valueOf(usersArrayList.get(position).getId()));
                     i.putExtra("pos",String.valueOf(position));
                     LocalBroadcastManager.getInstance(context).sendBroadcast(i);
                 }

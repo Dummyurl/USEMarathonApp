@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //        if(NAV_TAG.equals("chat")){
 //            if(user_type == 0)
-//            ft.replace(R.id.use_container,new ChatFragment()).commit();
+//            ft.replace(R.user_id.use_container,new ChatFragment()).commit();
 //            //todo complete with teacher
 //        }
 

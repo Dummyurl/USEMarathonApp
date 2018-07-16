@@ -75,7 +75,7 @@ public class ChatFragment extends AbstractFragment{
         ButterKnife.bind(this,view);
 
         utype = userType();
-        user_id = id();
+        user_id = user_id();
 
         updateToken(user_id);
 

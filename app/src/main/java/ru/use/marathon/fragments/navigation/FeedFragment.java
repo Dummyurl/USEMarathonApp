@@ -36,8 +36,8 @@ import ru.use.marathon.utils.ItemClickSupport;
 public class FeedFragment extends AbstractFragment {
 
 
-////    @BindView(R.id.feed_pb)
-//    @BindView(R.id.refresh_rv)
+////    @BindView(R.user_id.feed_pb)
+//    @BindView(R.user_id.refresh_rv)
 //    SwipeRefreshLayout  refreshLayout;
 
     Unbinder unbinder;

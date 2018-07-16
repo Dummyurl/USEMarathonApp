@@ -1,8 +1,12 @@
 package ru.use.marathon.fragments.navigation;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +14,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,8 +23,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ru.use.marathon.AppController;
 import ru.use.marathon.R;
+import ru.use.marathon.activities.UserProfileActivity;
+import ru.use.marathon.adapters.StatisticsAdapter;
+import ru.use.marathon.adapters.TeachersStudentsAdapter;
 import ru.use.marathon.fragments.AbstractFragment;
+import ru.use.marathon.models.StatisticsResponse;
+import ru.use.marathon.models.UsersResponse;
+import ru.use.marathon.utils.ItemClickSupport;
 
 /**
  * Created by ilyas on 10-Jun-18.
@@ -36,24 +44,25 @@ public class ProfileFragment extends AbstractFragment {
 
     Unbinder unbinder;
 
-    @BindView(R.id.user_image)
-    CircleImageView user_image;
-    @BindView(R.id.user_id)
-    TextView user_id_tv;
-    @BindView(R.id.user_email)
-    TextView user_email_tv;
-    @BindView(R.id.user_name)
-    TextView user_name_tv;
-    @Nullable
-    @BindView(R.id.logout)
-    Button logout;
-    @BindView(R.id.statistics) TextView stats;
-    @BindView(R.id.piechart)
-    PieChart pieChart;
+    @BindView(R.id.user_image) CircleImageView user_image;
+    @BindView(R.id.user_id) TextView user_id_tv;
+    @BindView(R.id.user_email) TextView user_email_tv;
+    @BindView(R.id.user_name) TextView user_name_tv;
+    @Nullable @BindView(R.id.logout) Button logout;
+
+    //STUDENT
     @BindView(R.id.student_relative)
     RelativeLayout student_layout;
+    @BindView(R.id.stats_rv) RecyclerView stats_rv;
+
+
+    //TEACHER
     @BindView(R.id.teacher_relative)
     RelativeLayout teacher_relative;
+    @BindView(R.id.my_students_rv)
+    RecyclerView my_students_rv;
+
+    UsersResponse users;
 
     public ProfileFragment() {
     }
@@ -71,8 +80,7 @@ public class ProfileFragment extends AbstractFragment {
         unbinder = ButterKnife.bind(this, view);
 
 
-
-        user_id_tv.setText(String.valueOf(id()));
+        user_id_tv.setText(String.valueOf(user_id()));
         user_email_tv.setText(String.valueOf(email()));
         user_name_tv.setText(String.valueOf(name()));
 
@@ -89,7 +97,7 @@ public class ProfileFragment extends AbstractFragment {
             initStudentStats();
         }else if(userType() == TEACHER){
             teacher_relative.setVisibility(View.VISIBLE);
-
+            initTeacherStudents();
         }
 
 
@@ -104,28 +112,64 @@ public class ProfileFragment extends AbstractFragment {
         return view;
     }
 
+    private void initTeacherStudents() {
+
+        final ArrayList<String> ids  = new ArrayList<>();
+
+        my_students_rv.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        AppController.getApi().getTeachersStudents(1,"getTeachersStudents", user_id()).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                users = new UsersResponse(response);
+                for (int i = 0; i < users.size(); i++) {
+                    ids.add(users.getId(i));
+                }
+                TeachersStudentsAdapter adapter = new TeachersStudentsAdapter(users,getActivity().getApplicationContext());
+                my_students_rv.setAdapter(adapter);
+
+                ItemClickSupport.addTo(my_students_rv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        String id = ids.get(position);
+                        Intent i = new Intent(getActivity(), UserProfileActivity.class);
+                        i.putExtra("user_id",id);
+                        i.putExtra("utype",0);
+                        startActivity(i);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                showInfoDialog("Ошибка!","Сообщение: " + t.getMessage());
+            }
+        });
+
+
+    }
+
     private void initStudentStats() {
-        int right = Integer.valueOf(user_data.get(student.KEY_WRONG_ANSWERS_COUNTER));
-        ArrayList<PieEntry> entries = new ArrayList<>();
 
-        entries.add(new PieEntry(Integer.valueOf(user_data.get(student.KEY_ANSWERS_COUNTER)),"Right answers"));
-        entries.add(new PieEntry(Integer.valueOf(user_data.get(student.KEY_WRONG_ANSWERS_COUNTER)),"Wrong answers"));
+        stats_rv.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(),3));
 
-        PieDataSet pieDataSet = new PieDataSet(entries,"");
-        PieData data1 = new PieData();
-        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-        data1.setDataSet(pieDataSet);
-        Description d = new Description();
-        d.setText("");
+        AppController.getApi().getStats(1,"getStats",String.valueOf(user_id())).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                StatisticsResponse response1 = new StatisticsResponse(response);
+                Double[] stats = new Double[3];
+                stats[0] = response1.totalTests();
+                stats[1] = response1.averageTime();
+                stats[2] = response1.wrongPercent();
+                String[] names = new String[]{"Всего заданий решено","Среднее время решения","Процент ошибок"};
+                StatisticsAdapter adapter = new StatisticsAdapter(stats,names);
+                stats_rv.setAdapter(adapter);
+            }
 
-        if(userType() == STUDENT){
-            stats.setText("Статистика: " + "\n");
-            pieChart.setDescription(d);
-            pieChart.setData(data1);
-        }else{
-            stats.setVisibility(View.GONE);
-            pieChart.setVisibility(View.GONE);
-        }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                showInfoDialog("Ошибка!","Сообщение: " + t.getMessage());
+            }
+        });
     }
 
 

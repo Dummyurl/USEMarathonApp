@@ -12,7 +12,9 @@
 
     <uses-permission android:name="ru.use.marathon.permission.C2D_MESSAGE" />
 
-    <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+    <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="false" />
 
     <application
         android:name=".AppController"
@@ -133,7 +135,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.use.marathon.activities.ChatRoomActivity" />
         </activity>
-        <activity android:name=".activities.CreateTaskActivity" android:label="Создать задание"></activity>
+        <activity
+            android:name=".activities.CreateTaskActivity"
+            android:label="Создать задание" />
+        <activity android:name=".activities.UserProfileActivity" android:label="Профиль">
+
+        </activity>
     </application>
 
 </manifest>

@@ -77,10 +77,6 @@ public class AllUsersActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        // тестируем контроль версий
-        // действительно классно
-
-
         teacher = new Teacher(this);
         student = new Student(this);
         positions = new HashSet<>();
@@ -109,7 +105,7 @@ public class AllUsersActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 pos = intent.getStringExtra("pos");
                 id = intent.getStringExtra("id");
-                Toast.makeText(AllUsersActivity.this, "pos and id: " + pos + "_"+ id, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AllUsersActivity.this, "pos and user_id: " + pos + "_"+ id, Toast.LENGTH_SHORT).show();
                 positions.add(Integer.valueOf(id));
                 Log.d(TAG, "onReceive(): positions array: " + positions.toString());
             }
