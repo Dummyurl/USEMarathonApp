@@ -22,7 +22,10 @@ public class Success {
     public static boolean success(){
         if(jsonObject.has("success")){
             success = jsonObject.get("success").getAsInt();
+        }else{
+            return true;
         }
+
         return success == 1;
     }
 }

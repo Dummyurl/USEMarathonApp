@@ -89,7 +89,7 @@ public interface API {
     Call<JsonObject> getFeedTextById(
             @Query("v") int v,
             @Query("method") String method,
-            @Query("user_id") int id
+            @Query("id") int id
     );
 
 

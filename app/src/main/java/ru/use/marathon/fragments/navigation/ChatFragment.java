@@ -36,10 +36,13 @@ import ru.use.marathon.activities.AllUsersActivity;
 import ru.use.marathon.activities.ChatRoomActivity;
 import ru.use.marathon.adapters.chat.ChatRoomsAdapter;
 import ru.use.marathon.fragments.AbstractFragment;
+import ru.use.marathon.models.Success;
 import ru.use.marathon.models.chat.ChatRoom;
 import ru.use.marathon.models.chat.Rooms;
 import ru.use.marathon.utils.ItemClickSupport;
 import ru.use.marathon.utils.NotificationUtils;
+
+import static ru.use.marathon.models.Success.success;
 
 /**
  * Created by ilyas on 06-Jul-18.
@@ -137,7 +140,7 @@ public class ChatFragment extends AbstractFragment{
 
         showLoadDialog(getContext(),"Пожалуйста подожите","Грузим сообщения..");
         getChatRooms(user_id);
-        closeLoadDialog();
+
 
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
@@ -192,18 +195,26 @@ public class ChatFragment extends AbstractFragment{
         AppController.getApi().getChatRooms(1,"getChatRooms",user_id,utype).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Rooms rooms = new Rooms(response);
-                for (int i = 0; i < rooms.size(); i++) {
-                    ChatRoom cr = new ChatRoom(rooms.getChatId(i),0,rooms.getTitle(i),rooms.getName(i),rooms.getTimestamp(i),"",rooms.getLastMessage(i));
-                    roomArrayList.add(cr);
-                }
-                if(roomArrayList.size() > 0){
-                    status.setVisibility(View.GONE);
-                }else{
+                new Success(response);
+                if(!success()){
+                    closeLoadDialog();
                     status.setText("Нажмите на + чтобы создать первый чат!");
                     status.setVisibility(View.VISIBLE);
+                }else {
+                    Rooms rooms = new Rooms(response);
+                    for (int i = 0; i < rooms.size(); i++) {
+                        ChatRoom cr = new ChatRoom(rooms.getChatId(i), 0, rooms.getTitle(i), rooms.getName(i), rooms.getTimestamp(i), "", rooms.getLastMessage(i));
+                        roomArrayList.add(cr);
+                    }
+                    if (roomArrayList.size() > 0) {
+                        status.setVisibility(View.GONE);
+                    } else {
+                        status.setText("Нажмите на + чтобы создать первый чат!");
+                        status.setVisibility(View.VISIBLE);
+                    }
+                    adapter.notifyDataSetChanged();
+                    closeLoadDialog();
                 }
-                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -212,6 +223,7 @@ public class ChatFragment extends AbstractFragment{
             }
         });
     }
+
 
     private void updateToken(int user_id) {
         AppController.getApi().updateRegToken(1,"updateToken",FirebaseInstanceId.getInstance().getToken(),user_id,utype).enqueue(new Callback<JsonObject>() {

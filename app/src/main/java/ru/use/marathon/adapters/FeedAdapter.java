@@ -10,6 +10,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.use.marathon.R;
@@ -23,6 +28,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
     public static final String TAG = FeedAdapter.class.getSimpleName();
     Feed feed;
+
+    private  static String today;
 
     class FeedViewHolder extends RecyclerView.ViewHolder{
 
@@ -40,6 +47,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
     public FeedAdapter(Feed feed) {
         this.feed = feed;
+        Calendar calendar = Calendar.getInstance();
+
+        today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     @Override
@@ -61,8 +71,32 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         holder.text.setText(feed.getContent(i));
 
         holder.title.setText(feed.getTitle(i));
-        holder.created_at.setText(feed.getCreatedAt(i));
+        holder.created_at.setText(getTimeStamp(feed.getCreatedAt(i)));
     }
+
+
+
+
+    private static String getTimeStamp(String dateStr) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timestamp = "";
+
+        today = today.length() < 2 ? "0" + today : today;
+
+        try {
+            Date date = format.parse(dateStr);
+            SimpleDateFormat todayFormat = new SimpleDateFormat("dd");
+            String dateToday = todayFormat.format(date);
+            format = dateToday.equals(today) ? new SimpleDateFormat("hh:mm a") : new SimpleDateFormat("dd LLL, hh:mm a");
+            String date1 = format.format(date);
+            timestamp = date1.toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return timestamp;
+    }
+
 
     @Override
     public int getItemCount() {
