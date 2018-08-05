@@ -26,7 +26,7 @@ import ru.use.marathon.models.Collection;
 import ru.use.marathon.models.Collections;
 
 
-public class TheoryContentActivity extends AppCompatActivity {
+public class TheoryContentActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.web_theory_container)

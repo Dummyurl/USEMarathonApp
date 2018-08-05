@@ -19,7 +19,7 @@ import ru.use.marathon.R;
 import ru.use.marathon.fragments.LoginStudentFragment;
 import ru.use.marathon.fragments.LoginTeacherFragment;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.tabs)

@@ -36,14 +36,16 @@ public interface API {
     @GET("api.php")
     Call<JsonObject> get_collections(
             @Query("v") int v,
-            @Query("method") String method
+            @Query("method") String method,
+            @Query("sbj") int sbj
     );
 
 
     @GET("api.php")
     Call<JsonObject> get_topics(
             @Query("v") int v,
-            @Query("method") String method
+            @Query("method") String method,
+            @Query("sbj") int sbj
     );
 
 
@@ -51,6 +53,7 @@ public interface API {
     Call<JsonObject> get_solved_tests_by_topic(
             @Query("v") int v,
             @Query("method") String method,
+            @Query("sbj") int sbj,
             @Query("user_id") int userid
     );
 
@@ -73,7 +76,8 @@ public interface API {
     @GET("api.php")
     Call<JsonObject> get_theory_topics(
             @Query("v") int v,
-            @Query("method") String method
+            @Query("method") String method,
+            @Query("sbj") int sbj
     );
 
 
@@ -181,6 +185,7 @@ public interface API {
     Call<JsonObject> sendStat(
             @Query("v") int v,
             @Query("method") String method,
+            @Query("sbj") int sbj,
             @Query("uid") int uid,
             @Query("qu_id") int qu_id,
             @Query("time") int time,
@@ -254,6 +259,7 @@ public interface API {
     Call<JsonObject> getStats(
             @Query("v") int v,
             @Query("method") String method,
+            @Query("sbj") int sbj,
             @Query("user_id") String user_id
     );
 }

@@ -45,7 +45,7 @@ import ru.use.marathon.models.chat.ChatIdResponse;
 import ru.use.marathon.models.chat.Rooms;
 import ru.use.marathon.utils.ItemClickSupport;
 
-public class AllUsersActivity extends AppCompatActivity {
+public class AllUsersActivity extends AbstractActivity {
 
     public static final String TAG = AllUsersActivity.class.getSimpleName();
 
@@ -59,8 +59,6 @@ public class AllUsersActivity extends AppCompatActivity {
     @BindView(R.id.create_chat_btn)
     Button create_chat_btn;
     private BroadcastReceiver mMessageReceiver;
-    private Teacher teacher;
-    private Student student;
     String user_id = "";
     int local_user_type,layout_type,chat_id;
 
@@ -76,11 +74,7 @@ public class AllUsersActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        teacher = new Teacher(this);
-        student = new Student(this);
         positions = new HashSet<>();
-        HashMap<String,String> user_data;
         if(student.isLoggedIn() && !teacher.isLoggedIn()){
             user_data = student.getData();
             user_id = user_data.get(student.KEY_ID);

@@ -43,7 +43,7 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.St
         if(error > 0){
             DecimalFormat numberFormat = new DecimalFormat("#.00");
 
-            holder.num.setText(String.valueOf(numberFormat.format(items[position])));
+            holder.num.setText(String.valueOf(numberFormat.format(items[position])) + "\ncек.");
         }else{
             holder.num.setText(String.valueOf(v));
         }

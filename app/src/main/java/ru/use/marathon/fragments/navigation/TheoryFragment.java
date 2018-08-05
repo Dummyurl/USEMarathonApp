@@ -24,6 +24,7 @@ import ru.use.marathon.AppController;
 import ru.use.marathon.R;
 import ru.use.marathon.activities.TheoryContentActivity;
 import ru.use.marathon.adapters.TheoryTopicsAdapter;
+import ru.use.marathon.fragments.AbstractFragment;
 import ru.use.marathon.models.TheoryTopics;
 import ru.use.marathon.utils.ItemClickSupport;
 
@@ -31,7 +32,7 @@ import ru.use.marathon.utils.ItemClickSupport;
  * Created by ilyas on 14-Jun-18.
  */
 
-public class TheoryFragment extends Fragment {
+public class TheoryFragment extends AbstractFragment {
 
     Unbinder unbinder;
     @BindView(R.id.theory_rv)
@@ -48,7 +49,7 @@ public class TheoryFragment extends Fragment {
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity().getApplicationContext(), resId);
         theory_rv.setLayoutAnimation(animation);
-        AppController.getApi().get_theory_topics(1,"get_theory_topics").enqueue(new Callback<JsonObject>() {
+        AppController.getApi().get_theory_topics(1,"get_theory_topics",subject()).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 topics = new TheoryTopics(response);
@@ -57,7 +58,7 @@ public class TheoryFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                showInfoDialog("Ошибка!",t.getMessage());
             }
         });
 

@@ -112,6 +112,14 @@ public class Student {
         editor.commit();
     }
 
+    public void setSubject(int subject){
+        editor.putInt("subject",subject);editor.commit();
+    }
+
+    public int getSubject(){
+        return sharedPreferences.getInt("subject",-1);
+    }
+
     public HashMap<String,String> getStatistics(){
         HashMap<String,String> data = new HashMap<>();
         data.put(KEY_TESTS_COUNTER, String.valueOf(sharedPreferences.getInt(KEY_TESTS_COUNTER,0)));

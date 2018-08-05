@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,12 +22,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
+import ru.use.marathon.fragments.TestUnitFragment;
 import ru.use.marathon.models.Collection;
 import ru.use.marathon.models.Collections;
 import ru.use.marathon.models.answers.AbstractAnswer;
 import ru.use.marathon.models.answers.StudentAnswers;
 
-public class TestsActivity extends AppCompatActivity implements TestsActivityFragment.OnDataPass {
+public class TestsActivity extends AbstractActivity implements TestUnitFragment.OnDataPass {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.tests_viewpager_container)
@@ -140,7 +140,7 @@ public class TestsActivity extends AppCompatActivity implements TestsActivityFra
 
         @Override
         public Fragment getItem(int position) {
-            return TestsActivityFragment.newInstance(position, tests_amount,cn);
+            return TestUnitFragment.newInstance(position, tests_amount,cn);
         }
 
         @Override

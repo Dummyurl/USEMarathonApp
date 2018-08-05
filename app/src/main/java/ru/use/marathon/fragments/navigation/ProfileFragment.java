@@ -12,9 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
@@ -46,16 +49,25 @@ public class ProfileFragment extends AbstractFragment {
 
     Unbinder unbinder;
 
-    @BindView(R.id.user_image) CircleImageView user_image;
-    @BindView(R.id.user_id) TextView user_id_tv;
-    @BindView(R.id.user_email) TextView user_email_tv;
-    @BindView(R.id.user_name) TextView user_name_tv;
-    @Nullable @BindView(R.id.logout) Button logout;
+    @BindView(R.id.user_image)
+    CircleImageView user_image;
+    @BindView(R.id.user_id)
+    TextView user_id_tv;
+    @BindView(R.id.user_email)
+    TextView user_email_tv;
+    @BindView(R.id.user_name)
+    TextView user_name_tv;
+    @Nullable
+    @BindView(R.id.logout)
+    Button logout;
 
     //STUDENT
     @BindView(R.id.student_relative)
     RelativeLayout student_layout;
-    @BindView(R.id.stats_rv) RecyclerView stats_rv;
+    @BindView(R.id.stats_rv)
+    RecyclerView stats_rv;
+    @BindView(R.id.subjects_spinner)
+    Spinner subject_spinner;
 
 
     //TEACHER
@@ -94,10 +106,17 @@ public class ProfileFragment extends AbstractFragment {
         user_email_tv.setTypeface(font);
         user_name_tv.setTypeface(font);
 
-        if(userType() == STUDENT) {
+        student_layout.setVisibility(View.GONE);
+        teacher_relative.setVisibility(View.GONE);
+
+        if (userType() == STUDENT) {
             student_layout.setVisibility(View.VISIBLE);
-            initStudentStats();
-        }else if(userType() == TEACHER){
+            if (subject() != -1) {
+                subject_spinner.setSelection(subject() - 1);
+            }
+            student_initSubjects();
+            student_initStudentStats();
+        } else if (userType() == TEACHER) {
             teacher_relative.setVisibility(View.VISIBLE);
             initTeacherStudents();
         }
@@ -107,26 +126,42 @@ public class ProfileFragment extends AbstractFragment {
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   logout();
+                    logout();
                 }
             });
         }
         return view;
     }
 
+    private void student_initSubjects() {
+        subject_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int index = i + 1;
+                setSubject(index);
+                student_initStudentStats();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
     private void initTeacherStudents() {
 
-        final ArrayList<String> ids  = new ArrayList<>();
+        final ArrayList<String> ids = new ArrayList<>();
 
         my_students_rv.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        AppController.getApi().getTeachersStudents(1,"getTeachersStudents", user_id()).enqueue(new Callback<JsonObject>() {
+        AppController.getApi().getTeachersStudents(1, "getTeachersStudents", user_id()).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 users = new UsersResponse(response);
                 for (int i = 0; i < users.size(); i++) {
                     ids.add(users.getId(i));
                 }
-                TeachersStudentsAdapter adapter = new TeachersStudentsAdapter(users,getActivity().getApplicationContext());
+                TeachersStudentsAdapter adapter = new TeachersStudentsAdapter(users, getActivity().getApplicationContext());
                 my_students_rv.setAdapter(adapter);
 
                 ItemClickSupport.addTo(my_students_rv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -134,8 +169,8 @@ public class ProfileFragment extends AbstractFragment {
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         String id = ids.get(position);
                         Intent i = new Intent(getActivity(), UserProfileActivity.class);
-                        i.putExtra("user_id",id);
-                        i.putExtra("utype",0);
+                        i.putExtra("user_id", id);
+                        i.putExtra("utype", 0);
                         startActivity(i);
                     }
                 });
@@ -143,36 +178,38 @@ public class ProfileFragment extends AbstractFragment {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                showInfoDialog("Ошибка!","Сообщение: " + t.getMessage());
+                showInfoDialog("Ошибка!", "Сообщение: " + t.getMessage());
             }
         });
 
 
     }
 
-    private void initStudentStats() {
+    private void student_initStudentStats() {
 
-        stats_rv.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(),3));
+        stats_rv.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 3));
 
-        AppController.getApi().getStats(1,"getStats",String.valueOf(user_id())).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                StatisticsResponse response1 = new StatisticsResponse(response);
-                Double[] stats = new Double[3];
-                stats[0] = response1.totalTests();
-                stats[1] = response1.averageTime();
-                stats[2] = response1.wrongPercent();
-                String[] names = new String[]{"Всего заданий решено","Среднее время решения","Процент ошибок"};
-                StatisticsAdapter adapter = new StatisticsAdapter(stats,names);
-                stats_rv.setAdapter(adapter);
+            AppController.getApi().getStats(1, "getStats", subject(), String.valueOf(user_id())).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    StatisticsResponse response1 = new StatisticsResponse(response);
+                    Double[] stats = new Double[3];
+                    stats[0] = response1.totalTests();
+                    stats[1] = response1.averageTime();
+                    stats[2] = response1.wrongPercent();
+                    String[] names = new String[]{"Всего заданий решено", "Среднее время решения", "Процент ошибок"};
+                    StatisticsAdapter adapter = new StatisticsAdapter(stats, names);
+                    stats_rv.setAdapter(adapter);
 
-            }
+                }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                showInfoDialog("Ошибка!","Сообщение: " + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    showInfoDialog("Ошибка!", "Сообщение: " + t.getMessage());
+                }
+            });
+
+
     }
 
 

@@ -39,7 +39,7 @@ import ru.use.marathon.models.chat.Message;
 import ru.use.marathon.models.chat.MessagesResponse;
 import ru.use.marathon.utils.NotificationUtils;
 
-public class ChatRoomActivity extends AppCompatActivity {
+public class ChatRoomActivity extends AbstractActivity {
 
     public static final String TAG = ChatRoomActivity.class.getSimpleName();
     @BindView(R.id.toolbar)

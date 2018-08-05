@@ -42,18 +42,18 @@ public class TopicsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Student s = new Student(getApplicationContext());
+        final Student s = new Student(getApplicationContext());
 
         HashMap<String,String> sdata = s.getData();
         final int user_id = Integer.parseInt(sdata.get(s.KEY_ID));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        AppController.getApi().get_topics(1,"get_topics").enqueue(new Callback<JsonObject>() {
+        AppController.getApi().get_topics(1,"get_topics",s.getSubject()).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 final Topics topics = new Topics(response);
 
-                AppController.getApi().get_solved_tests_by_topic(1,"get_solved_by_topic",user_id).enqueue(new Callback<JsonObject>() {
+                AppController.getApi().get_solved_tests_by_topic(1,"get_solved_by_topic",s.getSubject(),user_id).enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         SolvedTestsByTopics byTopics = new SolvedTestsByTopics(response);

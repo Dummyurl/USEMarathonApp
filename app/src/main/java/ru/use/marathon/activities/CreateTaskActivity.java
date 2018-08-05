@@ -39,7 +39,7 @@ import ru.use.marathon.models.topics.Topics;
 
 import static ru.use.marathon.models.Success.success;
 
-public class CreateTaskActivity extends AppCompatActivity {
+public class CreateTaskActivity extends AbstractActivity {
     public static final String TAG = CreateTaskActivity.class.getSimpleName();
     //QU PART
     @BindView(R.id.task_content_et) EditText content_et;
@@ -316,7 +316,7 @@ public class CreateTaskActivity extends AppCompatActivity {
 
     }
     private void initTaskTopics() {
-        AppController.getApi().get_topics(1,"get_topics").enqueue(new Callback<JsonObject>() {
+        AppController.getApi().get_topics(1,"get_topics",subject()).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 final Topics topics = new Topics(response);

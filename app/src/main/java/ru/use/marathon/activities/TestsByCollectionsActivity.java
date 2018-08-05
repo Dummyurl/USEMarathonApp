@@ -32,7 +32,7 @@ import ru.use.marathon.utils.ItemClickSupport;
 
 import static ru.use.marathon.models.Success.success;
 
-public class TestsByCollectionsActivity extends AppCompatActivity {
+public class TestsByCollectionsActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.collections_container)
@@ -67,7 +67,7 @@ public class TestsByCollectionsActivity extends AppCompatActivity {
     }
 
     private void gatherData() {
-        AppController.getApi().get_collections(1,"get_collections").enqueue(new Callback<JsonObject>() {
+        AppController.getApi().get_collections(1,"get_collections",subject()).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Collections collections = new Collections(response);
@@ -76,7 +76,7 @@ public class TestsByCollectionsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                showInfoDialog("Ошибка!",t.getMessage());
             }
         });
 

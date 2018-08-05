@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,23 +30,34 @@ import ru.use.marathon.models.Statistics;
 import ru.use.marathon.models.StatisticsResponse;
 import ru.use.marathon.models.UserProfile;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends AbstractActivity {
 
-    @BindView(R.id.account_image) CircleImageView imageView;
-    @BindView(R.id.account_name) TextView tv_name;
-    @BindView(R.id.account_status) TextView tv_status;
+    @BindView(R.id.account_image)
+    CircleImageView imageView;
+    @BindView(R.id.account_name)
+    TextView tv_name;
+    @BindView(R.id.account_status)
+    TextView tv_status;
 
     //TEACHER
-    @BindView(R.id.teacher_layout) RelativeLayout teacher_layout;
-    @BindView(R.id.account_write) Button teacher_write_message_btn;
-    @BindView(R.id.account_request_teacher) Button teacher_request_btn;
+    @BindView(R.id.teacher_layout)
+    RelativeLayout teacher_layout;
+    @BindView(R.id.account_write)
+    Button teacher_write_message_btn;
+    @BindView(R.id.account_request_teacher)
+    Button teacher_request_btn;
 
     //STUDENT
-    @BindView(R.id.student_layout) RelativeLayout student_relative;
-    @BindView(R.id.account_statistics_rv) RecyclerView stats_rv;
-    @BindView(R.id.account_write_message) Button student_write_message_btn;
-    @BindView(R.id.account_teacher_name) TextView teacher_name;
-
+    @BindView(R.id.student_layout)
+    RelativeLayout student_relative;
+    @BindView(R.id.account_statistics_rv)
+    RecyclerView stats_rv;
+    @BindView(R.id.account_write_message)
+    Button student_write_message_btn;
+    @BindView(R.id.account_teacher_name)
+    TextView teacher_name;
+    @BindView(R.id.subjects_spinner)
+    Spinner subject_spinner;
 
     String user_id;
     int user_type;
@@ -63,21 +76,21 @@ public class UserProfileActivity extends AppCompatActivity {
         Fabric.with(fabric);
 
         user_id = getIntent().getStringExtra("user_id");
-        user_type = getIntent().getIntExtra("utype",-1);
+        user_type = getIntent().getIntExtra("utype", -1);
 
 
         //todo set loading alert dialog
-        AppController.getApi().getUserInfo(1,"getUserInfo", user_id,user_type).enqueue(new Callback<JsonObject>() {
+        AppController.getApi().getUserInfo(1, "getUserInfo", user_id, user_type).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 userProfile = new UserProfile(response);
-                if(!userProfile.image().isEmpty())
-                Picasso.get().load(userProfile.image()).error(R.drawable.user_default).into(imageView);
+                if (!userProfile.image().isEmpty())
+                    Picasso.get().load(userProfile.image()).error(R.drawable.user_default).into(imageView);
                 tv_name.setText(userProfile.name());
 
-                if(user_type == 0) {
+                if (user_type == 0) {
                     initStudent(userProfile);
-                } else if(user_type == 1) {
+                } else if (user_type == 1) {
                     initTeacher(userProfile);
                 }
 
@@ -128,9 +141,27 @@ public class UserProfileActivity extends AppCompatActivity {
                 initMessagingStudent();
             }
         });
+        stats_rv.setLayoutManager(new GridLayoutManager(this, 3));
+        getStats(1);
 
-        stats_rv.setLayoutManager(new GridLayoutManager(this,3));
-        AppController.getApi().getStats(1,"getStats",user_id).enqueue(new Callback<JsonObject>() {
+        subject_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int index = i + 1;
+                getStats(index);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+    }
+
+    public void getStats(int subject) {
+        AppController.getApi().getStats(1, "getStats", subject, user_id).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 StatisticsResponse response1 = new StatisticsResponse(response);
@@ -138,8 +169,8 @@ public class UserProfileActivity extends AppCompatActivity {
                 stats[0] = response1.totalTests();
                 stats[1] = response1.averageTime();
                 stats[2] = response1.wrongPercent();
-                String[] names = new String[]{"Всего заданий решено","Среднее время решения","Процент ошибок"};
-                StatisticsAdapter adapter = new StatisticsAdapter(stats,names);
+                String[] names = new String[]{"Всего заданий решено", "Среднее время решения", "Процент ошибок"};
+                StatisticsAdapter adapter = new StatisticsAdapter(stats, names);
                 stats_rv.setAdapter(adapter);
             }
 

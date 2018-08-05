@@ -28,7 +28,7 @@ import ru.use.marathon.AppController;
 import ru.use.marathon.R;
 import ru.use.marathon.models.FeedText;
 
-public class FeedContentActivity extends AppCompatActivity {
+public class FeedContentActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.app_bar)

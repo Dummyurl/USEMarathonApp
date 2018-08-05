@@ -1,4 +1,4 @@
-package ru.use.marathon.activities;
+package ru.use.marathon.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -38,19 +37,18 @@ import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.Constants;
 import ru.use.marathon.R;
+import ru.use.marathon.activities.ResultsActivity;
+import ru.use.marathon.activities.TestsActivity;
 import ru.use.marathon.models.Collection;
 import ru.use.marathon.models.Collections;
 import ru.use.marathon.models.Student;
-import ru.use.marathon.models.Success;
 import ru.use.marathon.models.answers.AbstractAnswer;
 import ru.use.marathon.models.answers.StudentAnswers;
 
-import static ru.use.marathon.models.Success.success;
 
+public class TestUnitFragment extends AbstractFragment {
 
-public class TestsActivityFragment extends Fragment {
-
-    public static final String TAG = TestsActivityFragment.class.getSimpleName();
+    public static final String TAG = TestUnitFragment.class.getSimpleName();
     Collection collection;
     int page, max_page,cn;
     int answer_type;
@@ -87,11 +85,11 @@ public class TestsActivityFragment extends Fragment {
     private boolean startRun;
 
 
-    public TestsActivityFragment() {
+    public TestUnitFragment() {
     }
 
-    public static TestsActivityFragment newInstance(int page, int pages_amount,int cn) {
-        TestsActivityFragment fragment = new TestsActivityFragment();
+    public static TestUnitFragment newInstance(int page, int pages_amount, int cn) {
+        TestUnitFragment fragment = new TestUnitFragment();
         Bundle args = new Bundle();
         args.putInt("page", page);
         args.putInt("max_page", pages_amount);
@@ -270,11 +268,10 @@ public class TestsActivityFragment extends Fragment {
         HashMap<String,String> user_data = student.getData();
         int id = Integer.parseInt(user_data.get(student.KEY_ID));
         int c = isCorrectAnswer? 1 : 0;
-        AppController.getApi().sendStat(1,"setStats",id,collection.getId(page),seconds,c,0).enqueue(new Callback<JsonObject>() {
+        AppController.getApi().sendStat(1,"setStats",subject(),id,collection.getId(page),seconds,c,0).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                new Success(response);
-                Toast.makeText(getActivity().getApplicationContext(), success()?"ok":"not ok", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override

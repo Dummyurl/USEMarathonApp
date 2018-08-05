@@ -11,4 +11,9 @@
     <string name="title_activity_chat_room">ChatRoomActivity</string>
     <string name="title_activity_all_users">Choose user to create chat</string>
 
+    <string-array name="subjects">
+        <item>Русский язык</item>
+        <item>Математика (База)</item>
+        <item>Математика (Профиль)</item>
+    </string-array>
 </resources>

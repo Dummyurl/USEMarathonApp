@@ -30,7 +30,7 @@ import ru.use.marathon.models.chat.ChatMembers;
 
 import static ru.use.marathon.models.Success.success;
 
-public class ChatDetailsActivity extends AppCompatActivity {
+public class ChatDetailsActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 

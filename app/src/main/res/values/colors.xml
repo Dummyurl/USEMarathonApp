@@ -6,4 +6,6 @@
     <color name="colorItems">#008c00</color>
     <color name="colorChat">#3dadd000</color>
     <color name="message_name">#7c4dff</color>
+
+    <color name="tab_white">#ffffff</color>
 </resources>

@@ -31,7 +31,7 @@ import ru.use.marathon.models.Teacher;
 
 import static ru.use.marathon.models.Success.success;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AbstractActivity {
 
     @BindView(R.id.name_et)
     EditText nameEditText;

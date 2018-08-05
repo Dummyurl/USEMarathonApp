@@ -81,7 +81,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/txt_teacher"
@@ -91,11 +91,26 @@
             android:text="Учитель" />
 
         <TextView
+            android:layout_width="match_parent"
+            android:text="Предмет"
+            android:id="@+id/subject_txt"
+            android:layout_below="@id/txt_teacher"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/subjects_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/subject_txt"
+            android:layout_margin="10dp"
+            android:entries="@array/subjects" />
+
+        <TextView
             android:id="@+id/txt_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/txt_teacher"
+            android:layout_below="@+id/subjects_spinner"
             android:text="Статистика" />
 
         <android.support.v7.widget.RecyclerView

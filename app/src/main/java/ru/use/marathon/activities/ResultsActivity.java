@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import ru.use.marathon.R;
 import ru.use.marathon.models.Student;
 
-public class ResultsActivity extends AppCompatActivity {
+public class ResultsActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.result_return_btn)
