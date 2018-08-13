@@ -139,9 +139,9 @@
         <activity
             android:name=".activities.CreateTaskActivity"
             android:label="Создать задание" />
-        <activity android:name=".activities.UserProfileActivity" android:label="Профиль">
-
-        </activity>
+        <activity
+            android:name=".activities.UserProfileActivity"
+            android:label="Профиль"></activity>
 
         <receiver
             android:name=".utils.ConnectivityReceiver"
@@ -150,6 +150,8 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".activities.forgotpassActivity"></activity>
     </application>
 
 </manifest>

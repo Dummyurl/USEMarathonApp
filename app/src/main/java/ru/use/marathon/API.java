@@ -33,6 +33,27 @@ public interface API {
             @Query("password") String password
     );
 
+
+    @GET("api.php")
+    Call<JsonObject> restorePassword(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("email") String email,
+            @Query("utype") int type,
+            @Query("new_password") String password
+
+    );
+
+    @GET("api.php")
+    Call<JsonObject> sendPHPMail(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("email") String email
+
+
+    );
+
+
     @GET("api.php")
     Call<JsonObject> get_collections(
             @Query("v") int v,
