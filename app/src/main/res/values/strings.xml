@@ -16,4 +16,14 @@
         <item>Математика (База)</item>
         <item>Математика (Профиль)</item>
     </string-array>
+
+
+    <string name="question_next">СЛЕДУЮЩИЙ</string>
+    <string name="question_prev">ПРЕДЫДУЩИЙ</string>
+    <string name="question_end">ЗАВЕРШИТЬ</string>
+
+    <string name="start_description">Добро пожаловать! \n
+        Прежде чем мы начнем, вам нужно пройти тест для определения психотипа.
+    Тест нужен для того, чтобы манипулировать вами</string>
+
 </resources>

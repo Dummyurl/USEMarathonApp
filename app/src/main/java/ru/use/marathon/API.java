@@ -78,7 +78,7 @@ public interface API {
             @Query("v") int v,
             @Query("method") String method,
             @Query("sbj") int sbj
-    );
+    ); // интерфейс формирования запроса, тут ставлю в каком виде принимаю response
 
 
     @GET("api.php")

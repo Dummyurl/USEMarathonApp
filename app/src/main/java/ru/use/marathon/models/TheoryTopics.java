@@ -14,11 +14,11 @@ public class TheoryTopics {
     JsonObject js;
 
     public TheoryTopics(Response<JsonObject> response) {
-        js = response.body();
+        js = response.body(); // из конструктора беру json object
     }
 
     public JsonArray getData(){
-        return js.get("theory").getAsJsonArray();
+        return js.get("theory").getAsJsonArray(); // потом из этого json object'а беру json array
     }
 
     public int size(){
@@ -27,6 +27,8 @@ public class TheoryTopics {
 
     public int getId(int i){
         return getData().get(i).getAsJsonObject().get("id").getAsInt();
+        // беру необходимый элемент. позицию в json array беру как json object
+
     }
 
     public int getIcon(int i){

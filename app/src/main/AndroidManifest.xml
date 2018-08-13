@@ -139,17 +139,13 @@
         <activity
             android:name=".activities.CreateTaskActivity"
             android:label="Создать задание" />
-        <activity android:name=".activities.UserProfileActivity" android:label="Профиль">
+        <activity
+            android:name=".activities.UserProfileActivity"
+            android:label="Профиль"></activity>
 
-        </activity>
 
-        <receiver
-            android:name=".utils.ConnectivityReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
+        <activity android:name=".activities.StartQuestionsActivity"
+            android:theme="@style/AppTheme.NoBar"></activity>
     </application>
 
 </manifest>
