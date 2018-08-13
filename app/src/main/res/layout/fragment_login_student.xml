@@ -47,4 +47,13 @@
         android:gravity="center"
         android:text="Нет аккаунта? Создайте новый!" />
 
+
+    <TextView
+        android:id="@+id/s_fogt_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="забыли пароль!" />
+
 </LinearLayout>

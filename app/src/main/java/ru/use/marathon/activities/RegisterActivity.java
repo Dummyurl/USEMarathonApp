@@ -50,8 +50,8 @@ public class RegisterActivity extends AbstractActivity {
         ButterKnife.bind(this);
         final int post = getIntent().getIntExtra("post",-1);
 
-        emailEditText.addTextChangedListener(new MyTextWatcher(emailEditText));
         nameEditText.addTextChangedListener(new MyTextWatcher(nameEditText));
+        emailEditText.addTextChangedListener(new MyTextWatcher(emailEditText));
         passwordEditText.addTextChangedListener(new MyTextWatcher(passwordEditText));
 
         sign_up_btn.setOnClickListener(new View.OnClickListener() {

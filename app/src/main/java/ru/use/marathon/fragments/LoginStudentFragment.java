@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -30,6 +29,7 @@ import ru.use.marathon.AppController;
 import ru.use.marathon.R;
 import ru.use.marathon.activities.MainActivity;
 import ru.use.marathon.activities.RegisterActivity;
+import ru.use.marathon.activities.forgotpassActivity;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Success;
 import ru.use.marathon.models.Teacher;
@@ -51,6 +51,9 @@ public class LoginStudentFragment extends Fragment {
     Button sign_in;
     @BindView(R.id.s_sign_up_btn)
     TextView sign_up;
+    @BindView(R.id.s_fogt_btn)
+    TextView fogt;
+
 
 
 
@@ -80,6 +83,14 @@ public class LoginStudentFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), RegisterActivity.class);
+                i.putExtra("post",0);
+                startActivity(i);
+            }
+        });
+        fogt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), forgotpassActivity.class);
                 i.putExtra("post",0);
                 startActivity(i);
             }
