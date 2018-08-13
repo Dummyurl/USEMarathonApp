@@ -142,12 +142,11 @@
         <activity
             android:name=".activities.UserProfileActivity"
             android:label="Профиль"></activity>
-<<<<<<< HEAD
+
 
 
         <activity android:name=".activities.StartQuestionsActivity"
             android:theme="@style/AppTheme.NoBar"></activity>
-=======
 
         <receiver
             android:name=".utils.ConnectivityReceiver"
@@ -158,7 +157,7 @@
         </receiver>
 
         <activity android:name=".activities.forgotpassActivity"></activity>
->>>>>>> 166a29c3d073fbafd825b2f3118bc1abe793a2c4
+
     </application>
 
 </manifest>
