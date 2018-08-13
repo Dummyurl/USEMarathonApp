@@ -25,7 +25,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
-import ru.use.marathon.fragments.StartQuestionFragment;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Success;
 import ru.use.marathon.models.Teacher;
@@ -71,16 +70,13 @@ public class RegisterActivity extends AbstractActivity {
                                 if (post == 1) {
                                     Teacher t = new Teacher(getApplicationContext(), response);
                                     t.createSession(t.getID(), name, email);
-                                    Intent i = new Intent(RegisterActivity.this, MainActivity.class);
-                                    startActivity(i);
                                 } else {
                                     Student s = new Student(getApplicationContext(), response);
                                     s.createFirstSession(s.getID(), name, email); // todo if sign up, image will crush
-                                    Intent i = new Intent(RegisterActivity.this, StartQuestionsActivity.class);
-                                    startActivity(i);
                                 }
 
-
+                                Intent i = new Intent(RegisterActivity.this, MainActivity.class);
+                                startActivity(i);
                             } else {
                                 AlertDialog.Builder b = new AlertDialog.Builder(RegisterActivity.this);
                                 b.setTitle("Ошибка");

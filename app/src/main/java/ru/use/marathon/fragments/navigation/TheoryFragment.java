@@ -49,20 +49,16 @@ public class TheoryFragment extends AbstractFragment {
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity().getApplicationContext(), resId);
         theory_rv.setLayoutAnimation(animation);
-
-
-        AppController.getApi().get_theory_topics(1,"get_theory_topics",subject()).enqueue(new Callback<JsonObject>() { // тут я указываю параметры запроса и формирую его
+        AppController.getApi().get_theory_topics(1,"get_theory_topics",subject()).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                // сюда приходит содержимое ответа, response
-
-                topics = new TheoryTopics(response); // парсю пришедший ответ
-                theory_rv.setAdapter(new TheoryTopicsAdapter(topics)); // проставляю ответ в список
+                topics = new TheoryTopics(response);
+                theory_rv.setAdapter(new TheoryTopicsAdapter(topics));
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                showInfoDialog("Ошибка  !",t.getMessage());
+                showInfoDialog("Ошибка!",t.getMessage());
             }
         });
 

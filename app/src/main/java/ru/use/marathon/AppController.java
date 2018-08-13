@@ -47,7 +47,7 @@ public class AppController extends Application{
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-//        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -69,15 +69,11 @@ public class AppController extends Application{
                 })
                 .build();
 
-
-        // AppController.class
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://cordi.space/exam/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
-                .build(); // тут выстраивается основная часть ссылки
-
-
+                .build();
         api = retrofit.create(API.class);
     }
 
