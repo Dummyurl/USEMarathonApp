@@ -108,12 +108,12 @@ public class StartQuestionFragment extends Fragment {
         radioGroupcontainer.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                RadioButton checkedRadioButton = (RadioButton)radioGroup.findViewById(i);
-                boolean isChecked = checkedRadioButton.isChecked();
-                if (isChecked)
-                {
-                    answerListener.onAnswerFetched(page,radioGroup.indexOfChild(checkedRadioButton));
-                }
+//                RadioButton checkedRadioButton = (RadioButton)radioGroup.findViewById(i);
+//                boolean isChecked = checkedRadioButton.isChecked();
+//                if (isChecked)
+//                {
+//                    answerListener.onAnswerFetched(page,radioGroup.indexOfChild(checkedRadioButton));
+//                }
             }
         });
 
