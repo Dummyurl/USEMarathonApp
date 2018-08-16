@@ -41,6 +41,58 @@
         android:hint="Пароль"
         android:inputType="textPassword" />
 
+    <EditText
+        android:id="@+id/pupo_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:maxLength="11"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Телефон"
+        android:inputType="number" />
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/region_btn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_height="wrap_content"
+        android:text="Выберите регион" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/city_btn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:text="Выберите город" />
+
+
+    <Button
+        android:id="@+id/city_false_btn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:clickable="false"
+        android:text="Выберите город" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:text="Я принимаю условия Пользовательского соглашения" />
 
     <Button
         android:layout_width="match_parent"

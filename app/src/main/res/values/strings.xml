@@ -16,10 +16,7 @@
         <item>Математика (База)</item>
         <item>Математика (Профиль)</item>
     </string-array>
-<<<<<<< HEAD
-=======
 
-<<<<<<< HEAD
 >>>>>>> parent of 8faa61b... Revert "Start questions"
 
     <string name="question_next">СЛЕДУЮЩИЙ</string>
@@ -30,9 +27,7 @@
         Прежде чем мы начнем, вам нужно пройти тест для определения психотипа.
     Тест нужен для того, чтобы манипулировать вами</string>
 
-<<<<<<< HEAD
-=======
-=======
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 >>>>>>> 166a29c3d073fbafd825b2f3118bc1abe793a2c4

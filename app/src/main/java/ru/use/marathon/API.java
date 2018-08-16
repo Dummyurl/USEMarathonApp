@@ -20,7 +20,9 @@ public interface API {
             @Query("type") int type,
             @Query("name") String name,
             @Query("email") String email,
-            @Query("password") String password
+            @Query("password") String password,
+            @Query("phone") String num
+
     );
 
 
@@ -43,6 +45,24 @@ public interface API {
             @Query("new_password") String password
 
     );
+
+
+    @GET("api.php")
+    Call<JsonObject> regionshow(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("utype") int type
+
+    );
+    @GET("api.php")
+    Call<JsonObject> cityshow(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("id_region") int id_region
+
+    );
+
+
 
     @GET("api.php")
     Call<JsonObject> sendPHPMail(
