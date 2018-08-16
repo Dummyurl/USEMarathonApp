@@ -13,12 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -26,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,17 +37,13 @@ import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.Constants;
 import ru.use.marathon.R;
-import ru.use.marathon.activities.FeedContentActivity;
 import ru.use.marathon.activities.ResultsActivity;
 import ru.use.marathon.activities.TestsActivity;
 import ru.use.marathon.models.Collection;
 import ru.use.marathon.models.Collections;
 import ru.use.marathon.models.Student;
-import ru.use.marathon.models.Success;
 import ru.use.marathon.models.answers.AbstractAnswer;
 import ru.use.marathon.models.answers.StudentAnswers;
-
-import static ru.use.marathon.models.Success.success;
 
 
 public class TestUnitFragment extends AbstractFragment {
@@ -64,13 +56,6 @@ public class TestUnitFragment extends AbstractFragment {
 
     @BindView(R.id.content_text)
     TextView content_tv;
-
-    @BindView(R.id.content_image)
-    ImageView content_image;
-
-    @BindView(R.id.content_html)
-    WebView content_web;
-
     @BindView(R.id.answers_radio_group)
     RadioGroup rg_container;
     @BindView(R.id.show_hint_btn)
@@ -185,7 +170,9 @@ public class TestUnitFragment extends AbstractFragment {
 
                     if (abstractAnswer.isRight()) {
                         isCorrectAnswer = true;
-                        sendSolved();
+
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+
                         student.setStatistics(tests_counter + 1, seconds_stat + seconds, answer_counter + 1, answer_wrong_counter);
                     } else {
                         isCorrectAnswer = false;
@@ -204,10 +191,13 @@ public class TestUnitFragment extends AbstractFragment {
                     double seconds_stat = Double.parseDouble(stats.get(student.KEY_TESTS_TIME));
                     if (abstractAnswer.isRight()) {
                         isCorrectAnswer = true;
-                        sendSolved();
+
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
                         student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter + 1, answer_wrong_counter);
                     } else {
                         isCorrectAnswer = false;
+
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
                         student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter, answer_wrong_counter + 1);
                     }
                 } else if (answer_type == Constants.CHECK_BOX_TYPE) {
@@ -233,10 +223,11 @@ public class TestUnitFragment extends AbstractFragment {
 
                     if (abstractAnswer.isRight()) {
                         isCorrectAnswer = true;
-                        sendSolved();
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
                         student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter + 1, answer_wrong_counter);
                     } else {
                         isCorrectAnswer = false;
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
                         student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter, answer_wrong_counter + 1);
                     }
                 }
@@ -273,25 +264,6 @@ public class TestUnitFragment extends AbstractFragment {
         return view;
     }
 
-
-    private void sendSolved(){
-        AppController.getApi().setSolvedTopic(1,"setSolvedTopic",collection.getSubject(page),user_id(),collection.getTopic(page))
-                .enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        new Success(response);
-                        if(success()){
-                            Toast.makeText(getActivity(), "topic_solved", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                    }
-                });
-    }
-
     private void sendStatToServer(boolean isCorrectAnswer) {
         HashMap<String,String> user_data = student.getData();
         int id = Integer.parseInt(user_data.get(student.KEY_ID));
@@ -307,9 +279,6 @@ public class TestUnitFragment extends AbstractFragment {
 
             }
         });
-
-
-
     }
 
     private void initStopwatch() {
@@ -336,29 +305,13 @@ public class TestUnitFragment extends AbstractFragment {
 
     private void setupUI() {
 
-        content_web.setWebViewClient(new MyBrowser());
-        content_web.getSettings().setLoadsImagesAutomatically(true);
-        content_web.getSettings().setDomStorageEnabled(true);
-        content_web.getSettings().setJavaScriptEnabled(true);
 
         if (collection != null) {
             ((TestsActivity) getActivity())
                     .setActionBarTitle("Задание № " + collection.getTaskNumber(page))
             ;
 
-            if(!collection.getContent(page).equals("")){
-                content_tv.setVisibility(View.VISIBLE);
-                content_tv.setText(collection.getContent(page));
-            }
-            if(!collection.getContentImage(page).equals("")){
-                content_image.setVisibility(View.VISIBLE);
-                Picasso.get().load(collection.getContentImage(page)).into(content_image);
-            }
-            if(!collection.getContentHtml(page).equals("")){
-                content_web.setVisibility(View.VISIBLE);
-                content_web.loadUrl(collection.getContentHtml(page));
-            }
-
+            content_tv.setText(collection.getContent(page));
             answers = collection.getAnswers(page);
             answer_type = collection.getAnswerType(page);
 
@@ -469,14 +422,5 @@ public class TestUnitFragment extends AbstractFragment {
 
 
         Log.d("TestsFragment", "onResume " + page);
-    }
-
-
-    private class MyBrowser extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
-        }
     }
 }
