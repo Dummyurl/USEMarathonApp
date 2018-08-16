@@ -236,6 +236,19 @@ public interface API {
     );
 
 
+    @GET("api.php")
+    Call<JsonObject> setSolvedTopic(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("sbj") String sbj,
+            @Query("uid") int uid,
+            @Query("topic_id") String topic_id
+    );
+
+
+
+
+
     //CREATE TASK
 
 

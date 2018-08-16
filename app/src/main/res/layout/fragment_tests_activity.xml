@@ -23,14 +23,27 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <ImageView
+                    android:id="@+id/content_image"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_marginBottom="5dp"
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:id="@+id/content_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:visibility="gone"
                     android:layout_marginBottom="5dp"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
+
+                <WebView
+                    android:layout_width="match_parent"
+                    android:id="@+id/content_html"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"/>
 
                 <RadioGroup
                     android:id="@+id/answers_radio_group"
