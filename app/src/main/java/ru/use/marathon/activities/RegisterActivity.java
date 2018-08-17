@@ -14,9 +14,12 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
@@ -65,16 +68,24 @@ public class RegisterActivity extends AbstractActivity  {
     EditText passwordEditText;
     @BindView(R.id.sign_up_btn)
     Button sign_up_btn;
+    @BindView(R.id.spiner)
+    Spinner spiner;
     JsonArray regioin;
     JsonObject jsoni;
+    String id_subject="";
     int IDI;
+    int ctIDI;
     int counter=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        String[] datax = {"Русский", "Математика профиль","Математика база" };
+
         ButterKnife.bind(this);
+
+
 
 
 
@@ -96,6 +107,12 @@ public class RegisterActivity extends AbstractActivity  {
             public void onFailure(Call<JsonObject> call, Throwable t) {
 
             }});
+
+
+
+
+
+
 
 
 
@@ -135,7 +152,9 @@ public class RegisterActivity extends AbstractActivity  {
 
 
 
-                                        }city_false_btn.setVisibility(View.GONE);
+                                        }
+
+                                        city_false_btn.setVisibility(View.GONE);
                                         city_btn.setVisibility(View.VISIBLE);}
 
                                     @Override
@@ -174,10 +193,11 @@ public class RegisterActivity extends AbstractActivity  {
                     spinnerDialog2.bindOnSpinerListener(new OnSpinerItemClick() {
                         @Override
                         public void onClick(String item, int position) {
-                            Toast.makeText(RegisterActivity.this, item + "  " + position+1+"", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(RegisterActivity.this, item + "  " + position+1+"", Toast.LENGTH_SHORT).show();
                             //Toast.makeText(RegisterActivity.this, "Selected : "+item, Toast.LENGTH_SHORT).show();
                             city_btn.setText(item );
                             counter++;
+                            ctIDI=position+1;
                         }
                     });
                     spinnerDialog2.showSpinerDialog();
@@ -212,6 +232,45 @@ public class RegisterActivity extends AbstractActivity  {
         phone_et.addTextChangedListener(new MyTextWatcher(phone_et));
 
 
+
+
+
+        if(post == 1) {
+            spiner.setVisibility(View.VISIBLE);
+
+            // адаптер
+            ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, datax);
+            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            spiner.setAdapter(adapter1);
+            // заголовок
+            spiner.setPrompt("Предмет");
+            // выделяем элемент
+          //  spiner.setSelection(2);
+            // устанавливаем обработчик нажатия
+            spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view,
+                                           int position, long id) {
+                    id_subject = (String)parent.getItemAtPosition(position);
+
+                    // показываем позиция нажатого элемента
+                  //  Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getBaseContext(), id_subject , Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> arg0) {
+                }
+            });
+
+
+        }
+
+
+
+
+
         sign_up_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -222,7 +281,7 @@ public class RegisterActivity extends AbstractActivity  {
                 if(checkEmail() && checkPassword() && validateName() && checkPhoneN() && checkbox.isChecked() && counter==2) {
 
 
-                    AppController.getApi().sign_up(1, "sign_up", post, name, email, password,num).enqueue(new Callback<JsonObject>() {
+                    AppController.getApi().sign_up(1, "sign_up", post, name, email, password,num,IDI,ctIDI,id_subject).enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             new Success(response);
@@ -260,6 +319,14 @@ public class RegisterActivity extends AbstractActivity  {
                             Toast.makeText(RegisterActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
                         }
                     });
+
+
+
+
+
+
+
+
                 }else{
                     Toast.makeText(RegisterActivity.this, "Введите все данные", Toast.LENGTH_SHORT).show();
                 }
