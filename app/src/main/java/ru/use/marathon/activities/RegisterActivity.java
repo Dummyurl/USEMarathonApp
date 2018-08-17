@@ -72,7 +72,7 @@ public class RegisterActivity extends AbstractActivity  {
     Spinner spiner;
     JsonArray regioin;
     JsonObject jsoni;
-    String id_subject="";
+    int id_subject;
     int IDI;
     int ctIDI;
     int counter=0;
@@ -81,7 +81,7 @@ public class RegisterActivity extends AbstractActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        String[] datax = {"Русский", "Математика профиль","Математика база" };
+        String[] datax = {"Русский", "Математика (База)","Математика (Профиль)" };
 
         ButterKnife.bind(this);
 
@@ -178,7 +178,6 @@ public class RegisterActivity extends AbstractActivity  {
 
 
 
-
             city_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -252,7 +251,8 @@ public class RegisterActivity extends AbstractActivity  {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view,
                                            int position, long id) {
-                    id_subject = (String)parent.getItemAtPosition(position);
+                    id_subject = position+1;
+                   // id_subject = (String)parent.getItemAtPosition(position);
 
                     // показываем позиция нажатого элемента
                   //  Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
