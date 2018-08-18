@@ -15,7 +15,6 @@ public class TheoryTopics {
 
     public TheoryTopics(Response<JsonObject> response) {
         js = response.body(); // из конструктора беру json object
-
     }
 
     public JsonArray getData(){
