@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -19,7 +20,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -34,17 +34,19 @@ import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
 import ru.use.marathon.models.CityShow;
-import ru.use.marathon.models.RegionSHow;
+import ru.use.marathon.models.RegionShow;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Success;
 import ru.use.marathon.models.Teacher;
-import static ru.use.marathon.models.Success.success;
-public class RegisterActivity extends AbstractActivity  {
 
-    ArrayList<String> items = new ArrayList<>();
-    ArrayList<String> cityS = new ArrayList<>();
-    SpinnerDialog spinnerDialog;
-    SpinnerDialog spinnerDialog2;
+import static ru.use.marathon.models.Success.success;
+
+public class RegisterActivity extends AbstractActivity {
+
+    ArrayList<String> regions = new ArrayList<>();
+    ArrayList<String> cities = new ArrayList<>();
+    SpinnerDialog regions_sd;
+    SpinnerDialog cities_sd;
 
 
     @BindView(R.id.region_btn)
@@ -55,7 +57,7 @@ public class RegisterActivity extends AbstractActivity  {
     Button city_false_btn;
     @BindView(R.id.checkBox)
     CheckBox checkbox;
-    @BindView(R.id.pupo_et)
+    @BindView(R.id.phone_number_et)
     EditText phone_et;
     @BindView(R.id.name_et)
     EditText nameEditText;
@@ -65,10 +67,10 @@ public class RegisterActivity extends AbstractActivity  {
     EditText passwordEditText;
     @BindView(R.id.sign_up_btn)
     Button sign_up_btn;
-    JsonArray regioin;
-    JsonObject jsoni;
-    int IDI;
-    int counter=0;
+
+    int ID;
+    int counter = 0;
+    boolean isAgree = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,134 +79,105 @@ public class RegisterActivity extends AbstractActivity  {
         ButterKnife.bind(this);
 
 
-
         AppController.getApi().regionshow(1, "regionshow", 1).enqueue(new Callback<JsonObject>() {
 
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                RegionShow rs = new RegionShow(response);
+                for (int i = 0; i < rs.getData().size(); i++) {
+                    regions.add(rs.name(i));
+                }
+            }
 
-                RegionSHow rs = new RegionSHow(response);
-                for (int i=0;i<rs.getData().size();i++){
-                    items.add(rs.name(i));
-
-
-
-
-
-                }}
-                @Override
+            @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }});
-
+                showInfoDialog("Ошибка!", "Произошла ошибка при загрузке регионов. Повторите позднее.");
+            }
+        });
 
 
         region_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(IDI != 0){
-                    cityS.removeAll(cityS);
+                if (ID != 0) {
+                    cities.removeAll(cities);
                     city_btn.setVisibility(View.GONE);
                     city_false_btn.setVisibility(View.VISIBLE);
-                    counter=0;
+                    counter = 0;
 
 
                 }
 
-                       // spinnerDialog=new SpinnerDialog(MainActivity.this,items,"Select or Search City",R.style.DialogAnimations_SmileWindow,"Close Button Text");
-                        spinnerDialog =new SpinnerDialog(RegisterActivity.this,items,"Select item",R.style.DialogAnimations_SmileWindow,"Close");
-                        spinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
+                regions_sd = new SpinnerDialog(RegisterActivity.this, regions, "Select item", R.style.DialogAnimations_SmileWindow, "Close");
+                regions_sd.bindOnSpinerListener(new OnSpinerItemClick() {
+                    @Override
+                    public void onClick(String item, int position) {
+                        ID = position + 1;
+                        counter++;
+                        region_btn.setText(item);
+
+                        AppController.getApi().cityshow(1, "cityshow", ID).enqueue(new Callback<JsonObject>() {
+
                             @Override
-                            public void onClick(String item, int position) {
-                //                Toast.makeText(RegisterActivity.this, item + "  " + position+1+"", Toast.LENGTH_SHORT).show();
-                                IDI=position+1;
-                                counter++;
-                                region_btn.setText(item );
-/////////////города
-
-                                AppController.getApi().cityshow(1, "cityshow", IDI).enqueue(new Callback<JsonObject>() {
-
-                                    @Override
-                                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                        CityShow rs = new CityShow(response);
-                                        for (int i=0;i<rs.getData().size();i++){
-                                            cityS.add(rs.name(i));
+                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                                CityShow rs = new CityShow(response);
+                                for (int i = 0; i < rs.getData().size(); i++) {
+                                    cities.add(rs.name(i));
 
 
+                                }
+                                city_false_btn.setVisibility(View.GONE);
+                                city_btn.setVisibility(View.VISIBLE);
+                            }
 
-
-
-
-                                        }city_false_btn.setVisibility(View.GONE);
-                                        city_btn.setVisibility(View.VISIBLE);}
-
-                                    @Override
-                                    public void onFailure(Call<JsonObject> call, Throwable t) {
-                                        Toast.makeText(RegisterActivity.this,"в чем то проблемка", Toast.LENGTH_SHORT).show();
-                                    }});
-
-
-
-                                //////////////////kone4
+                            @Override
+                            public void onFailure(Call<JsonObject> call, Throwable t) {
+                                showInfoDialog("Ошибка!", "Произошла ошибка при загрузке городов. Повторите позднее.");
                             }
                         });
-                        spinnerDialog.showSpinerDialog();
-
-
-
 
                     }
-
-            });
-
-
+                });
+                regions_sd.showSpinerDialog();
 
 
-            city_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            }
+
+        });
 
 
+        city_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
 
+                cities_sd = new SpinnerDialog(RegisterActivity.this, cities, "Select item", R.style.DialogAnimations_SmileWindow, "Close");
+                cities_sd.bindOnSpinerListener(new OnSpinerItemClick() {
+                    @Override
+                    public void onClick(String item, int position) {
+                        Toast.makeText(RegisterActivity.this, item + "  " + position + 1 + "", Toast.LENGTH_SHORT).show();
+                        city_btn.setText(item);
+                        counter++;
+                    }
+                });
+                cities_sd.showSpinerDialog();
 
 
-                    // spinnerDialog=new SpinnerDialog(MainActivity.this,items,"Select or Search City",R.style.DialogAnimations_SmileWindow,"Close Button Text");
-                    spinnerDialog2 =new SpinnerDialog(RegisterActivity.this,cityS,"Select item",R.style.DialogAnimations_SmileWindow,"Close");
-                    spinnerDialog2.bindOnSpinerListener(new OnSpinerItemClick() {
-                        @Override
-                        public void onClick(String item, int position) {
-                            Toast.makeText(RegisterActivity.this, item + "  " + position+1+"", Toast.LENGTH_SHORT).show();
-                            //Toast.makeText(RegisterActivity.this, "Selected : "+item, Toast.LENGTH_SHORT).show();
-                            city_btn.setText(item );
-                            counter++;
-                        }
-                    });
-                    spinnerDialog2.showSpinerDialog();
-
-
-
-                }
-            });
-
-
+            }
+        });
 
 
         checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent browserIntent = new
-                        Intent(Intent.ACTION_VIEW, Uri.parse("http://www.mylink.com"));
-                startActivity(browserIntent);
-            }});
+                isAgree = checkbox.isChecked();
+            }
+        });
 
+        String link = "Я принимаю условия <a href=\"https://cordi.space/exam/agreement.html\">Пользовательского соглашения</a>";
+        checkbox.setText(Html.fromHtml(link));
 
-
-
-        Spannable spans = new SpannableString("Я принимаю условия Пользовательского соглашения");
-        spans.setSpan(new ForegroundColorSpan(Color.BLUE), 18, 47, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        checkbox.setText(spans);
-        final int post = getIntent().getIntExtra("post",-1);
+        final int post = getIntent().getIntExtra("post", -1);
 
         nameEditText.addTextChangedListener(new MyTextWatcher(nameEditText));
         emailEditText.addTextChangedListener(new MyTextWatcher(emailEditText));
@@ -219,10 +192,10 @@ public class RegisterActivity extends AbstractActivity  {
                 final String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 final String num = phone_et.getText().toString();
-                if(checkEmail() && checkPassword() && validateName() && checkPhoneN() && checkbox.isChecked() && counter==2) {
+                if (checkEmail() && checkPassword() && validateName() && checkPhoneNumber() && isAgree && counter == 2) {
 
 
-                    AppController.getApi().sign_up(1, "sign_up", post, name, email, password,num).enqueue(new Callback<JsonObject>() {
+                    AppController.getApi().sign_up(1, "sign_up", post, name, email, password, num).enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             new Success(response);
@@ -260,7 +233,7 @@ public class RegisterActivity extends AbstractActivity  {
                             Toast.makeText(RegisterActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
                         }
                     });
-                }else{
+                } else {
                     Toast.makeText(RegisterActivity.this, "Введите все данные", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -268,6 +241,7 @@ public class RegisterActivity extends AbstractActivity  {
 
 
     }
+
     private boolean validateName() {
         if (nameEditText.getText().toString().trim().isEmpty()) {
             requestFocus(nameEditText);
@@ -284,42 +258,39 @@ public class RegisterActivity extends AbstractActivity  {
     }
 
 
-
-    public boolean checkEmail(){
+    public boolean checkEmail() {
         String text = emailEditText.getText().toString().trim();
         if (text.isEmpty() || !isValidEmail(text)) {
             emailEditText.setError("Неверный email");
             requestFocus(emailEditText);
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
 
-
-
-    public boolean checkPassword(){
+    public boolean checkPassword() {
         String password = passwordEditText.getText().toString().trim();
-        if(password.length() <= 5){
+        if (password.length() <= 5) {
             passwordEditText.setError("Пароль должен содержать минимум 5 символов");
             requestFocus(passwordEditText);
             return false;
-        }else{
+        } else {
             return true;
         }
     }
-    public boolean checkPhoneN(){
 
-        if(phone_et.length() == 11){
+    public boolean checkPhoneNumber() {
+
+        if (phone_et.length() == 11) {
             return true;
-        }else{
+        } else {
             phone_et.setError("Номер должен содержать 11 цифр");
             requestFocus(phone_et);
             return false;
         }
     }
-
 
 
     private static boolean isValidEmail(String email) {
@@ -330,6 +301,7 @@ public class RegisterActivity extends AbstractActivity  {
     private class MyTextWatcher implements TextWatcher {
 
         private View view;
+
         private MyTextWatcher(View view) {
             this.view = view;
         }
@@ -350,6 +322,9 @@ public class RegisterActivity extends AbstractActivity  {
                     break;
                 case R.id.name_et:
                     validateName();
+                    break;
+                case R.id.phone_number_et:
+                    checkPhoneNumber();
                     break;
             }
         }

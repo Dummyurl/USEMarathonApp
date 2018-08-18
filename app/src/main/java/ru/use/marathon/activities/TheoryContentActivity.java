@@ -1,17 +1,21 @@
 package ru.use.marathon.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
@@ -52,9 +56,11 @@ public class TheoryContentActivity extends AbstractActivity {
 
         theory_container.setWebViewClient(new MyBrowser());
         theory_container.getSettings().setLoadsImagesAutomatically(true);
-        theory_container.getSettings().setDomStorageEnabled(true);
         theory_container.getSettings().setJavaScriptEnabled(true);
         theory_container.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            theory_container.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         theory_container.loadUrl(content);
 
         getSupportActionBar().setTitle(title);
@@ -68,16 +74,20 @@ public class TheoryContentActivity extends AbstractActivity {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         Collection c = new Collection(response);
-                        Collections collections = new Collections(getApplicationContext());
-                        collections.saveCollection(c);
-                        Intent view = new Intent(TheoryContentActivity.this,TestsActivity.class);
-                        view.putExtra("tag","topics");
-                        startActivity(view);
+                        if(c.success()){
+                            Collections collections = new Collections(getApplicationContext());
+                            collections.saveCollection(c);
+                            Intent view = new Intent(TheoryContentActivity.this,TestsActivity.class);
+                            view.putExtra("tag","topics");
+                            startActivity(view);
+                        }else{
+                            showInfoDialog("Нет доступа.","Извините, данный тест находится в разработке или редактируется модераторами");
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                        
                     }
                 });
 
@@ -92,6 +102,13 @@ public class TheoryContentActivity extends AbstractActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.saved){
+            Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
 
     private class MyBrowser extends WebViewClient {
         @Override
@@ -99,5 +116,6 @@ public class TheoryContentActivity extends AbstractActivity {
             view.loadUrl(url);
             return true;
         }
+
     }
 }

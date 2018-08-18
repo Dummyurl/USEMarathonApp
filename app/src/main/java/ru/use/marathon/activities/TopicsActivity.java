@@ -28,7 +28,7 @@ import ru.use.marathon.models.topics.SolvedTestsByTopics;
 import ru.use.marathon.models.topics.Topics;
 import ru.use.marathon.utils.ItemClickSupport;
 
-public class TopicsActivity extends AppCompatActivity {
+public class TopicsActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.by_topics_rv)
@@ -57,15 +57,20 @@ public class TopicsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         SolvedTestsByTopics byTopics = new SolvedTestsByTopics(response);
-                        TopicsAdapter topicsAdapter = new TopicsAdapter(topics,byTopics);
-                        recyclerView.setAdapter(topicsAdapter);
-                        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                            @Override
-                            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                                int id = topics.getID(position);
-                                initTests(id);
-                            }
-                        });
+                        if(byTopics.success()) {
+                            TopicsAdapter topicsAdapter = new TopicsAdapter(topics, byTopics);
+                            recyclerView.setAdapter(topicsAdapter);
+                            ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                                @Override
+                                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                                    int id = topics.getID(position);
+                                    initTests(id);
+                                }
+
+                            });
+                        }else{
+                            showInfoDialog("Не доступно.","Извините, этот раздел находится в разработке.");
+                        }
                     }
 
                     @Override

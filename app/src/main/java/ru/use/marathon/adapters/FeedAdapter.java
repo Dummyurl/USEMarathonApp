@@ -1,5 +1,7 @@
 package ru.use.marathon.adapters;
 
+import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
     public static final String TAG = FeedAdapter.class.getSimpleName();
     Feed feed;
+    Context context;
 
     private  static String today;
 
@@ -45,8 +48,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         }
     }
 
-    public FeedAdapter(Feed feed) {
+    public FeedAdapter(Context context, Feed feed) {
         this.feed = feed;
+        this.context = context;
         Calendar calendar = Calendar.getInstance();
 
         today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
@@ -67,9 +71,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         if(!image.isEmpty()){
             Picasso.get().load(image).into(holder.imageView);
         }
+        Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/gilroy.otf");
+
 
         holder.text.setText(feed.getContent(i));
 
+        holder.title.setTypeface(font);
         holder.title.setText(feed.getTitle(i));
         holder.created_at.setText(getTimeStamp(feed.getCreatedAt(i)));
     }

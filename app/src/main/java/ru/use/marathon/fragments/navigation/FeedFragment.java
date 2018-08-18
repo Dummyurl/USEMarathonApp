@@ -107,7 +107,7 @@ public class FeedFragment extends AbstractFragment {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 feed = new Feed(response);
-                recyclerView.setAdapter(new FeedAdapter(feed));
+                recyclerView.setAdapter(new FeedAdapter(getActivity().getApplicationContext(),feed));
                 feed_pb.setVisibility(View.GONE);
             }
 

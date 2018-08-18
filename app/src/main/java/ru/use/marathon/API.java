@@ -109,6 +109,7 @@ public interface API {
     Call<JsonObject> get_collection(
             @Query("v") int v,
             @Query("method") String method,
+            @Query("sbj") int sbj,
             @Query("qc_number") int qc_number
 
     );

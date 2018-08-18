@@ -17,6 +17,10 @@ public class SolvedTestsByTopics  {
         jsonObject = response.body();
     }
 
+    public boolean success(){
+        return (jsonObject.has("success") && (jsonObject.get("success").getAsInt() > 0));
+    }
+
     public JsonArray getData(){
         return jsonObject.get("solved").getAsJsonArray();
     }

@@ -24,6 +24,10 @@ public class Collection  {
         object = response.body();
     }
 
+    public boolean success(){
+        return (object.has("success") && (object.get("success").getAsInt() > 0));
+    }
+
     private JsonArray getCollectionArray(){
         return object.get("collection").getAsJsonArray();
     }
@@ -65,28 +69,32 @@ public class Collection  {
     }
 
     public List<String> getAnswers(int i){
-
-        int answers_size = getCollectionArray().get(i).getAsJsonObject().get("answers").getAsJsonArray().size();
         List<String> answers = new ArrayList<>();
-        try{
-            for (int j = 0; j < answers_size; j++){
-                answers.add(getCollectionArray()
-                        .get(i)
-                        .getAsJsonObject()
-                        .get("answers")
-                        .getAsJsonArray()
-                        .get(j)
-                        .getAsJsonObject()
-                        .get("answer")
-                        .getAsString());
+        if(getCollectionArray().get(i).getAsJsonObject().has("answers")){
+        int answers_size = getCollectionArray().get(i).getAsJsonObject().get("answers").getAsJsonArray().size();
+
+            try{
+                for (int j = 0; j < answers_size; j++){
+                    answers.add(getCollectionArray()
+                            .get(i)
+                            .getAsJsonObject()
+                            .get("answers")
+                            .getAsJsonArray()
+                            .get(j)
+                            .getAsJsonObject()
+                            .get("answer")
+                            .getAsString());
+                }
+            }catch (Exception e){
+                answers.add("Error.");
             }
-        }catch (Exception e){
-            answers.add("Error.");
+            return answers;
+        }else{
+            answers.add("");
+            return answers;
         }
 
 
-
-        return answers;
     }
 
     public int getAnswersSize(int i){
@@ -94,24 +102,29 @@ public class Collection  {
     }
 
     public List<String> getRightAnswers(int i){
-        int right_answers_size = getCollectionArray().get(i).getAsJsonObject().get("right_answers").getAsJsonArray().size();
         List<String> answers = new ArrayList<>();
-        try{
-            for (int j = 0; j < right_answers_size; j++){
-                answers.add(getCollectionArray()
-                        .get(i)
-                        .getAsJsonObject()
-                        .get("right_answers")
-                        .getAsJsonArray()
-                        .get(j)
-                        .getAsJsonObject()
-                        .get("order")
-                        .getAsString());
+        if(getCollectionArray().get(i).getAsJsonObject().has("right_answers")) {
+            int right_answers_size = getCollectionArray().get(i).getAsJsonObject().get("right_answers").getAsJsonArray().size();
+            try {
+                for (int j = 0; j < right_answers_size; j++) {
+                    answers.add(getCollectionArray()
+                            .get(i)
+                            .getAsJsonObject()
+                            .get("right_answers")
+                            .getAsJsonArray()
+                            .get(j)
+                            .getAsJsonObject()
+                            .get("order")
+                            .getAsString());
+                }
+            } catch (Exception e) {
+                answers.add("-");
             }
-        }catch (Exception e){
-            answers.add("-");
+            return answers;
+        }else{
+            answers.add("");
+            return answers;
         }
-        return answers;
     }
 
 

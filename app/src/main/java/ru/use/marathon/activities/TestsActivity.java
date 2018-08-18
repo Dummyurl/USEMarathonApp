@@ -77,7 +77,7 @@ public class TestsActivity extends AbstractActivity implements TestUnitFragment.
 
     private void variants_data() {
 
-        AppController.getApi().get_collection(1,"get_collection",collection_number).enqueue(new Callback<JsonObject>() {
+        AppController.getApi().get_collection(1,"get_collection",subject(),collection_number).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Collections collections = new Collections(getApplicationContext());

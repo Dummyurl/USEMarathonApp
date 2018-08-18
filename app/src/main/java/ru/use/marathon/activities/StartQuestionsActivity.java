@@ -56,7 +56,7 @@ public class StartQuestionsActivity extends AppCompatActivity implements StartQu
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
-        colors = new int[]{R.color.bg_screen1,R.color.bg_screen2,R.color.bg_screen3,R.color.bg_screen4,R.color.bg_screen5,R.color.bg_screen2};
+        colors = new int[]{R.color.bg_screen1,R.color.bg_screen2,R.color.bg_screen3,R.color.bg_screen4,R.color.bg_screen5};
 
         changeStatusBarColor();
 
@@ -124,18 +124,17 @@ public class StartQuestionsActivity extends AppCompatActivity implements StartQu
     private void prepareData(){
 
         dataList = new ArrayList<>();
-        String[] data1 = new String[]{"ответ 1(в.1)","ответ 2(в.1)","ответ 3(в.1)","ответ 4(в.1)"};
-        String[] data2 = new String[]{"ответ 1(в.2)","ответ 2(в.2)","ответ 3(в.2)","ответ 4(в.2)"};
-        String[] data3 = new String[]{"ответ 1(в.3)","ответ 2(в.3)","ответ 3(в.3)","ответ 4(в.3)"};
-        String[] data4 = new String[]{"ответ 1(в.4)","ответ 2(в.4)","ответ 3(в.4)","ответ 4(в.4)"};
-        String[] data5 = new String[]{"ответ 1(в.5)","ответ 2(в.5)","ответ 3(в.5)","ответ 4(в.5)"};
+        String[] data1 = new String[]{"от 40 до 50","от 50 до 70","больше 70"};
+        String[] data2 = new String[]{"менее 10 минут","25 минут","40+ минут"};
+        String[] data3 = new String[]{"Отлично!","Хорошо","Пойдет","Плохо"};
+        String[] data4 = new String[]{"Юриспруденция","IT-специальность","Медицина","Техническая","Экономическая","Творческая"};
 
         dataList.add(new StartQuestion("Тут название вопроса1",data1)); //not important, but should be
-        dataList.add(new StartQuestion("Тут название вопроса1",data1));
-        dataList.add(new StartQuestion("Тут название вопроса2",data2));
-        dataList.add(new StartQuestion("Тут название вопроса3",data3));
-        dataList.add(new StartQuestion("Тут название вопроса4",data4));
-        dataList.add(new StartQuestion("Тут название вопроса5",data5));
+        dataList.add(new StartQuestion("На какой балл ЕГЭ ты ориентирован?",data1));
+        dataList.add(new StartQuestion("Сколько времени ты готов тратить на подготовку в день",data2));
+        dataList.add(new StartQuestion("Насколько ты оцениваешь свои знания?",data3));
+        dataList.add(new StartQuestion("На какую специальность ты планируешь поступать?",data4));
+
 
     }
 
