@@ -8,8 +8,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -35,7 +33,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
-import ru.use.marathon.activities.SettingsProfileActivity;
 import ru.use.marathon.activities.UserProfileActivity;
 import ru.use.marathon.adapters.StatisticsAdapter;
 import ru.use.marathon.adapters.TeachersStudentsAdapter;
@@ -54,8 +51,6 @@ public class ProfileFragment extends AbstractFragment {
 
     @BindView(R.id.user_image)
     CircleImageView user_image;
-    @BindView(R.id.settings_btn)
-    Button settings_btn;
     @BindView(R.id.user_id)
     TextView user_id_tv;
     @BindView(R.id.user_email)
@@ -92,21 +87,12 @@ public class ProfileFragment extends AbstractFragment {
 
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, parent, false);
         unbinder = ButterKnife.bind(this, view);
 
-
-        settings_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), SettingsProfileActivity.class);
-                startActivity(i);
-            }});
 
         user_id_tv.setText(String.valueOf(user_id()));
         user_email_tv.setText(String.valueOf(email()));

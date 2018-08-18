@@ -45,7 +45,7 @@ public class Collection  {
     }
 
     public String getTopic(int i) {
-        return getCollectionArray().get(i).getAsJsonObject().get("topic").getAsString();
+        return getCollectionArray().get(i).getAsJsonObject().get("topic_id").getAsString();
     }
 
     public int getTaskNumber(int i) {
@@ -54,7 +54,14 @@ public class Collection  {
 
     public String getContent(int i) {
         return getCollectionArray().get(i).getAsJsonObject().get("content_text").getAsString();
-        return getCollectionArray().get(i).getAsJsonObject().get("content").getAsString();
+    }
+
+    public String getContentImage(int i) {
+        return getCollectionArray().get(i).getAsJsonObject().get("content_image").getAsString();
+    }
+
+    public String getContentHtml(int i) {
+        return getCollectionArray().get(i).getAsJsonObject().get("content_html").getAsString();
     }
 
     public int getAnswerType(int i){

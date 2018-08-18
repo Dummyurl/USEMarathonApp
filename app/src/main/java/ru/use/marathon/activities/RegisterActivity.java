@@ -15,12 +15,9 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
@@ -74,27 +71,12 @@ public class RegisterActivity extends AbstractActivity {
     int ID;
     int counter = 0;
     boolean isAgree = false;
-=======
-    @BindView(R.id.spiner)
-    Spinner spiner;
-    JsonArray regioin;
-    JsonObject jsoni;
-    int id_subject;
-    int IDI;
-    int ctIDI;
-    int counter=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        String[] datax = {"Русский", "Математика (База)","Математика (Профиль)" };
-
         ButterKnife.bind(this);
-
-
-=======
-
 
 
         AppController.getApi().regionshow(1, "regionshow", 1).enqueue(new Callback<JsonObject>() {
@@ -112,12 +94,6 @@ public class RegisterActivity extends AbstractActivity {
                 showInfoDialog("Ошибка!", "Произошла ошибка при загрузке регионов. Повторите позднее.");
             }
         });
-
-
-
-
-
-
 
 
         region_btn.setOnClickListener(new View.OnClickListener() {
@@ -147,15 +123,6 @@ public class RegisterActivity extends AbstractActivity {
                                 CityShow rs = new CityShow(response);
                                 for (int i = 0; i < rs.getData().size(); i++) {
                                     cities.add(rs.name(i));
-                                        }
-
-                                        city_false_btn.setVisibility(View.GONE);
-                                        city_btn.setVisibility(View.VISIBLE);}
-
-                                    @Override
-                                    public void onFailure(Call<JsonObject> call, Throwable t) {
-                                        Toast.makeText(RegisterActivity.this,"в чем то проблемка", Toast.LENGTH_SHORT).show();
-                                    }});
 
 
                                 }
@@ -172,37 +139,12 @@ public class RegisterActivity extends AbstractActivity {
                     }
                 });
                 regions_sd.showSpinerDialog();
-=======
-
-            });
-
-
-
-            city_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-
 
 
             }
 
         });
 
-=======
-                    // spinnerDialog=new SpinnerDialog(MainActivity.this,items,"Select or Search City",R.style.DialogAnimations_SmileWindow,"Close Button Text");
-                    spinnerDialog2 =new SpinnerDialog(RegisterActivity.this,cityS,"Select item",R.style.DialogAnimations_SmileWindow,"Close");
-                    spinnerDialog2.bindOnSpinerListener(new OnSpinerItemClick() {
-                        @Override
-                        public void onClick(String item, int position) {
-                           // Toast.makeText(RegisterActivity.this, item + "  " + position+1+"", Toast.LENGTH_SHORT).show();
-                            //Toast.makeText(RegisterActivity.this, "Selected : "+item, Toast.LENGTH_SHORT).show();
-                            city_btn.setText(item );
-                            counter++;
-                            ctIDI=position+1;
-                        }
-                    });
-                    spinnerDialog2.showSpinerDialog();
 
         city_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,46 +185,6 @@ public class RegisterActivity extends AbstractActivity {
         phone_et.addTextChangedListener(new MyTextWatcher(phone_et));
 
 
-
-
-
-        if(post == 1) {
-            spiner.setVisibility(View.VISIBLE);
-
-            // адаптер
-            ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, datax);
-            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            spiner.setAdapter(adapter1);
-            // заголовок
-            spiner.setPrompt("Предмет");
-            // выделяем элемент
-          //  spiner.setSelection(2);
-            // устанавливаем обработчик нажатия
-            spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view,
-                                           int position, long id) {
-                    id_subject = position+1;
-                   // id_subject = (String)parent.getItemAtPosition(position);
-
-                    // показываем позиция нажатого элемента
-                  //  Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(getBaseContext(), id_subject , Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> arg0) {
-                }
-            });
-
-
-        }
-
-
-
-
-
         sign_up_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -294,8 +196,6 @@ public class RegisterActivity extends AbstractActivity {
 
 
                     AppController.getApi().sign_up(1, "sign_up", post, name, email, password, num).enqueue(new Callback<JsonObject>() {
-=======
-                    AppController.getApi().sign_up(1, "sign_up", post, name, email, password,num,IDI,ctIDI,id_subject).enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             new Success(response);
@@ -334,16 +234,6 @@ public class RegisterActivity extends AbstractActivity {
                         }
                     });
                 } else {
-=======
-
-
-
-
-
-
-
-
-                }else{
                     Toast.makeText(RegisterActivity.this, "Введите все данные", Toast.LENGTH_SHORT).show();
                 }
             }

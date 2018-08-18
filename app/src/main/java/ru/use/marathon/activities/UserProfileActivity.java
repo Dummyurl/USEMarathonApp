@@ -1,12 +1,9 @@
 package ru.use.marathon.activities;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -41,7 +38,6 @@ public class UserProfileActivity extends AbstractActivity {
     TextView tv_name;
     @BindView(R.id.account_status)
     TextView tv_status;
-
 
     //TEACHER
     @BindView(R.id.teacher_layout)
@@ -106,9 +102,8 @@ public class UserProfileActivity extends AbstractActivity {
             }
         });
 
-
-
     }
+
     private void initTeacher(UserProfile userProfile) {
         teacher_layout.setVisibility(View.VISIBLE);
         student_relative.setVisibility(View.GONE);

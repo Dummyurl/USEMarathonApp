@@ -21,11 +21,7 @@ public interface API {
             @Query("name") String name,
             @Query("email") String email,
             @Query("password") String password,
-            @Query("phone") String num,
-            @Query("id_region") int id_region,
-            @Query("id_city") int id_city,
-            @Query("id_subject") int id_subject
-
+            @Query("phone") String num
 
     );
 

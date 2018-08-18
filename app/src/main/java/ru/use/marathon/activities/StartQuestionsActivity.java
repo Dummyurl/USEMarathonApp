@@ -51,10 +51,7 @@ public class StartQuestionsActivity extends AppCompatActivity implements StartQu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_questions);
         ButterKnife.bind(this);
-
-        if (savedInstanceState != null) {
-            mContent = (StartQuestionFragment) getSupportFragmentManager().getFragment(savedInstanceState, "start_question");
-        }
+        
 
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -123,13 +120,6 @@ public class StartQuestionsActivity extends AppCompatActivity implements StartQu
 
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        //Save the fragment's instance
-        getSupportFragmentManager().putFragment(outState, "start_question", mContent);
-    }
 
     private void prepareData(){
 

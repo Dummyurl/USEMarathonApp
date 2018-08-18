@@ -141,10 +141,12 @@
             android:label="Создать задание" />
         <activity
             android:name=".activities.UserProfileActivity"
-            android:label="Профиль" />
-        <activity
-            android:name=".activities.StartQuestionsActivity"
-            android:theme="@style/AppTheme.NoBar" />
+            android:label="Профиль"></activity>
+
+
+
+        <activity android:name=".activities.StartQuestionsActivity"
+            android:theme="@style/AppTheme.NoBar"></activity>
 
         <receiver
             android:name=".utils.ConnectivityReceiver"
@@ -154,10 +156,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activities.forgotpassActivity" />
-        <activity
-            android:name=".activities.SettingsProfileActivity"
-            android:label="@string/title_activity_settings_profile"></activity>
+        <activity android:name=".activities.forgotpassActivity"></activity>
+
     </application>
 
 </manifest>
