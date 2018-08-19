@@ -44,8 +44,8 @@ public class Collection  {
         return getCollectionArray().get(i).getAsJsonObject().get("subject").getAsString();
     }
 
-    public String getTopic(int i) {
-        return getCollectionArray().get(i).getAsJsonObject().get("topic_id").getAsString();
+    public int getTopic(int i) {
+        return getCollectionArray().get(i).getAsJsonObject().get("topic_id").getAsInt();
     }
 
     public int getTaskNumber(int i) {

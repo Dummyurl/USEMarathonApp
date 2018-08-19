@@ -8,25 +8,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.use.marathon.R;
+import ru.use.marathon.activities.StartQuestionsActivity;
 import ru.use.marathon.activities.TestsByCollectionsActivity;
 import ru.use.marathon.activities.TopicsActivity;
+import ru.use.marathon.fragments.AbstractFragment;
 
 /**
  * Created by ilyas on 10-Jun-18.
  */
 
-public class SNavTestsFragment extends Fragment {
+public class SNavTestsFragment extends AbstractFragment {
 
     @BindView(R.id.by_variants)
     Button by_vars;
 
     @BindView(R.id.by_topics)
     Button by_topics;
+
+    @BindView(R.id.tests_layout)
+    LinearLayout layout;
 
 
     Unbinder unbinder;
@@ -57,6 +63,20 @@ public class SNavTestsFragment extends Fragment {
                 startActivity(new Intent(getActivity(), TopicsActivity.class));
             }
         });
+
+        if(DEBUG){
+            Button btn = new Button(getActivity().getApplicationContext());
+            btn.setText("TEST_START_QUESTIONS");
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getActivity(), StartQuestionsActivity.class));
+                }
+            });
+            layout.addView(btn);
+
+        }
+
 
         return view;
     }

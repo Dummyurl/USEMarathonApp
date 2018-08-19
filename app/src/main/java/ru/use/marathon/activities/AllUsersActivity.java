@@ -60,7 +60,7 @@ public class AllUsersActivity extends AbstractActivity {
     Button create_chat_btn;
     private BroadcastReceiver mMessageReceiver;
     String user_id = "";
-    int local_user_type,layout_type,chat_id;
+    int local_user_type, layout_type, chat_id;
 
     String pos = "", id = "";
     Set<Integer> positions;
@@ -75,19 +75,19 @@ public class AllUsersActivity extends AbstractActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         positions = new HashSet<>();
-        if(student.isLoggedIn() && !teacher.isLoggedIn()){
+        if (student.isLoggedIn() && !teacher.isLoggedIn()) {
             user_data = student.getData();
             user_id = user_data.get(student.KEY_ID);
             local_user_type = 0;
-        }else if(!student.isLoggedIn() && teacher.isLoggedIn()){
+        } else if (!student.isLoggedIn() && teacher.isLoggedIn()) {
             user_data = teacher.getData();
             user_id = user_data.get(teacher.KEY_ID);
             local_user_type = 1;
         }
 
         user_type = getIntent().getIntExtra("type", -1);
-        layout_type = getIntent().getIntExtra("layout_type",-1);
-        chat_id = getIntent().getIntExtra("chat_id",-1);
+        layout_type = getIntent().getIntExtra("layout_type", -1);
+        chat_id = getIntent().getIntExtra("chat_id", -1);
         usersArrayList = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -99,16 +99,17 @@ public class AllUsersActivity extends AbstractActivity {
             public void onReceive(Context context, Intent intent) {
                 pos = intent.getStringExtra("pos");
                 id = intent.getStringExtra("id");
-                Toast.makeText(AllUsersActivity.this, "pos and user_id: " + pos + "_"+ id, Toast.LENGTH_SHORT).show();
+                if (DEBUG)
+                    Toast.makeText(AllUsersActivity.this, "pos and user_id: " + pos + "_" + id, Toast.LENGTH_SHORT).show();
                 positions.add(Integer.valueOf(id));
                 Log.d(TAG, "onReceive(): positions array: " + positions.toString());
             }
         };
 
-        if(layout_type == -1 ){
+        if (layout_type == -1) {
             create_chat_btn.setText("Создать чат");
             getSupportActionBar().setTitle("Создание чата");
-        }else{
+        } else {
             create_chat_btn.setText("Добавить в чат");
             getSupportActionBar().setTitle("Добавление в чат");
         }
@@ -118,10 +119,10 @@ public class AllUsersActivity extends AbstractActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(!id.isEmpty() && !pos.isEmpty()){
-                            if(layout_type == -1) initButton();
+                        if (!id.isEmpty() && !pos.isEmpty()) {
+                            if (layout_type == -1) initButton();
                             else initAddMemberButton();
-                        }else{
+                        } else {
                             Toast.makeText(AllUsersActivity.this, "Нельзя создать чат, не выбрав участника", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -148,17 +149,16 @@ public class AllUsersActivity extends AbstractActivity {
     }
 
 
-
     private void initAddMemberButton() {
         int[] p = new int[positions.size()];
         int counter = 0;
-        for(Integer i : positions){
+        for (Integer i : positions) {
             p[counter] = i;
             counter++;
         }
         for (int i = 0; i < p.length; i++) {
-            if(chat_id != -1){
-                AppController.getApi().addChatMember(1,"addChatMember",String.valueOf(chat_id),String.valueOf(p[i]),0).enqueue(new Callback<JsonObject>() {
+            if (chat_id != -1) {
+                AppController.getApi().addChatMember(1, "addChatMember", String.valueOf(chat_id), String.valueOf(p[i]), 0).enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         //todo notify user about response from server
@@ -171,7 +171,7 @@ public class AllUsersActivity extends AbstractActivity {
                     }
                 });
 
-            }else{
+            } else {
                 create_chat_btn.setError("Error! Try again later");
                 Toast.makeText(this, "Error. Please try again later..", Toast.LENGTH_SHORT).show();
             }
@@ -205,11 +205,11 @@ public class AllUsersActivity extends AbstractActivity {
                             AppController.getApi().addChatMember(1, "addChatMember", chat_id, id, user_type).enqueue(new Callback<JsonObject>() {
                                 @Override
                                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                   Intent i = new Intent(AllUsersActivity.this,ChatRoomActivity.class);
-                                   i.putExtra("chat_id",Integer.valueOf(chat_id));
-                                   i.putExtra("title",title[0]);
-                                   startActivity(i);
-                                   finish();
+                                    Intent i = new Intent(AllUsersActivity.this, ChatRoomActivity.class);
+                                    i.putExtra("chat_id", Integer.valueOf(chat_id));
+                                    i.putExtra("title", title[0]);
+                                    startActivity(i);
+                                    finish();
                                 }
 
                                 @Override
@@ -235,7 +235,7 @@ public class AllUsersActivity extends AbstractActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.users_menu,menu);
+        getMenuInflater().inflate(R.menu.users_menu, menu);
         return true;
     }
 
@@ -245,11 +245,13 @@ public class AllUsersActivity extends AbstractActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 UsersResponse users = new UsersResponse(response);
-                for (int i = 0; i < users.size(); i++) {
-                    usersArrayList.add(new Users(Integer.valueOf(users.getId(i)), users.getName(i), users.getImage(i), false));
+                if (users.success()) {
+                    for (int i = 0; i < users.size(); i++) {
+                        usersArrayList.add(new Users(Integer.valueOf(users.getId(i)), users.getName(i), users.getImage(i), false));
+                    }
+                    allUsersAdapter = new AllUsersAdapter(getApplicationContext(), usersArrayList, user_type);
+                    recyclerView.setAdapter(allUsersAdapter);
                 }
-                allUsersAdapter = new AllUsersAdapter(getApplicationContext(), usersArrayList, user_type);
-                recyclerView.setAdapter(allUsersAdapter);
             }
 
             @Override

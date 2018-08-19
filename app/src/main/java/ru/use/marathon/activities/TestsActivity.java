@@ -30,7 +30,8 @@ import ru.use.marathon.models.answers.StudentAnswers;
 
 public class TestsActivity extends AbstractActivity implements TestUnitFragment.OnDataPass {
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.tests_viewpager_container)
     ViewPager viewPager;
 
@@ -59,14 +60,14 @@ public class TestsActivity extends AbstractActivity implements TestUnitFragment.
         abstractAnswers = new ArrayList<>();
         test_numbers = new ArrayList<>();
 
-        if(tag.equals("var")){
-            collection_number = getIntent().getIntExtra("collection_number",0);
+        if (tag.equals("var")) {
+            collection_number = getIntent().getIntExtra("collection_number", 0);
             variants_data();
-        }else if(tag.equals("topics")){
+        } else if (tag.equals("topics")) {
             Collections collections = new Collections(getApplicationContext());
             collection = collections.getCollection();
             tests_amount = collection.size();
-            MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),collection,-1);
+            MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), collection, -1);
             viewPager.setAdapter(adapter);
             for (int i = 0; i < tests_amount; i++) {
                 test_numbers.add(collection.getTaskNumber(i));
@@ -77,24 +78,26 @@ public class TestsActivity extends AbstractActivity implements TestUnitFragment.
 
     private void variants_data() {
 
-        AppController.getApi().get_collection(1,"get_collection",subject(),collection_number).enqueue(new Callback<JsonObject>() {
+        AppController.getApi().get_collection(1, "get_collection", subject(), collection_number).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Collections collections = new Collections(getApplicationContext());
+
                 collection = new Collection(response);
                 collections.saveCollection(collection);
                 tests_amount = collection.size();
-                MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),collection,collection_number);
+                MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), collection, collection_number);
                 viewPager.setAdapter(adapter);
 
                 for (int i = 0; i < collection.size(); i++) {
                     test_numbers.add(collection.getTaskNumber(i));
                 }
+
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                showInfoDialog("Ошибка!", "Не удалось загрузить данные с сервера");
             }
         });
     }
@@ -114,9 +117,9 @@ public class TestsActivity extends AbstractActivity implements TestUnitFragment.
     }
 
     @Override
-    public void onDataPass(AbstractAnswer abstractAnswer,int page) {
+    public void onDataPass(AbstractAnswer abstractAnswer, int page) {
 
-        if(abstractAnswer!=null){
+        if (abstractAnswer != null) {
             abstractAnswers.add(abstractAnswer);
         }
         Log.i("ABSTRACTDATA_SIZE", String.valueOf(abstractAnswers.size()));
@@ -128,19 +131,18 @@ public class TestsActivity extends AbstractActivity implements TestUnitFragment.
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
         Collection collection;
-        int cn ;
+        int cn;
 
-        public MyFragmentPagerAdapter(FragmentManager fm, Collection collection,int cn) {
+        public MyFragmentPagerAdapter(FragmentManager fm, Collection collection, int cn) {
             super(fm);
             this.collection = collection;
             this.cn = cn;
         }
 
 
-
         @Override
         public Fragment getItem(int position) {
-            return TestUnitFragment.newInstance(position, tests_amount,cn);
+            return TestUnitFragment.newInstance(position, tests_amount, cn);
         }
 
         @Override

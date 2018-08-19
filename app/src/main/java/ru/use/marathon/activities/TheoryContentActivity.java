@@ -66,30 +66,34 @@ public class TheoryContentActivity extends AbstractActivity {
         getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if(userType() == TEACHER) tests_btn.setVisibility(View.GONE);
+
         tests_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                AppController.getApi().get_collection_by_topics(1,"get_collection_by_topics",topic_id).enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        Collection c = new Collection(response);
-                        if(c.success()){
-                            Collections collections = new Collections(getApplicationContext());
-                            collections.saveCollection(c);
-                            Intent view = new Intent(TheoryContentActivity.this,TestsActivity.class);
-                            view.putExtra("tag","topics");
-                            startActivity(view);
-                        }else{
-                            showInfoDialog("Нет доступа.","Извините, данный тест находится в разработке или редактируется модераторами");
+                if(userType() == STUDENT){
+                    AppController.getApi().get_collection_by_topics(1,"get_collection_by_topics",topic_id).enqueue(new Callback<JsonObject>() {
+                        @Override
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            Collection c = new Collection(response);
+                            if(c.success()){
+                                Collections collections = new Collections(getApplicationContext());
+                                collections.saveCollection(c);
+                                Intent view = new Intent(TheoryContentActivity.this,TestsActivity.class);
+                                view.putExtra("tag","topics");
+                                startActivity(view);
+                            }else{
+                                showInfoDialog("Нет доступа.","Извините, данный тест находится в разработке или редактируется модераторами");
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-                        
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                        }
+                    });
+                }
 
             }
         });
@@ -106,7 +110,10 @@ public class TheoryContentActivity extends AbstractActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.saved){
             Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
+        }else if(item.getItemId() == R.id.home){
+            onBackPressed();
         }
+
         return true;
     }
 

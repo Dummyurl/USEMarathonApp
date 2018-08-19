@@ -171,8 +171,7 @@ public class ChatDetailsActivity extends AbstractActivity {
         AppController.getApi().leaveChat(1,"leaveChat",String.valueOf(chat_id),String.valueOf(student.UID()),0).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                new Success(response);
-                if(success()){
+                if(success(response)){
                     Intent i = new Intent(ChatDetailsActivity.this,MainActivity.class);
                     i.putExtra("bnv_tag","chat");
                     startActivity(i);

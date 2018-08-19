@@ -1,6 +1,7 @@
 package ru.use.marathon.fragments.navigation;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -158,22 +159,33 @@ public class ProfileFragment extends AbstractFragment {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 users = new UsersResponse(response);
-                for (int i = 0; i < users.size(); i++) {
-                    ids.add(users.getId(i));
-                }
-                TeachersStudentsAdapter adapter = new TeachersStudentsAdapter(users, getActivity().getApplicationContext());
-                my_students_rv.setAdapter(adapter);
-
-                ItemClickSupport.addTo(my_students_rv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        String id = ids.get(position);
-                        Intent i = new Intent(getActivity(), UserProfileActivity.class);
-                        i.putExtra("user_id", id);
-                        i.putExtra("utype", 0);
-                        startActivity(i);
+                if(users.success()){
+                    for (int i = 0; i < users.size(); i++) {
+                        ids.add(users.getId(i));
                     }
-                });
+                    TeachersStudentsAdapter adapter = new TeachersStudentsAdapter(users, getActivity().getApplicationContext());
+                    my_students_rv.setAdapter(adapter);
+
+                    ItemClickSupport.addTo(my_students_rv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                        @Override
+                        public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                            String id = ids.get(position);
+                            Intent i = new Intent(getActivity(), UserProfileActivity.class);
+                            i.putExtra("user_id", id);
+                            i.putExtra("utype", 0);
+                            startActivity(i);
+                        }
+
+                    });
+
+                }else{
+                    TextView tv = new TextView(getActivity().getApplicationContext());
+                    tv.setText("У вас нет учеников, или произошла ошибка.");
+                    tv.setTextColor(Color.RED);
+                    teacher_relative.addView(tv);
+                    teacher_relative.setGravity(RelativeLayout.CENTER_VERTICAL);
+                    teacher_relative.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

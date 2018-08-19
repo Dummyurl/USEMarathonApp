@@ -10,7 +10,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.use.marathon.R;
-import ru.use.marathon.models.topics.SolvedTestsByTopics;
 import ru.use.marathon.models.topics.Topics;
 
 /**
@@ -20,14 +19,10 @@ import ru.use.marathon.models.topics.Topics;
 public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.TopicsViewHolder> {
 
     Topics topics;
-    SolvedTestsByTopics solvedTestsByTopics;
 
-
-    public TopicsAdapter(Topics topics, SolvedTestsByTopics solvedTestsByTopics) {
+    public TopicsAdapter(Topics topics) {
         this.topics = topics;
-        this.solvedTestsByTopics = solvedTestsByTopics;
     }
-
 
     @Override
     public TopicsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -38,15 +33,11 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.TopicsView
 
     @Override
     public void onBindViewHolder(TopicsViewHolder holder, int position) {
-        holder.content_tv.setText(topics.getContent(position));
+        holder.content_tv.setText(topics.getTitle(position));
 
-        for (int i = 0; i < solvedTestsByTopics.size(); i++) {
-            if (topics.getID(position) == solvedTestsByTopics.getTopicID(i)) {
-                holder.progressBar.setMax(topics.getTestsNumber(position));
-                holder.progressBar.setProgress(solvedTestsByTopics.getSolvedTestsNumber(i));
-                holder.pb_info_tv.setText(String.valueOf(solvedTestsByTopics.getSolvedTestsNumber(i)) + "/" + String.valueOf(topics.getTestsNumber(position)));
-            }
-        }
+        holder.progressBar.setMax(topics.getAmount(position));
+        holder.progressBar.setProgress(topics.getSolved(position));
+        holder.pb_info_tv.setText(String.valueOf(topics.getSolved(position)) + "/" + String.valueOf(topics.getAmount(position)));
 
     }
 

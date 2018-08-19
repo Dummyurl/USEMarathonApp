@@ -29,6 +29,9 @@ public class Collections {
         sharedPreferences = context.getSharedPreferences("collections",Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
+    public boolean success(){
+        return (res.has("success") && (res.get("success").getAsInt() > 0));
+    }
 
     public void saveCollection(Collection collection){
         Gson gson = new Gson();

@@ -31,7 +31,7 @@ import ru.use.marathon.models.StartQuestion;
 public class StartQuestionsActivity extends AppCompatActivity implements StartQuestionFragment.AnswerListener {
 
     public static final String TAG = StartQuestionsActivity.class.getSimpleName();
-    private static int NUM_ITEMS = 6;
+    private static int NUM_ITEMS = 5;
     MyPagerAdapter pagerAdapter;
 
     private TextView[] dots;

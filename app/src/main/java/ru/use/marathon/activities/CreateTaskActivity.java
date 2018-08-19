@@ -128,8 +128,8 @@ public class CreateTaskActivity extends AbstractActivity {
                         AppController.getApi().add_qu_ans(1,"add_qu_ans",qu_id,answerList.get(i).getContent()).enqueue(new Callback<JsonObject>() {
                             @Override
                             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                new Success(response);
-                                if(success()) Log.e(TAG, "onResponse Answers Queue: [" + String.valueOf(finalI) + "]" + (success()?" ok":" not ok"));
+
+                                if(success(response)) Log.e(TAG, "onResponse Answers Queue: [" + String.valueOf(finalI) + "]" + (success(response)?" ok":" not ok"));
                             }
 
                             @Override
@@ -145,7 +145,7 @@ public class CreateTaskActivity extends AbstractActivity {
                             @Override
                             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                                 new Success(response);
-                                if(success()) Log.e(TAG, "onResponse Right Answers Queue: [" + String.valueOf(finalI) + "]" + (success()?" ok":" not ok"));
+                                if(success(response)) Log.e(TAG, "onResponse Right Answers Queue: [" + String.valueOf(finalI) + "]" + (success(response)?" ok":" not ok"));
                             }
 
                             @Override
@@ -274,7 +274,7 @@ public class CreateTaskActivity extends AbstractActivity {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             new Success(response);
-                            if(success())
+                            if(success(response))
                                 Toast.makeText(CreateTaskActivity.this, "oh yeah", Toast.LENGTH_SHORT).show();
                         }
 

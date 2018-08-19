@@ -23,6 +23,7 @@ import ru.use.marathon.utils.InternetConnectionListener;
 
 public class AbstractFragment extends Fragment implements InternetConnectionListener {
 
+    public static final boolean DEBUG = false;
     public static final int STUDENT = 0;
     public static final int TEACHER = 1;
 

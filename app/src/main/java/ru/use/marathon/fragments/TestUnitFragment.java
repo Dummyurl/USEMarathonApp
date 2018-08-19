@@ -41,7 +41,6 @@ import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.Constants;
 import ru.use.marathon.R;
-import ru.use.marathon.activities.FeedContentActivity;
 import ru.use.marathon.activities.ResultsActivity;
 import ru.use.marathon.activities.TestsActivity;
 import ru.use.marathon.models.Collection;
@@ -300,7 +299,7 @@ public class TestUnitFragment extends AbstractFragment {
 
 
     private void sendSolved(){
-        AppController.getApi().setSolvedTopic(1,"setSolvedTopic",collection.getSubject(page),user_id(),collection.getTopic(page))
+        AppController.getApi().setSolvedTopic(1,"setSolvedTopic",collection.getSubject(page),user_id(),String.valueOf(collection.getTopic(page)))
                 .enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -321,7 +320,7 @@ public class TestUnitFragment extends AbstractFragment {
         HashMap<String,String> user_data = student.getData();
         int id = Integer.parseInt(user_data.get(student.KEY_ID));
         int c = isCorrectAnswer? 1 : 0;
-        AppController.getApi().sendStat(1,"setStats",subject(),id,collection.getId(page),seconds,c,0).enqueue(new Callback<JsonObject>() {
+        AppController.getApi().sendStat(1,"setStats",subject(),id,collection.getId(page),seconds,c,collection.getTopic(page)).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
@@ -396,7 +395,7 @@ public class TestUnitFragment extends AbstractFragment {
                     answers_container.setVisibility(View.GONE);
                     rg_answers = new RadioButton[answers.size()];
                     for (int i = 0; i < answers.size(); i++) {
-                        rg_answers[i] = new RadioButton(getActivity().getApplicationContext());
+                        rg_answers[i] = (RadioButton) View.inflate(getActivity().getApplicationContext(),R.layout.factory_radio_button,null);
                         rg_answers[i].setTextColor(Color.BLACK);
                         //todo correct radiobtn
                         rg_answers[i].setText(answers.get(i));
@@ -408,7 +407,7 @@ public class TestUnitFragment extends AbstractFragment {
                     rg_container.setVisibility(View.GONE);
                     cb_answers = new CheckBox[answers.size()];
                     for (int i = 0; i < answers.size(); i++) {
-                        cb_answers[i] = new CheckBox(getActivity().getApplicationContext());
+                        cb_answers[i] = (CheckBox) View.inflate(getActivity().getApplicationContext(),R.layout.factory_check_box,null);
                         cb_answers[i].setTextColor(Color.BLACK);
                         cb_answers[i].setText(answers.get(i));
                         answers_container.addView(cb_answers[i]);
@@ -417,7 +416,7 @@ public class TestUnitFragment extends AbstractFragment {
                 } else if (answer_type == Constants.TEXT_TYPE) {
 
                     rg_container.setVisibility(View.GONE);
-                    enter_answer_et = new EditText(getActivity().getApplicationContext());
+                    enter_answer_et = (EditText) View.inflate(getActivity().getApplicationContext(),R.layout.factory_edit_text,null);
                     enter_answer_et.setTextColor(Color.BLACK);
                     enter_answer_et.setHint("Введите ответ");
                     answers_container.addView(enter_answer_et);

@@ -17,6 +17,9 @@ public class UsersResponse
     public UsersResponse(Response<JsonObject> response) {
         js = response.body();
     }
+    public boolean success(){
+        return (js.has("success") && (js.get("success").getAsInt() > 0));
+    }
 
     public JsonArray getData(){
         return js.get("users").getAsJsonArray();

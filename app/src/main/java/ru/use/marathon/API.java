@@ -232,7 +232,7 @@ public interface API {
             @Query("qu_id") int qu_id,
             @Query("time") int time,
             @Query("ra") int ra,
-            @Query("c_id") int collection_id
+            @Query("t_id") int topic_id
 
     );
 
@@ -244,6 +244,15 @@ public interface API {
             @Query("sbj") String sbj,
             @Query("uid") int uid,
             @Query("topic_id") String topic_id
+    );
+
+
+    @GET("api.php")
+    Call<JsonObject> getSolvedByTopics(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("sbj") int sbj,
+            @Query("uid") int uid
     );
 
 

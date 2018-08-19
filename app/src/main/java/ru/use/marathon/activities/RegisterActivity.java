@@ -200,7 +200,7 @@ public class RegisterActivity extends AbstractActivity {
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             new Success(response);
                             Toast.makeText(RegisterActivity.this, num, Toast.LENGTH_SHORT).show();
-                            if (success()) {
+                            if (success(response)) {
                                 if (post == 1) {
                                     Teacher t = new Teacher(getApplicationContext(), response);
                                     t.createSession(t.getID(), name, email);
