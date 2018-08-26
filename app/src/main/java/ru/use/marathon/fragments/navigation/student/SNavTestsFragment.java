@@ -19,6 +19,8 @@ import ru.use.marathon.activities.TestsByCollectionsActivity;
 import ru.use.marathon.activities.TopicsActivity;
 import ru.use.marathon.fragments.AbstractFragment;
 
+import static ru.use.marathon.Constants.DEBUG;
+
 /**
  * Created by ilyas on 10-Jun-18.
  */

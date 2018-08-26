@@ -45,6 +45,8 @@ import ru.use.marathon.models.chat.ChatIdResponse;
 import ru.use.marathon.models.chat.Rooms;
 import ru.use.marathon.utils.ItemClickSupport;
 
+import static ru.use.marathon.Constants.DEBUG;
+
 public class AllUsersActivity extends AbstractActivity {
 
     public static final String TAG = AllUsersActivity.class.getSimpleName();

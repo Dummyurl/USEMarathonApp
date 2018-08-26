@@ -1,18 +1,17 @@
 package ru.use.marathon.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,10 +24,11 @@ import ru.use.marathon.R;
 import ru.use.marathon.fragments.TestUnitFragment;
 import ru.use.marathon.models.Collection;
 import ru.use.marathon.models.Collections;
+import ru.use.marathon.models.Tests.TestsViewModel;
 import ru.use.marathon.models.answers.AbstractAnswer;
 import ru.use.marathon.models.answers.StudentAnswers;
 
-public class TestsActivity extends AbstractActivity implements TestUnitFragment.OnDataPass {
+public class TestsActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -45,6 +45,9 @@ public class TestsActivity extends AbstractActivity implements TestUnitFragment.
     List<AbstractAnswer> abstractAnswers;
     ArrayList<Integer> test_numbers;
 
+
+    TestsViewModel testsViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +57,8 @@ public class TestsActivity extends AbstractActivity implements TestUnitFragment.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //todo set loading message
+
+        testsViewModel = ViewModelProviders.of(this).get(TestsViewModel.class);
 
         tag = getIntent().getStringExtra("tag");
         studentAnswers = new StudentAnswers(getApplicationContext());
@@ -116,19 +121,8 @@ public class TestsActivity extends AbstractActivity implements TestUnitFragment.
         getSupportActionBar().setTitle(title);
     }
 
-    @Override
-    public void onDataPass(AbstractAnswer abstractAnswer, int page) {
 
-        if (abstractAnswer != null) {
-            abstractAnswers.add(abstractAnswer);
-        }
-        Log.i("ABSTRACTDATA_SIZE", String.valueOf(abstractAnswers.size()));
-        Log.i("ABSTRACTDATA_ARRAY", Arrays.toString(new List[]{abstractAnswers}));
-
-    }
-
-
-    private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+    private class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         Collection collection;
         int cn;

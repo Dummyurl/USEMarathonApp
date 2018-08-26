@@ -47,26 +47,13 @@ public class AppController extends Application{
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-//        Fabric.with(this, new Crashlytics());
+        //Fabric.with(this, new Crashlytics());
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .cache(getCache())
                 .addInterceptor(interceptor)
-                .addInterceptor(new NetworkConnectionInterceptor() {
-                    @Override
-                    public boolean isInternetAvailable() {
-                        return AppController.this.isInternetAvailable();
-                    }
-
-                    @Override
-                    public void onInternetUnavailable() {
-                        if (mInternetConnectionListener != null) {
-                            mInternetConnectionListener.onInternetUnavailable();
-                        }
-                    }
-                })
                 .build();
 
 
@@ -94,12 +81,8 @@ public class AppController extends Application{
     public void removeInternetConnectionListener() {
         mInternetConnectionListener = null;
     }
-    private boolean isInternetAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+
+
 
 }
 

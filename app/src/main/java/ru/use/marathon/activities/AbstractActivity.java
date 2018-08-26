@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +26,7 @@ import ru.use.marathon.utils.InternetConnectionListener;
 
 public class AbstractActivity extends AppCompatActivity implements InternetConnectionListener {
 
-    public static final boolean DEBUG = false;
+
 
     public static final int STUDENT = 0;
     public static final int TEACHER = 1;
@@ -56,6 +58,12 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
     }
 
 
+    private boolean isInternetAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     public boolean success(Response<JsonObject> response){
         JsonObject js = response.body();

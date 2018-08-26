@@ -20,32 +20,78 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/result_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:text="10 правильных из 11"
-            android:textColor="@android:color/background_dark"
-            android:textSize="24sp" />
+            <TextView
+                android:id="@+id/result_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:text="Результат:"
+                android:visibility="gone"
+                android:textColor="@android:color/background_dark"
+                android:textSize="24sp" />
 
-        <Button
-            android:id="@+id/result_return_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/result_score"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="11dp"
-            android:text="Вернуться" />
+            <com.github.mikephil.charting.charts.PieChart
+                android:layout_width="match_parent"
+                android:id="@+id/result_pie"
+                android:layout_below="@+id/result_score"
+                android:layout_height="260dp"/>
 
-    </RelativeLayout>
+
+            <TableLayout
+                android:id="@+id/result_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/result_pie"
+                android:background="#eeeeee"
+                android:isScrollContainer="true"
+                android:stretchColumns="*">
+
+
+                <TableRow
+                    android:background="#cccccc"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:text="№ Задания"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:text="Правильный ответ"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:text="Ваш ответ"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:text="        "
+                        android:textColor="@android:color/black" />
+                </TableRow>
+
+
+            </TableLayout>
+
+            <Button
+                android:id="@+id/result_return_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/result_table"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="11dp"
+                android:text="Вернуться" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

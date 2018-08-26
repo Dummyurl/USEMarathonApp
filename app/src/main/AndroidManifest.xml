@@ -143,19 +143,8 @@
             android:name=".activities.UserProfileActivity"
             android:label="Профиль"></activity>
 
-
-
         <activity android:name=".activities.StartQuestionsActivity"
             android:theme="@style/AppTheme.NoBar"></activity>
-
-        <receiver
-            android:name=".utils.ConnectivityReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <activity android:name=".activities.forgotpassActivity"></activity>
 
     </application>
