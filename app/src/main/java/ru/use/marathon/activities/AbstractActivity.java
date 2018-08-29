@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -11,7 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
@@ -24,6 +28,7 @@ import ru.use.marathon.utils.InternetConnectionListener;
  */
 
 public class AbstractActivity extends AppCompatActivity implements InternetConnectionListener {
+
 
     public static final int STUDENT = 0;
     public static final int TEACHER = 1;
@@ -52,6 +57,19 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
     public void onPause() {
         super.onPause();
         ((AppController) getApplication()).removeInternetConnectionListener();
+    }
+
+
+    private boolean isInternetAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public boolean success(Response<JsonObject> response){
+        JsonObject js = response.body();
+        return (js != null) && js.has("success") && (js.get("success").getAsInt() > 0);
     }
 
     public int userType() {
@@ -137,6 +155,32 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
         showInfoDialog("Подключение к сети","Нет подлючения к интернету. Проверьте подключение или повторите позднее");
     }
 
+    String ellipsize(String input, int maxLength) {
+        if (input == null || input.length() < maxLength) {
+            return input;
+        }
+        return input.substring(0, maxLength) + "...";
+    }
+
+
+
+
+    public List<String> convertStringToList(String data) {
+        String a[] = data.substring(1, data.length() - 1).split(",");
+        List<String> res = new ArrayList<>(a.length);
+        for (int i = 0; i < a.length; i++) {
+            res.add(a[i]);
+        }
+        return res;
+    }
+    public List<Integer> convertStringListToIntList(List<String> data){
+        List<Integer> result = new ArrayList<>(data.size());
+        for (int i = 0; i < data.size(); i++) {
+            result.add(Integer.valueOf(data.get(i).trim()));
+        }
+        return result;
+    }
+
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
 
@@ -168,7 +212,5 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
         super.onStop();
         hideProgressDialog();
     }
-
-
 
 }

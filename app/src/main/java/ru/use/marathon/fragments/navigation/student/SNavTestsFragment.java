@@ -16,6 +16,8 @@ import ru.use.marathon.R;
 import ru.use.marathon.activities.TestsByCollectionsActivity;
 import ru.use.marathon.activities.TopicsActivity;
 
+import static ru.use.marathon.Constants.DEBUG;
+
 /**
  * Created by ilyas on 10-Jun-18.
  */

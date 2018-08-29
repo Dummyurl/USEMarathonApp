@@ -1,14 +1,19 @@
 package ru.use.marathon.fragments;
 
 import android.app.AlertDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +22,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,9 +35,11 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,9 +55,13 @@ import ru.use.marathon.models.Collection;
 import ru.use.marathon.models.Collections;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Success;
-import ru.use.marathon.models.answers.AbstractAnswer;
-import ru.use.marathon.models.answers.StudentAnswers;
+import ru.use.marathon.models.Tests.TestCollection;
+import ru.use.marathon.models.Tests.TestFragmentModel;
+import ru.use.marathon.models.Tests.TestsViewModel;
+import ru.use.marathon.utils.CounterClass;
+import ru.use.marathon.utils.Stopwatch;
 
+import static ru.use.marathon.Constants.DEBUG;
 import static ru.use.marathon.models.Success.success;
 
 
@@ -57,9 +69,13 @@ public class TestUnitFragment extends AbstractFragment {
 
     public static final String TAG = TestUnitFragment.class.getSimpleName();
     Collection collection;
-    int page, max_page,cn;
+    int page, max_page, cn;
     int answer_type;
     Student student;
+    TestFragmentModel testsModel;
+
+    TestsViewModel testsViewModel;
+    TestCollection.TestCollectionBuilder testsBuilder;
 
     @BindView(R.id.content_text)
     TextView content_tv;
@@ -88,8 +104,6 @@ public class TestUnitFragment extends AbstractFragment {
     RadioButton[] rg_answers;
     CheckBox[] cb_answers;
     EditText enter_answer_et;
-    StudentAnswers studentAnswers;
-    AbstractAnswer abstractAnswer;
     ViewPager parentView;
 
     //STOPWATCH
@@ -97,7 +111,7 @@ public class TestUnitFragment extends AbstractFragment {
     TextView stopwatch_txt;
     private int seconds = 0;
     private boolean startRun;
-
+    Stopwatch timer;
 
     public TestUnitFragment() {
     }
@@ -107,7 +121,7 @@ public class TestUnitFragment extends AbstractFragment {
         Bundle args = new Bundle();
         args.putInt("page", page);
         args.putInt("max_page", pages_amount);
-        args.putInt("cn",cn);
+        args.putInt("cn", cn);
         fragment.setArguments(args);
         return fragment;
     }
@@ -116,9 +130,11 @@ public class TestUnitFragment extends AbstractFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         page = getArguments().getInt("page");
         max_page = getArguments().getInt("max_page");
         cn = getArguments().getInt("cn");
+
 
     }
 
@@ -128,16 +144,15 @@ public class TestUnitFragment extends AbstractFragment {
 
         View view = inflater.inflate(R.layout.fragment_tests_activity, container, false);
         ButterKnife.bind(this, view);
+        testsViewModel = ViewModelProviders.of(getActivity()).get(TestsViewModel.class);
+        testsModel = new TestFragmentModel();
 
         student = new Student(getActivity().getApplicationContext());
 
-        parentView = (ViewPager) getActivity().findViewById(R.id.tests_viewpager_container);
+        parentView = getActivity().findViewById(R.id.tests_viewpager_container);
         Collections collections = new Collections(getActivity().getApplicationContext());
         collection = collections.getCollection();
 
-        startRun = true;
-
-        studentAnswers = new StudentAnswers(getActivity().getApplicationContext());
 
         initHint();
         setupUI();
@@ -147,165 +162,182 @@ public class TestUnitFragment extends AbstractFragment {
         save_ans_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                abstractAnswer = new AbstractAnswer(getActivity().getApplicationContext());
-                abstractAnswer.savePage(page);
-
-                Student student = new Student(getActivity().getApplicationContext());
-                HashMap<String, String> sdata = student.getStatistics();
-
-                boolean isCorrectAnswer = false;
-
-                List<String> ra = collection.getRightAnswers(page);
-
-                if(ra.get(0).equals("")){
-                    if (parentView.getCurrentItem() == max_page - 1) {
-                        AlertDialog.Builder b = new AlertDialog.Builder(getContext());
-                        b.setTitle("Завершить тест?");
-                        b.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent i1 = new Intent(getActivity(),ResultsActivity.class);
-                                startActivity(i1);
-                                getActivity().finish();
-                                dialogInterface.dismiss();
-                            }
-                        });
-                        b.setCancelable(false);
-                        AlertDialog d = b.create();
-                        d.show();
-                    } else {
-                        parentView.setCurrentItem(parentView.getCurrentItem() + 1);
-
-                    }
-                    return;
-                }else{
-
-
-
-                    if (answer_type == Constants.RADIO_BUTTON_TYPE) {
-
-                        RadioButton radioButton = (RadioButton) rg_container.findViewById(rg_container.getCheckedRadioButtonId());
-                        int i = rg_container.indexOfChild(radioButton);
-                        Log.i("RADIO_BTN_INDEX", String.valueOf(i));
-                        Log.i("RA_INDEX", String.valueOf(ra.get(0)));
-
-                        int rai = Integer.valueOf(ra.get(0));
-                        int[] ram = new int[answers.size()];
-                        for (int j = 0; j < ram.length; j++) ram[j] = 0;
-                        for (int j = 0; j < ram.length; j++) {
-                            if (j == rai - 1) ram[j] = 1;
-                            if (j == i) ram[j] = -1;
-                        }
-                        abstractAnswer.saveRadioBtn(ram);
-
-                        Log.i("RADIO_BTN_ARRAY", Arrays.toString(ram));
-
-
-                        HashMap<String, String> stats = student.getStatistics();
-                        int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
-                        int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
-                        int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
-                        double seconds_stat = Double.parseDouble(stats.get(student.KEY_TESTS_TIME));
-
-                        if (abstractAnswer.isRight()) {
-                            isCorrectAnswer = true;
-                            sendSolved();
-                            student.setStatistics(tests_counter + 1, seconds_stat + seconds, answer_counter + 1, answer_wrong_counter);
-                        } else {
-                            isCorrectAnswer = false;
-                            Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
-                            student.setStatistics(tests_counter + 1, seconds_stat + seconds, answer_counter, answer_wrong_counter + 1);
-                        }
-
-                    } else if (answer_type == Constants.TEXT_TYPE) {
-
-                        abstractAnswer.saveET(ra.get(0), enter_answer_et.getText().toString());
-
-                        HashMap<String, String> stats = student.getStatistics();
-                        int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
-                        int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
-                        int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
-                        double seconds_stat = Double.parseDouble(stats.get(student.KEY_TESTS_TIME));
-                        if (abstractAnswer.isRight()) {
-                            isCorrectAnswer = true;
-                            sendSolved();
-                            student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter + 1, answer_wrong_counter);
-                        } else {
-                            isCorrectAnswer = false;
-                            student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter, answer_wrong_counter + 1);
-                        }
-                    } else if (answer_type == Constants.CHECK_BOX_TYPE) {
-                        int count = answers_container.getChildCount();
-                        View v = null;
-                        List<Integer> uam = new ArrayList<>();
-                        List<Integer> ram = new ArrayList<>();
-
-                        for (int i = 0; i < count; i++) {
-                            v = answers_container.getChildAt(i);
-                            CheckBox cb = (CheckBox) v;
-                            if (cb.isChecked()) uam.add(i);
-                        }
-                        for (int i = 0; i < ra.size(); i++) ram.add(Integer.valueOf(ra.get(i)) - 1);
-
-                        abstractAnswer.saveCB(ram, uam);
-
-                        HashMap<String, String> stats = student.getStatistics();
-                        int tests_counter = Integer.parseInt(stats.get(student.KEY_TESTS_COUNTER));
-                        int answer_counter = Integer.parseInt(stats.get(student.KEY_ANSWERS_COUNTER));
-                        int answer_wrong_counter = Integer.parseInt(stats.get(student.KEY_WRONG_ANSWERS_COUNTER));
-                        double seconds_stat = Double.parseDouble(stats.get(student.KEY_TESTS_TIME));
-
-                        if (abstractAnswer.isRight()) {
-                            isCorrectAnswer = true;
-                            sendSolved();
-                            student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter + 1, answer_wrong_counter);
-                        } else {
-                            isCorrectAnswer = false;
-                            student.setStatistics(tests_counter + 1, seconds_stat+seconds, answer_counter, answer_wrong_counter + 1);
-                        }
-                    }
-                    sendStatToServer(isCorrectAnswer);
-                    startRun = false;
-                    seconds = 0;
-
-
-                    if (parentView.getCurrentItem() == max_page - 1) {
-                        AlertDialog.Builder b = new AlertDialog.Builder(getContext());
-                        b.setTitle("Завершить тест?");
-                        b.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent i1 = new Intent(getActivity(),ResultsActivity.class);
-                                startActivity(i1);
-                                getActivity().finish();
-                                dialogInterface.dismiss();
-                            }
-                        });
-                        b.setCancelable(false);
-                        AlertDialog d = b.create();
-                        d.show();
-                    } else {
-                        parentView.setCurrentItem(parentView.getCurrentItem() + 1);
-
-                    }
-
-            }
-
+                initSaveAnswer();
             }
         });
 
         return view;
     }
 
+    private void initSaveAnswer() {
+        testsModel.updateAnswer(page, true);
 
-    private void sendSolved(){
-        AppController.getApi().setSolvedTopic(1,"setSolvedTopic",collection.getSubject(page),user_id(),String.valueOf(collection.getTopic(page)))
+        boolean isCorrectAnswer = false;
+        List<String> ra = collection.getRightAnswers(page);
+
+        if (ra.get(0).equals("")) {
+
+            if (parentView.getCurrentItem() == max_page - 1) {
+                AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+                b.setTitle("Завершить тест?");
+                b.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent i1 = new Intent(getActivity(), ResultsActivity.class);
+                        startActivity(i1);
+                        getActivity().finish();
+                        dialogInterface.dismiss();
+                    }
+                });
+                b.setCancelable(false);
+                AlertDialog d = b.create();
+                d.show();
+            } else {
+                parentView.setCurrentItem(parentView.getCurrentItem() + 1);
+            }
+            return;
+        } else {
+
+            if (answer_type == Constants.RADIO_BUTTON_TYPE) {
+
+                RadioButton radioButton = rg_container.findViewById(rg_container.getCheckedRadioButtonId());
+                int i = rg_container.indexOfChild(radioButton); // i - user answer
+
+                List<String> uanswer = new ArrayList<>();
+                uanswer.add(String.valueOf(i));
+                testsBuilder.userAnswers(uanswer);
+
+                if (DEBUG) Log.i("RADIO_BTN_INDEX", String.valueOf(i));
+                if (DEBUG) Log.i("RA_INDEX", String.valueOf(ra.get(0)));
+
+                int right_answer = Integer.valueOf(String.valueOf(collection.getRightAnswers(page).get(0)));
+
+                if (right_answer - 1 == i) {
+                    isCorrectAnswer = true;
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+                    if (!DEBUG) sendSolved();
+                } else {
+                    isCorrectAnswer = false;
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                }
+
+            } else if (answer_type == Constants.TEXT_TYPE) {
+
+                List<String> uanswer = new ArrayList<>();
+                uanswer.add(enter_answer_et.getText().toString());
+                testsBuilder.userAnswers(uanswer);
+
+                if (enter_answer_et.getText().toString().toLowerCase().equals(collection.getRightAnswers(page).get(0))) {
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+                    isCorrectAnswer = true;
+                    if (!DEBUG) sendSolved();
+                } else {
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                    isCorrectAnswer = false;
+                }
+            } else if (answer_type == Constants.CHECK_BOX_TYPE) {
+
+                int count = answers_container.getChildCount();
+                View v = null;
+                List<Integer> uam = new ArrayList<>();
+
+                for (int i = 0; i < count; i++) {
+                    v = answers_container.getChildAt(i);
+                    CheckBox cb = (CheckBox) v;
+                    if (cb.isChecked()) uam.add(i);
+                }
+
+                List<String> uanswers = new ArrayList<>(uam.size());
+                for (Integer item : uam) {
+                    uanswers.add(String.valueOf(item));
+                }
+                testsBuilder.userAnswers(uanswers);
+
+                if (isCheckBoxAnswerRight(collection.getRightAnswers(page), uam)) {
+                    isCorrectAnswer = true;
+                    if (!DEBUG) sendSolved();
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                    isCorrectAnswer = false;
+                }
+            }
+            testsBuilder.build();
+            TestCollection collection = testsBuilder.build();
+            testsViewModel.insert(collection);
+            startRun = false;
+
+            if (!DEBUG) sendStatToServer(isCorrectAnswer);
+
+            if (parentView.getCurrentItem() == max_page - 1) {
+
+                for (int i = 0; i < testsModel.answeredSize(); i++) {
+                    if (testsModel.isAnswered(page)) {
+                        if (DEBUG) Log.d(TAG, "this page is answered");
+                    } else {
+                        if (DEBUG) Log.d(TAG, "this page is NOT answered");
+                    }
+                }
+
+                AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+                b.setTitle("Завершить тест?");
+                b.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent i1 = new Intent(getActivity(), ResultsActivity.class);
+                        startActivity(i1);
+                        getActivity().finish();
+                        dialogInterface.dismiss();
+                    }
+                });
+                b.setCancelable(false);
+                AlertDialog d = b.create();
+                d.show();
+            } else {
+                parentView.setCurrentItem(parentView.getCurrentItem() + 1);
+
+                for (int i = 0; i < testsModel.answeredSize(); i++) {
+                    if (testsModel.isAnswered(page)) {
+                        if (DEBUG) Log.d(TAG, "this page is answered");
+                    } else {
+                        if (DEBUG) Log.d(TAG, "this page is NOT answered");
+                    }
+                }
+            }
+
+        }
+
+
+    }
+
+    public boolean isCheckBoxAnswerRight(List<String> right_answers, List<Integer> answers) {
+        if (right_answers.size() == answers.size()) {
+            int c = 0, res = 0;
+            for (int i = 0; i < answers.size(); i++) {
+                if (Objects.equals(Integer.valueOf(right_answers.get(i)), answers.get(i))) c++;
+                res = c == answers.size() ? 1 : 0;
+            }
+            return res == 1;
+        }
+        return false;
+    }
+
+    private void sendSolved() {
+        AppController.getApi().setSolvedTopic(1, "setSolvedTopic", collection.getSubject(page), user_id(), String.valueOf(collection.getTopic(page)))
                 .enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         new Success(response);
-                        if(success()){
-                            Toast.makeText(getActivity(), "topic_solved", Toast.LENGTH_SHORT).show();
+                        if (success()) {
+                            if (DEBUG)
+                                Toast.makeText(getActivity(), "topic_solved", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -317,10 +349,10 @@ public class TestUnitFragment extends AbstractFragment {
     }
 
     private void sendStatToServer(boolean isCorrectAnswer) {
-        HashMap<String,String> user_data = student.getData();
-        int id = Integer.parseInt(user_data.get(student.KEY_ID));
-        int c = isCorrectAnswer? 1 : 0;
-        AppController.getApi().sendStat(1,"setStats",subject(),id,collection.getId(page),seconds,c,collection.getTopic(page)).enqueue(new Callback<JsonObject>() {
+        HashMap<String, String> user_data = student.getData();
+        int id = Integer.parseInt(user_data.get(Student.KEY_ID));
+        int c = isCorrectAnswer ? 1 : 0;
+        AppController.getApi().sendStat(1, "setStats", subject(), id, collection.getId(page), seconds, c, collection.getTopic(page)).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
@@ -333,28 +365,35 @@ public class TestUnitFragment extends AbstractFragment {
         });
 
 
-
     }
 
     private void initStopwatch() {
+        timer = new Stopwatch();
+        startRun = true;
         final Handler handler = new Handler();
+
         handler.post(new Runnable() {
             @Override
             public void run() {
-                int minutes = (seconds % 3600) / 60;
-                int secs = seconds % 60;
-
-                String time = String.format("%02d:%02d", minutes, secs);
-
-                stopwatch_txt.setText(time);
-
                 if (startRun) {
-                    seconds++;
+                    timer.start();
+
+                    int minutes = ((int) timer.getElapsedTimeSecs() % 3600) / 60;
+                    int secs = (int)timer.getElapsedTimeSecs() % 60;
+
+                    String time = String.format("%02d:%02d", minutes, secs);
+
+                    testsBuilder.time(secs);
+                    stopwatch_txt.setText(time);
+                    handler.postDelayed(this, 100);
+                }else{
+                    timer.stop();
                 }
 
-                handler.postDelayed(this, 1000);
+
             }
         });
+
 
     }
 
@@ -365,29 +404,44 @@ public class TestUnitFragment extends AbstractFragment {
         content_web.getSettings().setDomStorageEnabled(true);
         content_web.getSettings().setJavaScriptEnabled(true);
 
+        testsBuilder = new TestCollection.TestCollectionBuilder();
+
         if (collection != null) {
             ((TestsActivity) getActivity())
                     .setActionBarTitle("Задание № " + collection.getTaskNumber(page))
             ;
+            testsBuilder.taskNumber(collection.getTaskNumber(page));
+            testsBuilder.topicId(collection.getTopic(page));
+            testsBuilder.rightAnswers(collection.getRightAnswers(page));
 
-            if(!collection.getContent(page).equals("")){
+            testsModel.setAnswer(page, false);
+
+            if (!collection.getContent(page).equals("")) {
                 content_tv.setVisibility(View.VISIBLE);
                 content_tv.setText(collection.getContent(page));
+                testsBuilder.content(collection.getContent(page));
             }
-            if(!collection.getContentImage(page).equals("")){
+            if (!collection.getContentImage(page).equals("")) {
                 content_image.setVisibility(View.VISIBLE);
                 Picasso.get().load(collection.getContentImage(page)).into(content_image);
+                testsBuilder.contentImage(collection.getContentImage(page));
             }
-            if(!collection.getContentHtml(page).equals("")){
+            if (!collection.getContentHtml(page).equals("")) {
                 content_web.setVisibility(View.VISIBLE);
                 content_web.loadUrl(collection.getContentHtml(page));
+                testsBuilder.contentHtml(collection.getContentHtml(page));
+
             }
 
             answers = collection.getAnswers(page);
+            testsBuilder.answers(collection.getAnswers(page));
             answer_type = collection.getAnswerType(page);
+            testsBuilder.answerType(collection.getAnswerType(page));
 
+            if (DEBUG)
+                Toast.makeText(getActivity(), "Right answers: \n" + collection.getRightAnswers(page).toString(), Toast.LENGTH_SHORT).show();
 
-            if(!answers.get(0).equals("")){
+            if (!answers.get(0).equals("")) {
 
 
                 if (answer_type == Constants.RADIO_BUTTON_TYPE) {
@@ -395,10 +449,15 @@ public class TestUnitFragment extends AbstractFragment {
                     answers_container.setVisibility(View.GONE);
                     rg_answers = new RadioButton[answers.size()];
                     for (int i = 0; i < answers.size(); i++) {
-                        rg_answers[i] = (RadioButton) View.inflate(getActivity().getApplicationContext(),R.layout.factory_radio_button,null);
+                        rg_answers[i] = (RadioButton) View.inflate(getActivity().getApplicationContext(), R.layout.factory_radio_button, null);
                         rg_answers[i].setTextColor(Color.BLACK);
-                        //todo correct radiobtn
                         rg_answers[i].setText(answers.get(i));
+                        rg_answers[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                                testsModel.updateAnswer(page, b);
+                            }
+                        });
                         rg_container.addView(rg_answers[i]);
                     }
 
@@ -407,26 +466,49 @@ public class TestUnitFragment extends AbstractFragment {
                     rg_container.setVisibility(View.GONE);
                     cb_answers = new CheckBox[answers.size()];
                     for (int i = 0; i < answers.size(); i++) {
-                        cb_answers[i] = (CheckBox) View.inflate(getActivity().getApplicationContext(),R.layout.factory_check_box,null);
+                        cb_answers[i] = (CheckBox) View.inflate(getActivity().getApplicationContext(), R.layout.factory_check_box, null);
                         cb_answers[i].setTextColor(Color.BLACK);
                         cb_answers[i].setText(answers.get(i));
+                        cb_answers[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                                testsModel.updateAnswer(page, b);
+                            }
+                        });
                         answers_container.addView(cb_answers[i]);
                     }
 
                 } else if (answer_type == Constants.TEXT_TYPE) {
 
                     rg_container.setVisibility(View.GONE);
-                    enter_answer_et = (EditText) View.inflate(getActivity().getApplicationContext(),R.layout.factory_edit_text,null);
+                    enter_answer_et = (EditText) View.inflate(getActivity().getApplicationContext(), R.layout.factory_edit_text, null);
                     enter_answer_et.setTextColor(Color.BLACK);
                     enter_answer_et.setHint("Введите ответ");
                     answers_container.addView(enter_answer_et);
+                    enter_answer_et.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            testsModel.updateAnswer(page, true);
+                            testsBuilder.userAnswersText(charSequence.toString());
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
                 }
-            }else{
+            } else {
                 save_ans_btn.setVisibility(View.GONE);
                 show_hint_btn.setVisibility(View.GONE);
                 stopwatch_txt.setVisibility(View.GONE);
 
-                if(page == max_page - 1){
+                if (page == max_page - 1) {
                     save_ans_btn.setVisibility(View.VISIBLE);
                     save_ans_btn.setText("Завершить");
 
@@ -452,30 +534,15 @@ public class TestUnitFragment extends AbstractFragment {
         });
     }
 
-
-    public interface OnDataPass {
-        public void onDataPass(AbstractAnswer data, int page);
-    }
-
-    OnDataPass dataPasser;
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("abstract_answer", abstractAnswer);
-        outState.putString("a", "a");
-        Log.d("TestsFragment", "onSaveInstanceState " + page);
     }
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        dataPasser = (OnDataPass) context;
-    }
-
-    public void passData(AbstractAnswer data, int page) {
-        dataPasser.onDataPass(data, page);
     }
 
     @Override
@@ -488,10 +555,6 @@ public class TestUnitFragment extends AbstractFragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("TestsFragment", "onDestroyView " + page);
-
-        if (abstractAnswer != null) {
-            passData(abstractAnswer, page);
-        }
     }
 
     @Override
@@ -517,4 +580,5 @@ public class TestUnitFragment extends AbstractFragment {
             return true;
         }
     }
+
 }

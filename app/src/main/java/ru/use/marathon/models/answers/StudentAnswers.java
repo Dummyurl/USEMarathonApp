@@ -31,15 +31,4 @@ public class StudentAnswers {
     }
 
 
-    public void saveAbstractAnswer(List<AbstractAnswer> abstractAnswers){
-    }
-
-    public List<AbstractAnswer> getAbstractAnswers(){
-        Gson gson = new Gson();
-        String js = shPrefs.getString("abstract_answers","");
-        Type type = new TypeToken<List<AbstractAnswer>>(){}.getType();
-        return gson.fromJson(js,type);
-    }
-
-
 }

@@ -150,16 +150,9 @@
             android:name=".activities.StartQuestionsActivity"
             android:theme="@style/AppTheme.NoBar" />
 
-        <receiver
-            android:name=".utils.ConnectivityReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <activity android:name=".activities.forgotpassActivity" />
         <activity android:name=".activities.vkauthActivity"></activity>
+      <activity android:name=".activities.TaskReviewActivity"></activity>
     </application>
 
 </manifest>

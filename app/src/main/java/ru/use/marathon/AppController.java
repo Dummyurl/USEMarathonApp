@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -42,31 +43,21 @@ public class AppController extends Application{
 
     public static API getApi () { return api;}
 
+    public static boolean startTimer;
+    public static int time;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-//        Fabric.with(this, new Crashlytics());
+        //Fabric.with(this, new Crashlytics());
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .cache(getCache())
                 .addInterceptor(interceptor)
-                .addInterceptor(new NetworkConnectionInterceptor() {
-                    @Override
-                    public boolean isInternetAvailable() {
-                        return AppController.this.isInternetAvailable();
-                    }
-
-                    @Override
-                    public void onInternetUnavailable() {
-                        if (mInternetConnectionListener != null) {
-                            mInternetConnectionListener.onInternetUnavailable();
-                        }
-                    }
-                })
                 .build();
 
 
@@ -79,6 +70,33 @@ public class AppController extends Application{
 
 
         api = retrofit.create(API.class);
+    }
+
+    public static String startTimer(){
+        startTimer = true;
+        final String[] time_formatted = new String[1];
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                int minutes = (time % 3600) / 60;
+                int secs = time % 60;
+
+                time_formatted[0] = String.format("%02d:%02d", minutes, secs);
+
+                if (startTimer) {
+                    time++;
+                }
+
+                handler.postDelayed(this, 1000);
+            }
+        });
+
+        return time_formatted[0];
+    }
+
+    public static void stopTimer(){
+        startTimer = false;
     }
 
     public Cache getCache() {
@@ -94,12 +112,8 @@ public class AppController extends Application{
     public void removeInternetConnectionListener() {
         mInternetConnectionListener = null;
     }
-    private boolean isInternetAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+
+
 
 }
 
