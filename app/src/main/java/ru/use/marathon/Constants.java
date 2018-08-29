@@ -6,7 +6,7 @@ package ru.use.marathon;
 
 public class Constants {
 
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     public static final int RADIO_BUTTON_TYPE = 0;
     public static final int CHECK_BOX_TYPE = 1;

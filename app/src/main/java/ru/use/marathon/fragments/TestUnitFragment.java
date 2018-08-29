@@ -7,7 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -36,6 +38,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +59,7 @@ import ru.use.marathon.models.Tests.TestCollection;
 import ru.use.marathon.models.Tests.TestFragmentModel;
 import ru.use.marathon.models.Tests.TestsViewModel;
 import ru.use.marathon.utils.CounterClass;
+import ru.use.marathon.utils.Stopwatch;
 
 import static ru.use.marathon.Constants.DEBUG;
 import static ru.use.marathon.models.Success.success;
@@ -106,7 +111,7 @@ public class TestUnitFragment extends AbstractFragment {
     TextView stopwatch_txt;
     private int seconds = 0;
     private boolean startRun;
-
+    Stopwatch timer;
 
     public TestUnitFragment() {
     }
@@ -148,7 +153,7 @@ public class TestUnitFragment extends AbstractFragment {
         Collections collections = new Collections(getActivity().getApplicationContext());
         collection = collections.getCollection();
 
-        startRun = true;
+
         initHint();
         setupUI();
         initStopwatch();
@@ -165,7 +170,7 @@ public class TestUnitFragment extends AbstractFragment {
     }
 
     private void initSaveAnswer() {
-        testsModel.updateAnswer(page,true);
+        testsModel.updateAnswer(page, true);
 
         boolean isCorrectAnswer = false;
         List<String> ra = collection.getRightAnswers(page);
@@ -209,11 +214,13 @@ public class TestUnitFragment extends AbstractFragment {
 
                 if (right_answer - 1 == i) {
                     isCorrectAnswer = true;
-                    if(DEBUG) Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
-                    if(!DEBUG) sendSolved();
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+                    if (!DEBUG) sendSolved();
                 } else {
                     isCorrectAnswer = false;
-                    if(DEBUG) Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
                 }
 
             } else if (answer_type == Constants.TEXT_TYPE) {
@@ -223,11 +230,13 @@ public class TestUnitFragment extends AbstractFragment {
                 testsBuilder.userAnswers(uanswer);
 
                 if (enter_answer_et.getText().toString().toLowerCase().equals(collection.getRightAnswers(page).get(0))) {
-                    if(DEBUG) Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
                     isCorrectAnswer = true;
-                    if(!DEBUG) sendSolved();
+                    if (!DEBUG) sendSolved();
                 } else {
-                    if(DEBUG) Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
                     isCorrectAnswer = false;
                 }
             } else if (answer_type == Constants.CHECK_BOX_TYPE) {
@@ -250,31 +259,30 @@ public class TestUnitFragment extends AbstractFragment {
 
                 if (isCheckBoxAnswerRight(collection.getRightAnswers(page), uam)) {
                     isCorrectAnswer = true;
-                    if(!DEBUG) sendSolved();
-                    if(DEBUG) Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
+                    if (!DEBUG) sendSolved();
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "правильно!", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    if(DEBUG) Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
+                    if (DEBUG)
+                        Toast.makeText(getActivity().getApplicationContext(), "не правильно!", Toast.LENGTH_SHORT).show();
                     isCorrectAnswer = false;
                 }
             }
             testsBuilder.build();
             TestCollection collection = testsBuilder.build();
             testsViewModel.insert(collection);
-
-            if(!DEBUG) sendStatToServer(isCorrectAnswer);
-
             startRun = false;
-            seconds = 0;
 
+            if (!DEBUG) sendStatToServer(isCorrectAnswer);
 
             if (parentView.getCurrentItem() == max_page - 1) {
 
                 for (int i = 0; i < testsModel.answeredSize(); i++) {
-                    if(testsModel.isAnswered(page)){
-                        if(DEBUG) Log.d(TAG, "this page is answered");
-                    }else{
-                        if(DEBUG) Log.d(TAG, "this page is NOT answered");
+                    if (testsModel.isAnswered(page)) {
+                        if (DEBUG) Log.d(TAG, "this page is answered");
+                    } else {
+                        if (DEBUG) Log.d(TAG, "this page is NOT answered");
                     }
                 }
 
@@ -296,10 +304,10 @@ public class TestUnitFragment extends AbstractFragment {
                 parentView.setCurrentItem(parentView.getCurrentItem() + 1);
 
                 for (int i = 0; i < testsModel.answeredSize(); i++) {
-                    if(testsModel.isAnswered(page)){
-                        if(DEBUG) Log.d(TAG, "this page is answered");
-                    }else{
-                        if(DEBUG) Log.d(TAG, "this page is NOT answered");
+                    if (testsModel.isAnswered(page)) {
+                        if (DEBUG) Log.d(TAG, "this page is answered");
+                    } else {
+                        if (DEBUG) Log.d(TAG, "this page is NOT answered");
                     }
                 }
             }
@@ -360,27 +368,31 @@ public class TestUnitFragment extends AbstractFragment {
     }
 
     private void initStopwatch() {
+        timer = new Stopwatch();
+        startRun = true;
         final Handler handler = new Handler();
+
         handler.post(new Runnable() {
             @Override
             public void run() {
-                int minutes = (seconds % 3600) / 60;
-                int secs = seconds % 60;
-
-                String time = String.format("%02d:%02d", minutes, secs);
-
-
-                testsBuilder.time(secs);
-                stopwatch_txt.setText(time);
-
                 if (startRun) {
-                    seconds++;
+                    timer.start();
+
+                    int minutes = ((int) timer.getElapsedTimeSecs() % 3600) / 60;
+                    int secs = (int)timer.getElapsedTimeSecs() % 60;
+
+                    String time = String.format("%02d:%02d", minutes, secs);
+
+                    testsBuilder.time(secs);
+                    stopwatch_txt.setText(time);
+                    handler.postDelayed(this, 100);
+                }else{
+                    timer.stop();
                 }
 
-                handler.postDelayed(this, 1000);
+
             }
         });
-
 
 
     }
@@ -402,7 +414,7 @@ public class TestUnitFragment extends AbstractFragment {
             testsBuilder.topicId(collection.getTopic(page));
             testsBuilder.rightAnswers(collection.getRightAnswers(page));
 
-            testsModel.setAnswer(page,false);
+            testsModel.setAnswer(page, false);
 
             if (!collection.getContent(page).equals("")) {
                 content_tv.setVisibility(View.VISIBLE);
@@ -426,7 +438,8 @@ public class TestUnitFragment extends AbstractFragment {
             answer_type = collection.getAnswerType(page);
             testsBuilder.answerType(collection.getAnswerType(page));
 
-            if(DEBUG) Toast.makeText(getActivity(), "Right answers: \n" + collection.getRightAnswers(page).toString() , Toast.LENGTH_SHORT).show();
+            if (DEBUG)
+                Toast.makeText(getActivity(), "Right answers: \n" + collection.getRightAnswers(page).toString(), Toast.LENGTH_SHORT).show();
 
             if (!answers.get(0).equals("")) {
 
@@ -442,7 +455,7 @@ public class TestUnitFragment extends AbstractFragment {
                         rg_answers[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                                testsModel.updateAnswer(page,b);
+                                testsModel.updateAnswer(page, b);
                             }
                         });
                         rg_container.addView(rg_answers[i]);
@@ -459,7 +472,7 @@ public class TestUnitFragment extends AbstractFragment {
                         cb_answers[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                                testsModel.updateAnswer(page,b);
+                                testsModel.updateAnswer(page, b);
                             }
                         });
                         answers_container.addView(cb_answers[i]);
@@ -480,7 +493,7 @@ public class TestUnitFragment extends AbstractFragment {
 
                         @Override
                         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                            testsModel.updateAnswer(page,true);
+                            testsModel.updateAnswer(page, true);
                             testsBuilder.userAnswersText(charSequence.toString());
                         }
 
@@ -567,4 +580,5 @@ public class TestUnitFragment extends AbstractFragment {
             return true;
         }
     }
+
 }
