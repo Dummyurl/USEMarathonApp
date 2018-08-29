@@ -52,11 +52,6 @@ public class Student {
         editor = sharedPreferences.edit();
     }
 
-    public boolean success(){
-        return (jsonObject.has("success") && (jsonObject.get("success").getAsInt() > 0));
-    }
-
-
     public String getName(){
         return jsonObject.get("name").getAsString();
     }

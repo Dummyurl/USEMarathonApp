@@ -18,6 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKCallback;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.api.VKError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,9 +32,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
+import ru.use.marathon.activities.GoogleSignInActivity;
 import ru.use.marathon.activities.MainActivity;
 import ru.use.marathon.activities.RegisterActivity;
 import ru.use.marathon.activities.forgotpassActivity;
+import ru.use.marathon.activities.vkauthActivity;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Success;
 import ru.use.marathon.models.Teacher;
@@ -53,7 +60,10 @@ public class LoginStudentFragment extends Fragment {
     TextView sign_up;
     @BindView(R.id.s_fogt_btn)
     TextView fogt;
-
+    @BindView(R.id.s_vk_up_btn)
+    Button vk_up;
+    @BindView(R.id.s_google_up_btn)
+    Button google_up;
 
 
 
@@ -95,6 +105,24 @@ public class LoginStudentFragment extends Fragment {
                 startActivity(i);
             }
         });
+
+        vk_up.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), vkauthActivity.class);
+                i.putExtra("post",0);
+                startActivity(i);
+            }
+        });
+        google_up.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), GoogleSignInActivity.class);
+                i.putExtra("post",0);
+                startActivity(i);
+            }
+        });
+
 
         emailEditText.addTextChangedListener(new MyTextWatcher(emailEditText));
         passwordEditText.addTextChangedListener(new MyTextWatcher(passwordEditText));
@@ -208,6 +236,9 @@ public class LoginStudentFragment extends Fragment {
         }
 
     }
+
+
+
 
     @Override
     public void onDestroyView() {

@@ -75,6 +75,10 @@
             android:label="@string/title_activity_tests_acitivty"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.GoogleSignInActivity"
+            android:label="google"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.TopicsActivity"
             android:label="@string/title_activity_topics"
             android:parentActivityName=".activities.MainActivity"
@@ -145,8 +149,10 @@
         <activity
             android:name=".activities.StartQuestionsActivity"
             android:theme="@style/AppTheme.NoBar" />
+
         <activity android:name=".activities.forgotpassActivity" />
-        <activity android:name=".activities.TaskReviewActivity"></activity>
+        <activity android:name=".activities.vkauthActivity"></activity>
+      <activity android:name=".activities.TaskReviewActivity"></activity>
     </application>
 
 </manifest>

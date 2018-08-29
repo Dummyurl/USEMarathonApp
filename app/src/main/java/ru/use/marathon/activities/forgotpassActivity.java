@@ -84,7 +84,7 @@ public class forgotpassActivity extends AbstractActivity {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             new RestoreCode(response);
-                            if (success(response)) {
+                            if (success()) {
                                 code=code();
                                 new CountDownTimer(122000, 1000) {
 
@@ -159,7 +159,7 @@ public class forgotpassActivity extends AbstractActivity {
                             //////////////////////////
 
 
-                            if (success(response)) {
+                            if (success()) {
                                 if (post == 1) {
                                     Teacher teacher = new Teacher(getApplicationContext(), response);
                                     Student student = new Student(getApplicationContext());
