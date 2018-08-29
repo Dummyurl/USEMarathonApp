@@ -22,8 +22,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -36,56 +36,74 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="10dp"
                 android:text="Результат:"
-                android:visibility="gone"
                 android:textColor="@android:color/background_dark"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:visibility="gone" />
 
             <com.github.mikephil.charting.charts.PieChart
-                android:layout_width="match_parent"
                 android:id="@+id/result_pie"
-                android:layout_below="@+id/result_score"
-                android:layout_height="260dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:layout_below="@+id/result_score"/>
 
 
-            <TableLayout
-                android:id="@+id/result_table"
+            <TextView
+                android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/result_pie"
-                android:background="#eeeeee"
-                android:isScrollContainer="true"
-                android:stretchColumns="*">
+                android:layout_below="@id/result_pie"
+                android:layout_margin="10dp"
+                android:text="Нажмите на задание, чтобы увидеть больше" />
+
+            <HorizontalScrollView
+                android:id="@+id/table_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView3">
 
 
-                <TableRow
-                    android:background="#cccccc"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:text="№ Задания"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:text="Правильный ответ"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:text="Ваш ответ"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:text="        "
-                        android:textColor="@android:color/black" />
-                </TableRow>
+                <TableLayout
+                    android:id="@+id/result_table"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#eeeeee"
+                    android:isScrollContainer="true"
+                    android:stretchColumns="*">
 
 
-            </TableLayout>
+                    <TableRow
+                        android:background="#cccccc"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:gravity="center"
+                            android:text="№ Задания"
+                            android:textColor="@android:color/black" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Правильный ответ"
+                            android:textColor="@android:color/black" />
+
+                        <TextView
+                            android:gravity="center"
+                            android:text="Ваш ответ"
+                            android:textColor="@android:color/black" />
+
+                    </TableRow>
+
+
+                </TableLayout>
+
+            </HorizontalScrollView>
 
             <Button
                 android:id="@+id/result_return_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/result_table"
+                android:layout_below="@+id/table_scroll"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="11dp"
                 android:text="Вернуться" />

@@ -6,6 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class TestCollection {
     private
     int answer_type;
 
+    @ColumnInfo(name = "time")
+    private double time;
 
     @ColumnInfo(name = "subject")
     private
@@ -65,7 +68,8 @@ public class TestCollection {
     String user_answers;
 
 
-    public TestCollection( String title, int answer_type, int subject, int task_number, int topic_id,@NonNull String content, @NonNull String content_image,@NonNull String content_html,@NonNull String answers,@NonNull String right_answers, @NonNull String user_answers) {
+    public TestCollection( String title, int answer_type, int subject, int task_number, int topic_id,@NonNull String content, @NonNull String content_image,@NonNull String content_html,@NonNull String answers,@NonNull String right_answers, @NonNull String user_answers,double time) {
+        this.time = time;
         this.title = title;
         this.answer_type = answer_type;
         this.subject = subject;
@@ -81,6 +85,7 @@ public class TestCollection {
 
     @Ignore
     public TestCollection(TestCollectionBuilder builder) {
+        this.time = builder.time;
         this.title = builder.title;
         this.answer_type = builder.answer_type;
         this.task_number = builder.task_number;
@@ -138,6 +143,8 @@ public class TestCollection {
         return user_answers;
     }
 
+    public double getTime(){ return time;}
+
     public static class TestCollectionBuilder {
 
         String title;
@@ -151,6 +158,7 @@ public class TestCollection {
         String answers;
         String right_answers;
         String user_answers;
+        double time;
 
         public TestCollectionBuilder() {
         }
@@ -209,6 +217,20 @@ public class TestCollection {
             this.user_answers = uanswers.toString();
             return this;
         }
+
+        public TestCollectionBuilder time(double time) {
+            this.time = time;
+            return this;
+        }
+
+
+        public TestCollectionBuilder userAnswersText(String uanswers) {
+            List<String> ua = new ArrayList<>();
+            ua.add(uanswers);
+            this.user_answers = ua.toString();
+            return this;
+        }
+
 
         public TestCollection build() {
             return new TestCollection(this);

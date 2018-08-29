@@ -10,7 +10,7 @@ import android.content.Context;
 /**
  * Created by ilyas on 24-Aug-18.
  */
-@Database(entities = {TestCollection.class}, version = 2)
+@Database(entities = {TestCollection.class}, version = 3)
 public abstract class TestsRoomDatabase extends RoomDatabase {
 
     public abstract TestsDAO testsDAO();
@@ -24,6 +24,16 @@ public abstract class TestsRoomDatabase extends RoomDatabase {
                     + " MODIFY COLUMN id AUTOINCREMENT");
       }
     };
+
+
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+        }
+    };
+
+
 
     static TestsRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {

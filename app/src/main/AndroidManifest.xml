@@ -141,12 +141,12 @@
             android:label="Создать задание" />
         <activity
             android:name=".activities.UserProfileActivity"
-            android:label="Профиль"></activity>
-
-        <activity android:name=".activities.StartQuestionsActivity"
-            android:theme="@style/AppTheme.NoBar"></activity>
-        <activity android:name=".activities.forgotpassActivity"></activity>
-
+            android:label="Профиль" />
+        <activity
+            android:name=".activities.StartQuestionsActivity"
+            android:theme="@style/AppTheme.NoBar" />
+        <activity android:name=".activities.forgotpassActivity" />
+        <activity android:name=".activities.TaskReviewActivity"></activity>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by ilyas on 24-Aug-18.
@@ -31,6 +32,7 @@ public class TestsRepository {
     public void deleteAll(){
         new deleteAsyncTask(mTestsDao).execute();
     }
+
 
     private static class insertAsyncTask extends AsyncTask<TestCollection, Void, Void> {
 
@@ -62,4 +64,5 @@ public class TestsRepository {
             return null;
         }
     }
+
 }

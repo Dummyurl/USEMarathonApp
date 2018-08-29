@@ -12,7 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Response;
 import ru.use.marathon.AppController;
@@ -163,4 +165,31 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
     public void onInternetUnavailable() {
         showInfoDialog("Подключение к сети","Нет подлючения к интернету. Проверьте подключение или повторите позднее");
     }
+
+    String ellipsize(String input, int maxLength) {
+        if (input == null || input.length() < maxLength) {
+            return input;
+        }
+        return input.substring(0, maxLength) + "...";
+    }
+
+
+
+
+    public List<String> convertStringToList(String data) {
+        String a[] = data.substring(1, data.length() - 1).split(",");
+        List<String> res = new ArrayList<>(a.length);
+        for (int i = 0; i < a.length; i++) {
+            res.add(a[i]);
+        }
+        return res;
+    }
+    public List<Integer> convertStringListToIntList(List<String> data){
+        List<Integer> result = new ArrayList<>(data.size());
+        for (int i = 0; i < data.size(); i++) {
+            result.add(Integer.valueOf(data.get(i).trim()));
+        }
+        return result;
+    }
+
 }

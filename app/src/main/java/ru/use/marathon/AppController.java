@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -42,6 +43,9 @@ public class AppController extends Application{
 
     public static API getApi () { return api;}
 
+    public static boolean startTimer;
+    public static int time;
+
 
     @Override
     public void onCreate() {
@@ -66,6 +70,33 @@ public class AppController extends Application{
 
 
         api = retrofit.create(API.class);
+    }
+
+    public static String startTimer(){
+        startTimer = true;
+        final String[] time_formatted = new String[1];
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                int minutes = (time % 3600) / 60;
+                int secs = time % 60;
+
+                time_formatted[0] = String.format("%02d:%02d", minutes, secs);
+
+                if (startTimer) {
+                    time++;
+                }
+
+                handler.postDelayed(this, 1000);
+            }
+        });
+
+        return time_formatted[0];
+    }
+
+    public static void stopTimer(){
+        startTimer = false;
     }
 
     public Cache getCache() {

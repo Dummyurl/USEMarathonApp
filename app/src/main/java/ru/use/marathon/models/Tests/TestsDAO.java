@@ -24,5 +24,4 @@ public interface TestsDAO {
     @Query("SELECT * from tests ORDER BY task_number ASC")
     LiveData<List<TestCollection>> getAllTasksByNumber();
 
-
 }

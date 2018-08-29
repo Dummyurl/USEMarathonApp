@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +52,9 @@ import ru.use.marathon.models.Collections;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Success;
 import ru.use.marathon.models.Tests.TestCollection;
+import ru.use.marathon.models.Tests.TestFragmentModel;
 import ru.use.marathon.models.Tests.TestsViewModel;
+import ru.use.marathon.utils.CounterClass;
 
 import static ru.use.marathon.Constants.DEBUG;
 import static ru.use.marathon.models.Success.success;
@@ -63,6 +67,7 @@ public class TestUnitFragment extends AbstractFragment {
     int page, max_page, cn;
     int answer_type;
     Student student;
+    TestFragmentModel testsModel;
 
     TestsViewModel testsViewModel;
     TestCollection.TestCollectionBuilder testsBuilder;
@@ -120,9 +125,11 @@ public class TestUnitFragment extends AbstractFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         page = getArguments().getInt("page");
         max_page = getArguments().getInt("max_page");
         cn = getArguments().getInt("cn");
+
 
     }
 
@@ -132,12 +139,12 @@ public class TestUnitFragment extends AbstractFragment {
 
         View view = inflater.inflate(R.layout.fragment_tests_activity, container, false);
         ButterKnife.bind(this, view);
-
         testsViewModel = ViewModelProviders.of(getActivity()).get(TestsViewModel.class);
+        testsModel = new TestFragmentModel();
 
         student = new Student(getActivity().getApplicationContext());
 
-        parentView = (ViewPager) getActivity().findViewById(R.id.tests_viewpager_container);
+        parentView = getActivity().findViewById(R.id.tests_viewpager_container);
         Collections collections = new Collections(getActivity().getApplicationContext());
         collection = collections.getCollection();
 
@@ -158,6 +165,7 @@ public class TestUnitFragment extends AbstractFragment {
     }
 
     private void initSaveAnswer() {
+        testsModel.updateAnswer(page,true);
 
         boolean isCorrectAnswer = false;
         List<String> ra = collection.getRightAnswers(page);
@@ -187,7 +195,7 @@ public class TestUnitFragment extends AbstractFragment {
 
             if (answer_type == Constants.RADIO_BUTTON_TYPE) {
 
-                RadioButton radioButton = (RadioButton) rg_container.findViewById(rg_container.getCheckedRadioButtonId());
+                RadioButton radioButton = rg_container.findViewById(rg_container.getCheckedRadioButtonId());
                 int i = rg_container.indexOfChild(radioButton); // i - user answer
 
                 List<String> uanswer = new ArrayList<>();
@@ -261,6 +269,15 @@ public class TestUnitFragment extends AbstractFragment {
 
 
             if (parentView.getCurrentItem() == max_page - 1) {
+
+                for (int i = 0; i < testsModel.answeredSize(); i++) {
+                    if(testsModel.isAnswered(page)){
+                        if(DEBUG) Log.d(TAG, "this page is answered");
+                    }else{
+                        if(DEBUG) Log.d(TAG, "this page is NOT answered");
+                    }
+                }
+
                 AlertDialog.Builder b = new AlertDialog.Builder(getContext());
                 b.setTitle("Завершить тест?");
                 b.setPositiveButton("Да", new DialogInterface.OnClickListener() {
@@ -277,6 +294,14 @@ public class TestUnitFragment extends AbstractFragment {
                 d.show();
             } else {
                 parentView.setCurrentItem(parentView.getCurrentItem() + 1);
+
+                for (int i = 0; i < testsModel.answeredSize(); i++) {
+                    if(testsModel.isAnswered(page)){
+                        if(DEBUG) Log.d(TAG, "this page is answered");
+                    }else{
+                        if(DEBUG) Log.d(TAG, "this page is NOT answered");
+                    }
+                }
             }
 
         }
@@ -317,7 +342,7 @@ public class TestUnitFragment extends AbstractFragment {
 
     private void sendStatToServer(boolean isCorrectAnswer) {
         HashMap<String, String> user_data = student.getData();
-        int id = Integer.parseInt(user_data.get(student.KEY_ID));
+        int id = Integer.parseInt(user_data.get(Student.KEY_ID));
         int c = isCorrectAnswer ? 1 : 0;
         AppController.getApi().sendStat(1, "setStats", subject(), id, collection.getId(page), seconds, c, collection.getTopic(page)).enqueue(new Callback<JsonObject>() {
             @Override
@@ -344,6 +369,8 @@ public class TestUnitFragment extends AbstractFragment {
 
                 String time = String.format("%02d:%02d", minutes, secs);
 
+
+                testsBuilder.time(secs);
                 stopwatch_txt.setText(time);
 
                 if (startRun) {
@@ -353,6 +380,8 @@ public class TestUnitFragment extends AbstractFragment {
                 handler.postDelayed(this, 1000);
             }
         });
+
+
 
     }
 
@@ -373,6 +402,7 @@ public class TestUnitFragment extends AbstractFragment {
             testsBuilder.topicId(collection.getTopic(page));
             testsBuilder.rightAnswers(collection.getRightAnswers(page));
 
+            testsModel.setAnswer(page,false);
 
             if (!collection.getContent(page).equals("")) {
                 content_tv.setVisibility(View.VISIBLE);
@@ -412,7 +442,7 @@ public class TestUnitFragment extends AbstractFragment {
                         rg_answers[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
+                                testsModel.updateAnswer(page,b);
                             }
                         });
                         rg_container.addView(rg_answers[i]);
@@ -429,6 +459,7 @@ public class TestUnitFragment extends AbstractFragment {
                         cb_answers[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                                testsModel.updateAnswer(page,b);
                             }
                         });
                         answers_container.addView(cb_answers[i]);
@@ -441,6 +472,23 @@ public class TestUnitFragment extends AbstractFragment {
                     enter_answer_et.setTextColor(Color.BLACK);
                     enter_answer_et.setHint("Введите ответ");
                     answers_container.addView(enter_answer_et);
+                    enter_answer_et.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            testsModel.updateAnswer(page,true);
+                            testsBuilder.userAnswersText(charSequence.toString());
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
                 }
             } else {
                 save_ans_btn.setVisibility(View.GONE);

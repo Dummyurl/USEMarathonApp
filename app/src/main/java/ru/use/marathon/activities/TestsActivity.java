@@ -27,6 +27,7 @@ import ru.use.marathon.models.Collections;
 import ru.use.marathon.models.Tests.TestsViewModel;
 import ru.use.marathon.models.answers.AbstractAnswer;
 import ru.use.marathon.models.answers.StudentAnswers;
+import ru.use.marathon.utils.CounterClass;
 
 public class TestsActivity extends AbstractActivity {
 
@@ -98,6 +99,9 @@ public class TestsActivity extends AbstractActivity {
                     test_numbers.add(collection.getTaskNumber(i));
                 }
 
+                CounterClass counterClass = CounterClass.initInstance(180000, 1000);
+                counterClass.start();
+
             }
 
             @Override
@@ -143,6 +147,8 @@ public class TestsActivity extends AbstractActivity {
         public int getCount() {
             return tests_amount;
         }
+
+
 
     }
 
