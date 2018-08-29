@@ -6,14 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
-
-import com.google.gson.JsonObject;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.HashMap;
 
-import retrofit2.Response;
 import ru.use.marathon.AppController;
+import ru.use.marathon.R;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Teacher;
 import ru.use.marathon.utils.InternetConnectionListener;
@@ -23,8 +24,6 @@ import ru.use.marathon.utils.InternetConnectionListener;
  */
 
 public class AbstractActivity extends AppCompatActivity implements InternetConnectionListener {
-
-    public static final boolean DEBUG = false;
 
     public static final int STUDENT = 0;
     public static final int TEACHER = 1;
@@ -55,14 +54,6 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
         ((AppController) getApplication()).removeInternetConnectionListener();
     }
 
-
-
-    public boolean success(Response<JsonObject> response){
-        JsonObject js = response.body();
-        return (js != null) && js.has("success") && (js.get("success").getAsInt() > 0);
-    }
-
-
     public int userType() {
         if (student.isLoggedIn() && !teacher.isLoggedIn()) {
             return 0;
@@ -71,14 +62,6 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
         } else {
             return -1;
         }
-    }
-
-    public int id(){
-        if (userType() == STUDENT)
-            return Integer.valueOf(user_data.get(student.KEY_ID));
-        else if (userType() == TEACHER)
-            return Integer.valueOf(user_data.get(teacher.KEY_ID));
-        else return -1;
     }
 
     public int subject() {
@@ -134,8 +117,6 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
         }
     }
 
-
-
     public void showLoadDialog(Context c, String title, String message) {
         dialog = new ProgressDialog(c);
         dialog.setTitle(title);
@@ -155,4 +136,39 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
     public void onInternetUnavailable() {
         showInfoDialog("Подключение к сети","Нет подлючения к интернету. Проверьте подключение или повторите позднее");
     }
+
+    @VisibleForTesting
+    public ProgressDialog mProgressDialog;
+
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    public void hideKeyboard(View view) {
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        hideProgressDialog();
+    }
+
+
+
 }

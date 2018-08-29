@@ -75,6 +75,10 @@
             android:label="@string/title_activity_tests_acitivty"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.GoogleSignInActivity"
+            android:label="google"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.TopicsActivity"
             android:label="@string/title_activity_topics"
             android:parentActivityName=".activities.MainActivity"
@@ -141,12 +145,10 @@
             android:label="Создать задание" />
         <activity
             android:name=".activities.UserProfileActivity"
-            android:label="Профиль"></activity>
-
-
-
-        <activity android:name=".activities.StartQuestionsActivity"
-            android:theme="@style/AppTheme.NoBar"></activity>
+            android:label="Профиль" />
+        <activity
+            android:name=".activities.StartQuestionsActivity"
+            android:theme="@style/AppTheme.NoBar" />
 
         <receiver
             android:name=".utils.ConnectivityReceiver"
@@ -156,8 +158,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activities.forgotpassActivity"></activity>
-
+        <activity android:name=".activities.forgotpassActivity" />
+        <activity android:name=".activities.vkauthActivity"></activity>
     </application>
 
 </manifest>

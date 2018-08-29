@@ -42,7 +42,7 @@
         android:inputType="textPassword" />
 
     <EditText
-        android:id="@+id/phone_number_et"
+        android:id="@+id/pupo_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
@@ -56,7 +56,7 @@
 
     <Button
         android:layout_width="match_parent"
-        android:id="@+id/region_btn"
+        android:id="@+id/region_btn_first"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
@@ -84,6 +84,17 @@
         android:clickable="false"
         android:text="Выберите город" />
 
+    <Spinner
+        android:id="@+id/spiner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp">
+    </Spinner>
+
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="match_parent"
@@ -95,11 +106,11 @@
         android:text="Я принимаю условия Пользовательского соглашения" />
 
     <Button
-        android:layout_width="match_parent"
         android:id="@+id/sign_up_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_height="wrap_content"
         android:text="Sign up" />
 
 
