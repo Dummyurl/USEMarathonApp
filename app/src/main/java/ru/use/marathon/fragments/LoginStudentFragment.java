@@ -18,11 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKCallback;
-import com.vk.sdk.VKScope;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.api.VKError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,11 +27,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
-import ru.use.marathon.activities.GoogleSignInActivity;
+import ru.use.marathon.activities.auth.ForgotPasswordActivity;
+import ru.use.marathon.activities.auth.GoogleSignInActivity;
 import ru.use.marathon.activities.MainActivity;
-import ru.use.marathon.activities.RegisterActivity;
-import ru.use.marathon.activities.forgotpassActivity;
-import ru.use.marathon.activities.vkauthActivity;
+import ru.use.marathon.activities.auth.RegisterActivity;
+import ru.use.marathon.activities.auth.VkAuthActivity;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Success;
 import ru.use.marathon.models.Teacher;
@@ -100,7 +95,7 @@ public class LoginStudentFragment extends Fragment {
         fogt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getActivity(), forgotpassActivity.class);
+                Intent i = new Intent(getActivity(), ForgotPasswordActivity.class);
                 i.putExtra("post",0);
                 startActivity(i);
             }
@@ -109,7 +104,7 @@ public class LoginStudentFragment extends Fragment {
         vk_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getActivity(), vkauthActivity.class);
+                Intent i = new Intent(getActivity(), VkAuthActivity.class);
                 i.putExtra("post",0);
                 startActivity(i);
             }

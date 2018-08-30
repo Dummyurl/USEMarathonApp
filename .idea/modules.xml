@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/USEMarathonApp.iml" filepath="$PROJECT_DIR$/USEMarathonApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/snova.iml" filepath="$PROJECT_DIR$/snova.iml" />
-      <module fileurl="file://$PROJECT_DIR$/vksdk_library/vksdk_library.iml" filepath="$PROJECT_DIR$/vksdk_library/vksdk_library.iml" />
+      <module fileurl="file://C:\android_projects\USEMarathonApp\snova.iml" filepath="C:\android_projects\USEMarathonApp\snova.iml" />
+      <module fileurl="file://C:\android_projects\USEMarathonApp\vksdk_library\vksdk_library.iml" filepath="C:\android_projects\USEMarathonApp\vksdk_library\vksdk_library.iml" />
     </modules>
   </component>
 </project>

@@ -24,15 +24,16 @@ import ru.use.marathon.adapters.TopicsAdapter;
 import ru.use.marathon.models.Collection;
 import ru.use.marathon.models.Collections;
 import ru.use.marathon.models.Student;
-import ru.use.marathon.models.topics.SolvedTestsByTopics;
 import ru.use.marathon.models.topics.Topics;
 import ru.use.marathon.utils.ItemClickSupport;
 
-public class TopicsActivity extends AppCompatActivity {
+public class TopicsActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.by_topics_rv)
     RecyclerView recyclerView;
+    TopicsAdapter adapter;
+    Topics topics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,38 +43,21 @@ public class TopicsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final Student s = new Student(getApplicationContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        HashMap<String,String> sdata = s.getData();
-        final int user_id = Integer.parseInt(sdata.get(s.KEY_ID));
+
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        AppController.getApi().get_topics(1,"get_topics",s.getSubject()).enqueue(new Callback<JsonObject>() {
+        AppController.getApi().getSolvedByTopics(1,"getSolvedByTopics",subject(),id()).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                final Topics topics = new Topics(response);
-
-                AppController.getApi().get_solved_tests_by_topic(1,"get_solved_by_topic",s.getSubject(),user_id).enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        SolvedTestsByTopics byTopics = new SolvedTestsByTopics(response);
-                        TopicsAdapter topicsAdapter = new TopicsAdapter(topics,byTopics);
-                        recyclerView.setAdapter(topicsAdapter);
-                        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                            @Override
-                            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                                int id = topics.getID(position);
-                                initTests(id);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                    }
-                });
-
+                topics = new Topics(response);
+                if(topics.success()){
+                    adapter = new TopicsAdapter(topics);
+                    recyclerView.setAdapter(adapter);
+                }else{
+                    showInfoDialog("Ошибка!","Произошла ошибка на сервере. Повторите попытку позже");
+                }
             }
 
             @Override
@@ -83,6 +67,12 @@ public class TopicsActivity extends AppCompatActivity {
         });
 
 
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                initTests(topics.getID(position));
+            }
+        });
 
     }
 

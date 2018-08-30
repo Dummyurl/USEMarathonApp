@@ -13,10 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
 import ru.use.marathon.models.Student;
@@ -59,6 +62,13 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
         ((AppController) getApplication()).removeInternetConnectionListener();
     }
 
+    public int id(){
+        if (userType() == STUDENT)
+            return Integer.valueOf(user_data.get(student.KEY_ID));
+        else if (userType() == TEACHER)
+            return Integer.valueOf(user_data.get(teacher.KEY_ID));
+        else return -1;
+    }
 
     private boolean isInternetAvailable() {
         ConnectivityManager connectivityManager
@@ -207,10 +217,5 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        hideProgressDialog();
-    }
 
 }

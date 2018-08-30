@@ -5,11 +5,11 @@ import com.google.gson.JsonObject;
 
 import retrofit2.Response;
 
-public class RegionSHow {
+public class RegionShow {
     static int success;
     static JsonObject jsonObject;
 
-    public RegionSHow (Response<JsonObject> response) {
+    public RegionShow (Response<JsonObject> response) {
         jsonObject = response.body();
     }
 

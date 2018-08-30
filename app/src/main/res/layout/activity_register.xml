@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:orientation="vertical"
-    tools:context="ru.use.marathon.activities.RegisterActivity">
+    tools:context="ru.use.marathon.activities.auth.RegisterActivity">
 
 
     <EditText
@@ -14,9 +15,13 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/colorItems"
         android:hint="Имя"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:textColor="@color/colorItems"
+        android:textColorHint="@color/colorPrimary"
+        android:textCursorDrawable="@drawable/edittext_cursor" />
 
     <EditText
         android:id="@+id/email_et"
@@ -24,9 +29,13 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="40dp"
+        android:textColorHint="@color/colorPrimary"
+        android:backgroundTint="@color/colorItems"
+        android:textColor="@color/colorItems"
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
         android:hint="Email"
+        android:textCursorDrawable="@drawable/edittext_cursor"
         android:inputType="textEmailAddress" />
 
 
@@ -35,9 +44,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
+        android:textColorHint="@color/colorPrimary"
+        android:textColor="@color/colorItems"
+        android:backgroundTint="@color/colorItems"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
+        android:textCursorDrawable="@drawable/edittext_cursor"
         android:hint="Пароль"
         android:inputType="textPassword" />
 
@@ -46,32 +59,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:maxLength="11"
+        android:textColorHint="@color/colorPrimary"
+        android:textColor="@color/colorItems"
+        android:backgroundTint="@color/colorItems"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
+        android:textCursorDrawable="@drawable/edittext_cursor"
         android:layout_marginTop="10dp"
         android:hint="Телефон"
-        android:inputType="number" />
+        android:inputType="number"
+        android:maxLength="11" />
 
 
     <Button
-        android:layout_width="match_parent"
         android:id="@+id/region_btn_first"
         style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_height="wrap_content"
         android:text="Выберите регион" />
 
     <Button
-        android:layout_width="match_parent"
         android:id="@+id/city_btn"
         style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        android:text="Выберите город" />
+        android:text="Выберите город"
+        android:visibility="gone" />
 
 
     <Button
@@ -88,12 +105,11 @@
         android:id="@+id/spiner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp">
-    </Spinner>
+        android:layout_marginTop="10dp"
+        android:visibility="gone"></Spinner>
 
     <CheckBox
         android:id="@+id/checkBox"
@@ -105,13 +121,51 @@
         android:layout_marginTop="10dp"
         android:text="Я принимаю условия Пользовательского соглашения" />
 
-    <Button
-        android:id="@+id/sign_up_btn"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:text="Sign up" />
+        android:layout_marginEnd="40dp"
+
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_white"
+            android:elevation="4dp"
+            android:text="Назад"
+            android:textColor="@color/colorItems" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:gravity="right"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/sign_up_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_default"
+                android:elegantTextHeight="false"
+                android:elevation="4dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="Регистрация"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 </LinearLayout>

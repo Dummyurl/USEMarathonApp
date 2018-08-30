@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -27,7 +28,7 @@ import ru.use.marathon.utils.NetworkConnectionInterceptor;
  * Created by ilyas on 09-Jun-18.
  */
 
-public class AppController extends Application{
+public class AppController extends MultiDexApplication{
 
     public static final int DISK_CACHE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -51,7 +52,7 @@ public class AppController extends Application{
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        //Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -66,7 +67,7 @@ public class AppController extends Application{
                 .baseUrl("https://cordi.space/exam/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
-                .build(); // тут выстраивается основная часть ссылки
+                .build();
 
 
         api = retrofit.create(API.class);

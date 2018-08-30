@@ -17,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.use.marathon.R;
-import ru.use.marathon.activities.LoginActivity;
+import ru.use.marathon.activities.auth.LoginActivity;
 import ru.use.marathon.models.Teacher;
 
 /**

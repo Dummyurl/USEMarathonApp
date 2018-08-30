@@ -12,7 +12,7 @@ import android.support.v4.app.Fragment;
 import java.util.HashMap;
 
 import ru.use.marathon.AppController;
-import ru.use.marathon.activities.LoginActivity;
+import ru.use.marathon.activities.auth.LoginActivity;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Teacher;
 import ru.use.marathon.utils.InternetConnectionListener;

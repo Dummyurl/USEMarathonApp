@@ -4,12 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -20,16 +16,15 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.use.marathon.R;
+import ru.use.marathon.activities.auth.LoginActivity;
 import ru.use.marathon.fragments.navigation.ChatFragment;
 import ru.use.marathon.fragments.navigation.FeedFragment;
 import ru.use.marathon.fragments.navigation.ProfileFragment;
 import ru.use.marathon.fragments.navigation.student.SNavTestsFragment;
 import ru.use.marathon.fragments.navigation.TheoryFragment;
-import ru.use.marathon.fragments.navigation.teacher.TNavHomeFragment;
 import ru.use.marathon.fragments.navigation.teacher.TNavTestsFragment;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Teacher;
-import ru.use.marathon.utils.BottomNavigationViewHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,9 +80,12 @@ public class MainActivity extends AppCompatActivity {
         bnv.addItem(item3);
         bnv.addItem(item4);
         bnv.addItem(item5);
-        bnv.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        bnv.setDefaultBackgroundColor(getResources().getColor(R.color.colorItems));
+        bnv.setInactiveColor(Color.parseColor("#005E28")); // inactive color
+        bnv.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bnv.setCurrentItem(2);
-        bnv.setAccentColor(getResources().getColor(R.color.colorAccent));
+
+        bnv.setAccentColor(getResources().getColor(R.color.tab_white));
 
         bnv.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override

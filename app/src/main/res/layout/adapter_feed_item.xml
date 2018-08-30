@@ -10,9 +10,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp" >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/relativeLayout"
+            android:background="@android:color/white"
             android:orientation="vertical">
 
             <ImageView
@@ -32,32 +34,36 @@
                 android:id="@+id/feed_title_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_above="@+id/feed_text_item"
+                android:layout_alignStart="@+id/feed_text_item"
                 android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
                 android:text="title"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/feed_text_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="text" />
+                android:layout_alignBottom="@+id/feed_image_item"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="20dp"
+                android:text="text"
+                android:layout_toStartOf="@+id/cre"
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:id="@+id/feed_created_at"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_alignBottom="@+id/feed_text_item"
+                android:layout_alignEnd="@+id/feed_title_item"
                 android:gravity="right"
                 android:text="created_at"
+                android:textColor="@android:color/white"
                 android:textSize="12sp" />
 
-        </LinearLayout>
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

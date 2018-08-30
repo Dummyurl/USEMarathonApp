@@ -27,11 +27,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
-import ru.use.marathon.activities.GoogleSignInActivity;
+import ru.use.marathon.activities.auth.GoogleSignInActivity;
 import ru.use.marathon.activities.MainActivity;
-import ru.use.marathon.activities.RegisterActivity;
-import ru.use.marathon.activities.forgotpassActivity;
-import ru.use.marathon.activities.vkauthActivity;
+import ru.use.marathon.activities.auth.RegisterActivity;
+import ru.use.marathon.activities.auth.ForgotPasswordActivity;
+import ru.use.marathon.activities.auth.VkAuthActivity;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Success;
 import ru.use.marathon.models.Teacher;
@@ -136,7 +136,7 @@ public class LoginTeacherFragment extends Fragment {
         fogt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getActivity(), forgotpassActivity.class);
+                Intent i = new Intent(getActivity(), ForgotPasswordActivity.class);
                 i.putExtra("post",1);
                 startActivity(i);
             }
@@ -147,7 +147,7 @@ public class LoginTeacherFragment extends Fragment {
         vk_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getActivity(), vkauthActivity.class);
+                Intent i = new Intent(getActivity(), VkAuthActivity.class);
                 i.putExtra("post",1);
                 startActivity(i);
             }

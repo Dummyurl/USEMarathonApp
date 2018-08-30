@@ -66,6 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
+        app:backgroundTint="#FEC900"
         app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@drawable/ic_star" />
 
