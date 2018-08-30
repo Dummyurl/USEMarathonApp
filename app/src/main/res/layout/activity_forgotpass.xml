@@ -71,6 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
+            android:background="@drawable/button_default"
+            android:textColor="@android:color/background_light"
             android:text="Восстановление пароля"
             android:visibility="visible" />
 

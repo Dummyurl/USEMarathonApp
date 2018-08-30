@@ -18,5 +18,7 @@
         android:id="@+id/again_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_default"
+        android:textColor="@android:color/background_light"
         android:text="Попробовать заново" />
 </LinearLayout>

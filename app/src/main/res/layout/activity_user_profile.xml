@@ -64,12 +64,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:background="@drawable/button_default"
+            android:textColor="@android:color/background_light"
             android:layout_toEndOf="@+id/account_request_teacher"
             android:text="Написать" />
 
         <Button
             android:id="@+id/account_request_teacher"
             android:layout_width="wrap_content"
+            android:background="@drawable/button_default"
+            android:textColor="@android:color/background_light"
             android:layout_height="wrap_content"
             android:text="Добавиться к учителю" />
     </RelativeLayout>
