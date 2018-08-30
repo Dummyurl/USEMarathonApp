@@ -40,7 +40,7 @@
                 android:layout_weight="10"
                 android:fontFamily="sans-serif"
                 android:gravity="center"
-                android:text="ED WAY"
+                android:text="EDWAY "
                 android:textColor="@android:color/white"
                 android:textSize="56sp"
                 android:textStyle="bold" />

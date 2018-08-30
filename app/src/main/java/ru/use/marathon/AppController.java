@@ -2,12 +2,16 @@ package ru.use.marathon;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKAccessTokenTracker;
+import com.vk.sdk.VKSdk;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +25,8 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import ru.use.marathon.activities.auth.VkAuthActivity;
+import ru.use.marathon.fragments.LoginStudentFragment;
 import ru.use.marathon.utils.InternetConnectionListener;
 import ru.use.marathon.utils.NetworkConnectionInterceptor;
 
@@ -48,9 +54,24 @@ public class AppController extends MultiDexApplication{
     public static int time;
 
 
+    VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
+        @Override
+        public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
+            if (newToken == null) {
+                Intent intent = new Intent(ru.use.marathon.AppController.this,VkAuthActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        }
+    };
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        vkAccessTokenTracker.startTracking();
+        VKSdk.initialize(this);
+
         mInstance = this;
         Fabric.with(this, new Crashlytics());
 

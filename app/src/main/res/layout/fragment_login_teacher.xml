@@ -64,7 +64,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/gogle"
+                android:background="@drawable/googlegreen"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -72,7 +72,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/vk512"
+                android:background="@drawable/vkgreen"
                 android:textColor="@android:color/white" />
         </LinearLayout>
 
