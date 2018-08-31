@@ -1,8 +1,11 @@
 package ru.use.marathon.activities.auth;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -244,7 +248,11 @@ public class VkAuthActivity extends AppCompatActivity {
 
         //и отображаем его:
         alertDialog.show();
-
+        Button negativeButton = ((AlertDialog)alertDialog).getButton(DialogInterface.BUTTON_NEGATIVE);
+        Button positiveButton = ((AlertDialog)alertDialog).getButton(DialogInterface.BUTTON_POSITIVE);
+        positiveButton.setTextColor(getResources().getColor(R.color.vk_black));
+        negativeButton.setTextColor(getResources().getColor(R.color.vk_black));
+        userInput.getBackground().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
 
     }
 

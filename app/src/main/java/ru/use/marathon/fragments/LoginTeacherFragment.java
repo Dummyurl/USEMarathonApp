@@ -107,12 +107,21 @@ public class LoginTeacherFragment extends Fragment {
                                 AlertDialog.Builder b = new AlertDialog.Builder(getContext());
                                 b.setTitle("Ошибка");
                                 b.setMessage("Проверьте введенные данные.");
+
                                 b.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         dialogInterface.dismiss();
+
                                     }
+
                                 });
+                                AlertDialog alert = b.create();
+                                alert.show();
+
+                                Button positiveButton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+                                positiveButton.setTextColor(getResources().getColor(R.color.vk_black));
+
                             }
                         }
 

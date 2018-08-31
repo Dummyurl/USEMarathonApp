@@ -7,7 +7,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -197,6 +200,9 @@ public class AllUsersActivity extends AbstractActivity {
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
+//                Button buttonPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+//                buttonPositive.setTextColor(ContextCompat.getColor(this, R.color.vk_black));
                 title[0] = input.getText().toString();
                 if (!pos.isEmpty() && !id.isEmpty() && !title[0].isEmpty()) {
                     AppController.getApi().createChat(1, "createChatRoom", title[0], user_id, local_user_type).enqueue(new Callback<JsonObject>() {
@@ -231,7 +237,16 @@ public class AllUsersActivity extends AbstractActivity {
 
 
         });
+
+
         builder.create().show();
+//        Button positiveButton = ((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE);
+//        positiveButton.setTextColor(getApplicationContext().getResources().getColor(R.color.vk_black));
+//        positiveButton.setTypeface(Typeface.DEFAULT_BOLD);
+//        positiveButton.invalidate();
+
+
+      // userInput.getBackground().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
     }
 
 

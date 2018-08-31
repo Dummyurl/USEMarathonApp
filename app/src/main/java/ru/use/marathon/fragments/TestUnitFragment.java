@@ -192,6 +192,9 @@ public class TestUnitFragment extends AbstractFragment {
                 b.setCancelable(false);
                 AlertDialog d = b.create();
                 d.show();
+                Button positiveButton = ((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE);
+                positiveButton.setTextColor(getResources().getColor(R.color.vk_black));
+
             } else {
                 parentView.setCurrentItem(parentView.getCurrentItem() + 1);
             }
@@ -300,6 +303,8 @@ public class TestUnitFragment extends AbstractFragment {
                 b.setCancelable(false);
                 AlertDialog d = b.create();
                 d.show();
+                Button positiveButton = ((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE);
+                positiveButton.setTextColor(getResources().getColor(R.color.vk_black));
             } else {
                 parentView.setCurrentItem(parentView.getCurrentItem() + 1);
 

@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -362,8 +364,15 @@ public class GoogleSignInActivity extends AbstractActivity implements
                             }
                         });
 
+
+
         AlertDialog alertDialog = mDialogBuilder.create();
         alertDialog.show();
+        Button negativeButton = ((AlertDialog)alertDialog).getButton(DialogInterface.BUTTON_NEGATIVE);
+        Button positiveButton = ((AlertDialog)alertDialog).getButton(DialogInterface.BUTTON_POSITIVE);
+            positiveButton.setTextColor(getResources().getColor(R.color.vk_black));
+            negativeButton.setTextColor(getResources().getColor(R.color.vk_black));
+            userInput1.getBackground().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
 
 
     }

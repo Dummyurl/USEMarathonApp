@@ -162,6 +162,8 @@ public class LoginStudentFragment extends Fragment {
                         });
                         AlertDialog dialog = builder.create();
                         dialog.show();
+                        Button positiveButton = ((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE);
+                        positiveButton.setTextColor(getResources().getColor(R.color.vk_black));
                     }
                 }
 
