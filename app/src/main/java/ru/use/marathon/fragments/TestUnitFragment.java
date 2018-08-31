@@ -111,7 +111,6 @@ public class TestUnitFragment extends AbstractFragment {
     TextView stopwatch_txt;
     private int seconds = 0;
     private boolean startRun;
-    Stopwatch timer;
 
     public TestUnitFragment() {
     }
@@ -130,12 +129,22 @@ public class TestUnitFragment extends AbstractFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         page = getArguments().getInt("page");
         max_page = getArguments().getInt("max_page");
         cn = getArguments().getInt("cn");
 
 
+    }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            timeStart();
+        } else {
+            timeStop();
+        }
     }
 
     @Override
@@ -269,10 +278,11 @@ public class TestUnitFragment extends AbstractFragment {
                     isCorrectAnswer = false;
                 }
             }
+            testsBuilder.time(seconds);
+
             testsBuilder.build();
             TestCollection collection = testsBuilder.build();
             testsViewModel.insert(collection);
-            startRun = false;
 
             if (!DEBUG) sendStatToServer(isCorrectAnswer);
 
@@ -311,6 +321,8 @@ public class TestUnitFragment extends AbstractFragment {
                     }
                 }
             }
+
+            timeReset();
 
         }
 
@@ -368,34 +380,43 @@ public class TestUnitFragment extends AbstractFragment {
     }
 
     private void initStopwatch() {
-        timer = new Stopwatch();
-        startRun = true;
-        final Handler handler = new Handler();
 
+        if(!DEBUG) stopwatch_txt.setVisibility(View.GONE);
+
+        final Handler handler = new Handler();
         handler.post(new Runnable() {
             @Override
             public void run() {
+                int hours = seconds / 3600;
+                int minutes = (seconds % 3600) / 60;
+                int secs = seconds % 60;
+
+                String time = String.format("%d:%02d:%02d", hours, minutes, secs);
+
+                stopwatch_txt.setText(time);
+
                 if (startRun) {
-                    timer.start();
-
-                    int minutes = ((int) timer.getElapsedTimeSecs() % 3600) / 60;
-                    int secs = (int)timer.getElapsedTimeSecs() % 60;
-
-                    String time = String.format("%02d:%02d", minutes, secs);
-
-                    testsBuilder.time(secs);
-                    stopwatch_txt.setText(time);
-                    handler.postDelayed(this, 100);
-                }else{
-                    timer.stop();
+                    seconds++;
                 }
 
-
+                handler.postDelayed(this, 1000);
             }
         });
-
-
     }
+
+    private void timeStart() {
+        startRun = true;
+    }
+
+    private void timeStop() {
+        startRun = false;
+    }
+
+    private void timeReset() {
+        startRun = false;
+        seconds = 0;
+    }
+
 
     private void setupUI() {
 
@@ -413,6 +434,7 @@ public class TestUnitFragment extends AbstractFragment {
             testsBuilder.taskNumber(collection.getTaskNumber(page));
             testsBuilder.topicId(collection.getTopic(page));
             testsBuilder.rightAnswers(collection.getRightAnswers(page));
+            testsBuilder.subject(subject());
 
             testsModel.setAnswer(page, false);
 

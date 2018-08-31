@@ -106,17 +106,6 @@ public class TheoryContentActivity extends AbstractActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.saved){
-            Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
-        }else if(item.getItemId() == R.id.home){
-            onBackPressed();
-        }
-
-        return true;
-    }
-
     private class MyBrowser extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
