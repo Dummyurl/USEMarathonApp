@@ -3,7 +3,6 @@ package ru.use.marathon.fragments.navigation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -58,6 +57,7 @@ public class TheoryFragment extends AbstractFragment {
 
                 topics = new TheoryTopics(response); // парсю пришедший ответ
                 theory_rv.setAdapter(new TheoryTopicsAdapter(topics)); // проставляю ответ в список
+                runLayoutAnimation(theory_rv);
             }
 
             @Override
