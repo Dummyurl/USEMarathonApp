@@ -9,29 +9,29 @@
     tools:context=".activities.auth.ForgotPasswordActivity">
 
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="11dp"
-        android:text="Ваша электронная почта"
-        android:textColor="@color/common_google_signin_btn_text_dark_focused"
-        android:textSize="14sp"
-        android:visibility="gone" />
-
     <LinearLayout
+        android:id="@+id/emailpassword_lay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:background="@color/colorBottomNavigationActiveColored"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+
+            android:layout_marginTop="11dp"
+            android:layout_weight="1"
+            android:text="Ваша электронная почта"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:textSize="14sp"
+            android:visibility="visible" />
 
         <EditText
             android:id="@+id/email_et"
@@ -43,27 +43,27 @@
             android:inputType="textEmailAddress"
             android:singleLine="false"
             android:visibility="visible" />
+
+        <EditText
+            android:id="@+id/password_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:hint="Новый пароль"
+            android:inputType="textPassword"
+            android:visibility="visible" />
     </LinearLayout>
 
 
-    <EditText
-        android:id="@+id/password_et"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Новый пароль"
-        android:inputType="textPassword"
-        android:visibility="gone" />
-
-
     <LinearLayout
+        android:id="@+id/checkcode"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="348dp"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv"
@@ -73,99 +73,40 @@
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginTop="10dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="Времени осталось :"
             android:textColor="@android:color/black"
             android:textSize="25dp"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
-        <LinearLayout
-            android:id="@+id/checkcode"
+        <EditText
+            android:id="@+id/first_c"
             android:layout_width="match_parent"
-            android:layout_height="209dp"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/first_c"
-                android:layout_width="5dp"
-                android:inputType = "numberPassword"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="60dp"
-                android:imeOptions="actionNext"
-                android:scrollHorizontally="false"
-                android:layout_marginTop="10dp"
-                android:maxLength="1"
-                android:singleLine="true"
-                android:nextFocusForward="@+id/first_c2"
-                android:layout_weight="1"
-                android:hint="Код"
-                android:visibility="visible" />
-
-            <EditText
-                android:id="@+id/first_c2"
-                android:layout_width="5dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:scrollHorizontally="false"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:maxLength="1"
-                android:imeOptions="actionNext"
-                android:nextFocusForward="@+id/first_c3"
-                android:singleLine="true"
-                android:hint="Код"
-                android:inputType = "numberPassword"
-                android:visibility="visible" />
-
-            <EditText
-                android:id="@+id/first_c3"
-                android:layout_width="5dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:maxLength="1"
-                android:scrollHorizontally="false"
-                android:layout_marginTop="10dp"
-                android:singleLine="true"
-                android:nextFocusForward="@+id/first_c4"
-                android:layout_weight="1"
-                android:hint="Код"
-                android:imeOptions="actionNext"
-                android:inputType = "numberPassword"
-                android:visibility="visible" />
-
-            <EditText
-                android:id="@+id/first_c4"
-                android:layout_width="5dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:scrollHorizontally="false"
-                android:layout_marginRight="60dp"
-                android:maxLength="1"
-                android:singleLine="true"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:hint="Код"
-
-                android:imeOptions="actionNext"
-                android:inputType = "numberPassword"
-                android:visibility="visible" />
-
-        </LinearLayout>
+            android:layout_height="38dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/downline"
+            android:hint="Код"
+            android:imeOptions="actionNext"
+            android:inputType="numberPassword"
+            android:maxLength="5"
+            android:scrollHorizontally="false"
+            android:singleLine="true"
+            android:visibility="visible" />
 
         <Button
-            android:id="@+id/forgotpass_btn"
+            android:id="@+id/enter_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/button_default"
-            android:text="Получить код подтверждения"
-            android:textColor="@color/colorAccent"
+            android:text="Готово"
+            android:textColor="@color/tab_white"
             android:visibility="visible" />
 
         <Button
@@ -174,18 +115,25 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_default"
             android:text="Готово"
+            android:textColor="@color/tab_white"
             android:visibility="gone" />
 
-        <Button
-            android:id="@+id/enter_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:text="Готово"
-            android:visibility="gone" />
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/forgotpass_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/button_default"
+        android:text="Получить код подтверждения"
+        android:textColor="@color/tab_white"
+        android:visibility="visible" />
 
 
 </LinearLayout>

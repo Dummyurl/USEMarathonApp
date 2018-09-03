@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,13 +51,16 @@ public class ForgotPasswordActivity extends AbstractActivity {
 //    EditText gift_et;
     @BindView(R.id.first_c)
     EditText firs_c;
-    @BindView(R.id.first_c2)
-    EditText firs_c2;
-    @BindView(R.id.first_c3)
-    EditText firs_c3;
-    @BindView(R.id.first_c4)
-    EditText firs_c4;
-
+//    @BindView(R.id.first_c2)
+//    EditText firs_c2;
+//    @BindView(R.id.first_c3)
+//    EditText firs_c3;
+//    @BindView(R.id.first_c4)
+//    EditText firs_c4;
+    @BindView(R.id.emailpassword_lay)
+    LinearLayout passLay;
+    @BindView(R.id.checkcode)
+    LinearLayout checkLay;
 
     @BindView(R.id.tv)
     TextView tv_tv;
@@ -97,6 +101,10 @@ public class ForgotPasswordActivity extends AbstractActivity {
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             new RestoreCode(response);
                             if (success(response)) {
+                                passLay.setVisibility(View.GONE);
+                                checkLay.setVisibility(View.VISIBLE);
+
+
                                 code=code();
                                 new CountDownTimer(122000, 1000) {
 
@@ -156,8 +164,8 @@ public class ForgotPasswordActivity extends AbstractActivity {
 
             @Override
             public void onClick(View view) {
-//                String Cod = gift_et.getText().toString();
-                String Cod = "1";
+                String Cod = firs_c.getText().toString();
+               // String Cod = "1";
                 if(code == Integer.valueOf(Cod)){
                // final String name = nameEditText.getText().toString();
                 final String email = emailEditText.getText().toString();
