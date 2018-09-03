@@ -53,9 +53,11 @@
             android:layout_height="wrap_content"
             android:text="Мои ученики" />
 
-        <android.support.v7.widget.RecyclerView
+        <ru.use.marathon.utils.GridRecyclerView
             android:layout_width="match_parent"
             android:id="@+id/my_students_rv"
+            android:overScrollMode="never"
+            android:layoutAnimation="@anim/grid_layout_animation_from_bottom"
             android:layout_below="@+id/my_students_txt"
             android:layout_height="wrap_content" />
 
@@ -89,9 +91,10 @@
             android:layout_height="wrap_content"
             android:text="Статистика" />
 
-        <android.support.v7.widget.RecyclerView
+        <ru.use.marathon.utils.GridRecyclerView
             android:id="@+id/stats_rv"
             android:layout_width="match_parent"
+            android:overScrollMode="never"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView" />
 

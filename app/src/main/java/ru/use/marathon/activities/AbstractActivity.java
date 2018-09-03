@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Response;
 import ru.use.marathon.AppController;
@@ -56,13 +57,14 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
         else if (userType() == TEACHER) user_data = teacher.getData();
 
     }
+
     @Override
     public void onPause() {
         super.onPause();
         ((AppController) getApplication()).removeInternetConnectionListener();
     }
 
-    public int id(){
+    public int id() {
         if (userType() == STUDENT)
             return Integer.valueOf(user_data.get(student.KEY_ID));
         else if (userType() == TEACHER)
@@ -77,7 +79,7 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public boolean success(Response<JsonObject> response){
+    public boolean success(Response<JsonObject> response) {
         JsonObject js = response.body();
         return (js != null) && js.has("success") && (js.get("success").getAsInt() > 0);
     }
@@ -93,9 +95,9 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
     }
 
     public int subject() {
-        if(student.getSubject() == -1){
+        if (student.getSubject() == -1) {
             return 1;
-        }else{
+        } else {
             return student.getSubject();
         }
     }
@@ -162,7 +164,7 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
 
     @Override
     public void onInternetUnavailable() {
-        showInfoDialog("Подключение к сети","Нет подлючения к интернету. Проверьте подключение или повторите позднее");
+        showInfoDialog("Подключение к сети", "Нет подлючения к интернету. Проверьте подключение или повторите позднее");
     }
 
     String ellipsize(String input, int maxLength) {
@@ -173,17 +175,20 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
     }
 
 
-
-
     public List<String> convertStringToList(String data) {
-        String a[] = data.substring(1, data.length() - 1).split(",");
-        List<String> res = new ArrayList<>(a.length);
-        for (int i = 0; i < a.length; i++) {
-            res.add(a[i]);
+        if (!Objects.equals(data, "")) {
+            String a[] = data.substring(1, data.length() - 1).split(",");
+            List<String> res = new ArrayList<>(a.length);
+            for (int i = 0; i < a.length; i++) {
+                res.add(a[i]);
+            }
+            return res;
+        }else{
+            throw new NullPointerException();
         }
-        return res;
     }
-    public List<Integer> convertStringListToIntList(List<String> data){
+
+    public List<Integer> convertStringListToIntList(List<String> data) {
         List<Integer> result = new ArrayList<>(data.size());
         for (int i = 0; i < data.size(); i++) {
             result.add(Integer.valueOf(data.get(i).trim()));

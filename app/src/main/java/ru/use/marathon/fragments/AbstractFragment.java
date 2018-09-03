@@ -8,10 +8,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ru.use.marathon.AppController;
+import ru.use.marathon.R;
 import ru.use.marathon.activities.auth.LoginActivity;
 import ru.use.marathon.models.Student;
 import ru.use.marathon.models.Teacher;
@@ -161,6 +171,32 @@ public class AbstractFragment extends Fragment implements InternetConnectionList
         if (adialog != null) {
             adialog.dismiss();
         }
+    }
+
+
+    public void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
+    }
+
+    public void updateRegToken() {
+        AppController.getApi().updateRegToken(1, "updateToken", FirebaseInstanceId.getInstance().getToken(), user_id(), userType()).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                new Success(response);
+//                Toast.makeText(getActivity().getApplicationContext(), success() ? "ok": "not ok", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

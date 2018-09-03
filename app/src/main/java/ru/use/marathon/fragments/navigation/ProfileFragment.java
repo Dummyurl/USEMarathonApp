@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -37,6 +39,7 @@ import ru.use.marathon.adapters.TeachersStudentsAdapter;
 import ru.use.marathon.fragments.AbstractFragment;
 import ru.use.marathon.models.StatisticsResponse;
 import ru.use.marathon.models.UsersResponse;
+import ru.use.marathon.utils.GridRecyclerView;
 import ru.use.marathon.utils.ItemClickSupport;
 
 /**
@@ -72,7 +75,7 @@ public class ProfileFragment extends AbstractFragment {
     @BindView(R.id.teacher_relative)
     RelativeLayout teacher_relative;
     @BindView(R.id.my_students_rv)
-    RecyclerView my_students_rv;
+    GridRecyclerView my_students_rv;
 
     UsersResponse users;
 
@@ -152,6 +155,10 @@ public class ProfileFragment extends AbstractFragment {
         final ArrayList<String> ids = new ArrayList<>();
 
         my_students_rv.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        int resId = R.anim.grid_layout_animation_from_bottom;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity().getApplicationContext(), resId);
+        my_students_rv.setLayoutAnimation(animation);
+
         AppController.getApi().getTeachersStudents(1, "getTeachersStudents", user_id()).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -162,6 +169,8 @@ public class ProfileFragment extends AbstractFragment {
                     }
                     TeachersStudentsAdapter adapter = new TeachersStudentsAdapter(users, getActivity().getApplicationContext());
                     my_students_rv.setAdapter(adapter);
+
+                    runLayoutAnimation(my_students_rv);
 
                     ItemClickSupport.addTo(my_students_rv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                         @Override
@@ -195,6 +204,9 @@ public class ProfileFragment extends AbstractFragment {
     }
 
     private void student_initStudentStats() {
+        int resId = R.anim.grid_layout_animation_from_bottom;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity().getApplicationContext(), resId);
+        stats_rv.setLayoutAnimation(animation);
 
         stats_rv.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 3));
 
@@ -209,6 +221,7 @@ public class ProfileFragment extends AbstractFragment {
                     String[] names = new String[]{"Всего заданий решено", "Среднее время решения", "Процент ошибок"};
                     StatisticsAdapter adapter = new StatisticsAdapter(stats, names);
                     stats_rv.setAdapter(adapter);
+                    runLayoutAnimation(stats_rv);
 
                 }
 

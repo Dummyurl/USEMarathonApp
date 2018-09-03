@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/tests_layout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top|center_vertical|center"
-    android:orientation="horizontal">
+    android:background="@drawable/sample_image2"
+    >
 
-    <Button
-        android:id="@+id/by_variants"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:layout_weight="1"
-        android:background="@null"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="По вариантам" />
+        android:background="@drawable/gradient_tests"
+        android:gravity="center_vertical|center"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/by_topics"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
+        <Button
+            android:id="@+id/by_variants"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_white"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="По вариантам"
+            android:textColor="@color/colorItems" />
 
-        android:layout_weight="1"
-        android:background="@null"
-        android:padding="10dp"
-        android:text="По темам" />
+        <Button
+            android:id="@+id/by_topics"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+
+            android:background="@drawable/button_white"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="По темам"
+            android:textColor="@color/colorItems" />
+
+    </LinearLayout>
 
 </LinearLayout>

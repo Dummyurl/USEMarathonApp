@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ru.use.marathon">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -8,25 +9,37 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="ru.use.marathon.permission.C2D_MESSAGE" />
 
     <permission
         android:name="ru.use.marathon.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="ru.use.marathon.permission.C2D_MESSAGE" />
-
-    <meta-data
-        android:name="firebase_crashlytics_collection_enabled"
-        android:value="false" />
 
     <application
         android:name=".AppController"
         android:allowBackup="true"
         android:icon="@mipmap/logo_new"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/logo"
+        android:roundIcon="@mipmap/logo_new"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:resizeableActivity="true"
+        android:theme="@style/AppTheme"
+        tools:targetApi="n">
+
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_marathon_logo_mini" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <!--activities-->
+
         <activity
             android:name=".activities.MainActivity"
             android:launchMode="singleTop"
@@ -37,12 +50,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.auth.LoginActivity"
             android:theme="@style/AppTheme.NoBar" />
+
         <activity
             android:name=".activities.auth.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activities.TestsByCollectionsActivity"
             android:label="@string/title_activity_tests_by_variant_acitvity"
@@ -53,6 +69,108 @@
                 android:value="ru.use.marathon.activities.MainActivity" />
         </activity>
 
+        <activity
+            android:name=".activities.TestsActivity"
+            android:label="@string/title_activity_tests_acitivty"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activities.auth.GoogleSignInActivity"
+            android:label="google"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activities.TopicsActivity"
+            android:label="@string/title_activity_topics"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.TheoryContentActivity"
+            android:label="@string/title_activity_theory_content"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.FeedContentActivity"
+            android:label="@string/title_activity_feed_content"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.ResultsActivity"
+            android:label="@string/title_activity_results"
+            android:parentActivityName=".activities.TestsByCollectionsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.TestsByCollectionsActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.ChatRoomActivity"
+            android:label="@string/title_activity_chat_room"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.AllUsersActivity"
+            android:label="@string/title_activity_all_users"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.ChatDetailsActivity"
+            android:label="Детали чата"
+            android:theme="@style/AppTheme.NoBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.use.marathon.activities.ChatRoomActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.CreateTaskActivity"
+            android:label="Создать задание" />
+
+        <activity
+            android:name=".activities.UserProfileActivity"
+            android:label="Профиль" />
+
+        <activity
+            android:name=".activities.StartQuestionsActivity"
+            android:theme="@style/AppTheme.NoBar" />
+
+        <activity android:name=".activities.auth.ForgotPasswordActivity" />
+
+        <activity android:name=".activities.auth.VkAuthActivity"/>
+
+        <activity android:name=".activities.TaskReviewActivity"/>
+
+        <activity android:name="com.vk.sdk.VKServiceActivity" android:label="ServiceActivity" android:theme="@style/VK.Transparent" />
+
+        <!--activities end-->
+
+        <!--services-->
         <service android:name=".service.MessagingService">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -65,97 +183,7 @@
             </intent-filter>
         </service>
 
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_marathon_logo_mini" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
 
-
-        <activity
-            android:name=".activities.TestsActivity"
-            android:label="@string/title_activity_tests_acitivty"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.auth.GoogleSignInActivity"
-            android:label="google"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.TopicsActivity"
-            android:label="@string/title_activity_topics"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.use.marathon.activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.TheoryContentActivity"
-            android:label="@string/title_activity_theory_content"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.use.marathon.activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.FeedContentActivity"
-            android:label="@string/title_activity_feed_content"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.use.marathon.activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.ResultsActivity"
-            android:label="@string/title_activity_results"
-            android:parentActivityName=".activities.TestsByCollectionsActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.use.marathon.activities.TestsByCollectionsActivity" />
-        </activity>
-        <activity
-            android:name=".activities.ChatRoomActivity"
-            android:label="@string/title_activity_chat_room"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.use.marathon.activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.AllUsersActivity"
-            android:label="@string/title_activity_all_users"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.use.marathon.activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.ChatDetailsActivity"
-            android:label="Детали чата"
-            android:theme="@style/AppTheme.NoBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.use.marathon.activities.ChatRoomActivity" />
-        </activity>
-        <activity
-            android:name=".activities.CreateTaskActivity"
-            android:label="Создать задание" />
-        <activity
-            android:name=".activities.UserProfileActivity"
-            android:label="Профиль" />
-        <activity
-            android:name=".activities.StartQuestionsActivity"
-            android:theme="@style/AppTheme.NoBar" />
-
-        <activity android:name=".activities.auth.ForgotPasswordActivity" />
-        <activity android:name=".activities.auth.VkAuthActivity"></activity>
-      <activity android:name=".activities.TaskReviewActivity"></activity>
     </application>
 
 </manifest>

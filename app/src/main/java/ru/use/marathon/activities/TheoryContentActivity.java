@@ -3,19 +3,13 @@ package ru.use.marathon.activities;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
@@ -28,19 +22,25 @@ import ru.use.marathon.AppController;
 import ru.use.marathon.R;
 import ru.use.marathon.models.Collection;
 import ru.use.marathon.models.Collections;
+import ru.use.marathon.utils.ObservableWebView;
 
 
 public class TheoryContentActivity extends AbstractActivity {
 
+    public static final String TAG = TheoryContentActivity.class.getSimpleName();
+
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.web_theory_container)
-    WebView theory_container;
+    ObservableWebView theory_container;
 
     @BindView(R.id.goto_tests_btn)
     Button tests_btn;
 
     int id,topic_id;
     String title,content;
+
+    boolean animationConfig = false;
+    int animationDistance = 400;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,21 @@ public class TheoryContentActivity extends AbstractActivity {
         theory_container.getSettings().setLoadsImagesAutomatically(true);
         theory_container.getSettings().setJavaScriptEnabled(true);
         theory_container.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        theory_container.setOnScrollChangeListener(new ObservableWebView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(WebView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                if(animationConfig){
+                    tests_btn.animate().translationY(animationDistance);
+                    animationConfig = false;
+                }else{
+                    tests_btn.animate().translationY(0);
+                    animationConfig =true;
+                }
+
+            }
+        });
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             theory_container.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
@@ -103,17 +118,6 @@ public class TheoryContentActivity extends AbstractActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.theory_content_menu,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.saved){
-            Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
-        }else if(item.getItemId() == R.id.home){
-            onBackPressed();
-        }
-
         return true;
     }
 

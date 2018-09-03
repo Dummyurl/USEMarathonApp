@@ -94,32 +94,6 @@ public class AppController extends MultiDexApplication{
         api = retrofit.create(API.class);
     }
 
-    public static String startTimer(){
-        startTimer = true;
-        final String[] time_formatted = new String[1];
-        final Handler handler = new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                int minutes = (time % 3600) / 60;
-                int secs = time % 60;
-
-                time_formatted[0] = String.format("%02d:%02d", minutes, secs);
-
-                if (startTimer) {
-                    time++;
-                }
-
-                handler.postDelayed(this, 1000);
-            }
-        });
-
-        return time_formatted[0];
-    }
-
-    public static void stopTimer(){
-        startTimer = false;
-    }
 
     public Cache getCache() {
         File cacheDir = new File(getCacheDir(), "cache");

@@ -4,8 +4,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -37,7 +37,7 @@ import ru.use.marathon.models.Tests.TestsViewModel;
 
 import static ru.use.marathon.Constants.DEBUG;
 
-public class ResultsActivity extends AbstractActivity  implements View.OnClickListener{
+public class ResultsActivity extends AbstractActivity {
 
     public static final String TAG = ResultsActivity.class.getSimpleName();
     @BindView(R.id.toolbar)
@@ -53,7 +53,9 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
 
     TestsViewModel testsViewModel;
 
-    int rowAmount= 0;
+    int answersCount = 0;
+    int answersTimeTotal = 0;
+    double averageTime;
     List<TestCollection> testCollectionList;
 
     List<TableRow> tableRows;
@@ -77,29 +79,28 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
             @Override
             public void onChanged(@Nullable List<TestCollection> testCollections) {
                 testCollectionList = testCollections;
-                rowAmount = testCollections.size();
-                tableRows = new ArrayList<>(rowAmount);
+                answersCount = testCollections.size();
+                tableRows = new ArrayList<>(answersCount);
 
                 StringBuilder data = new StringBuilder("SavedData: \n ");
 
                 for (int i = 0; i < testCollections.size(); i++) {
                     TestCollection tc = testCollections.get(i);
-                    data.append("Content: ").append(tc.getContent()).append("\n");
-                    data.append("answer_type: ").append(tc.getAnswer_type()).append("\n");
-                    data.append("Answers: ").append(tc.getAnswers()).append("\n");
-                    data.append("User answers: ").append(tc.getUser_answers()).append("\n");
-                    data.append("Right answers: ").append(tc.getRight_answers()).append("\n");
-                    data.append("\n\n");
+                    if (DEBUG) {
+                        data.append("Content: ").append(tc.getContent()).append("\n");
+                        data.append("answer_type: ").append(tc.getAnswer_type()).append("\n");
+                        data.append("Answers: ").append(tc.getAnswers()).append("\n");
+                        data.append("User answers: ").append(tc.getUser_answers()).append("\n");
+                        data.append("Right answers: ").append(tc.getRight_answers()).append("\n");
+                        data.append("\n\n");
 
-                    if(DEBUG){
-                        Log.d(TAG, "TEST COLLECTION DATA ["+i+"]: " +
+                        Log.d(TAG, "TEST COLLECTION DATA [" + i + "]: " +
                                 "\n ANSWERS:" + tc.getAnswers() +
                                 "\n RIGHT_ANSWERS: " + tc.getRight_answers() +
                                 "\n USER_ANSWERS: " + tc.getUser_answers() +
                                 "\n ANSWER_TYPE: " + tc.getAnswer_type() +
                                 "\n TIME: " + tc.getTime());
                     }
-                    List<String> answers = convertStringToList(tc.getAnswers());
                     List<String> right_answers = convertStringToList(tc.getRight_answers());
                     List<String> user_answers = convertStringToList(tc.getUser_answers());
 
@@ -107,49 +108,22 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
                         right_answers_count[0]++;
                     }
 
+                    answersTimeTotal += tc.getTime();
                     total_answers[0]++;
                 }
-                if (DEBUG) {
-//                    Log.d(TAG, "onChanged: \n" + data);
-                    score.setVisibility(View.VISIBLE);
-                    score.setText("");
-                }
+
+                score.setVisibility(View.VISIBLE);
+                if(answersCount!=0) averageTime = answersTimeTotal / answersCount;
+                score.setText(" Общее время: " + String.valueOf(answersTimeTotal) +
+                        " секунд \n Среднее время решения задания: "  + String.valueOf(averageTime) +
+                        " секунды \n Ответы: ");
+
 
                 initPie(total_answers[0] - right_answers_count[0], right_answers_count[0]);
                 initTable(testCollectionList);
 
             }
         });
-
-
-        final int[] clicked = new int[1];
-        final View.OnClickListener mListener = new View.OnClickListener() {
-
-            public void onClick(View v) {
-                int id = v.getId();
-                clicked[0] = id - 1000;
-
-                for (int i = 0; i < rowAmount; i++) {
-                    TestCollection tc = testCollectionList.get(i);
-                    if(i == clicked[0]){
-                        Intent intent = new Intent(ResultsActivity.this,TaskReviewActivity.class);
-                        intent.putExtra("answer_type",tc.getAnswer_type());
-                        intent.putExtra("subject",tc.getSubject());
-                        intent.putExtra("time",tc.getTime());
-                        intent.putExtra("topic_id",tc.getTopic_id());
-                        intent.putExtra("content",tc.getContent());
-                        intent.putExtra("content_html",tc.getContent_html());
-                        intent.putExtra("content_image",tc.getContent_image());
-                        intent.putExtra("answers",tc.getAnswers());
-                        intent.putExtra("right_answers",tc.getRight_answers());
-                        intent.putExtra("user_answers",tc.getUser_answers());
-
-                        startActivity(intent);
-                    }
-                }
-
-            }
-        };
 
 
         return_btn.setOnClickListener(new View.OnClickListener() {
@@ -172,8 +146,8 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
 
             int counter = 0;
             if (ra.size() == ua.size()) {
-                for (int i = 0; i < ua.size(); i++) if(ra.get(i) -1 == ua.get(i)) counter++;
-                if(counter==ra.size()) right = true;
+                for (int i = 0; i < ua.size(); i++) if (ra.get(i) - 1 == ua.get(i)) counter++;
+                if (counter == ra.size()) right = true;
             }
 
         } else if (testCollection.getAnswer_type() == Constants.RADIO_BUTTON_TYPE) {
@@ -182,7 +156,7 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
             Collections.sort(ra);
             Collections.sort(ua);
 
-            if(ra.get(0) - 1 == ua.get(0)) right = true;
+            if (ra.get(0) - 1 == ua.get(0)) right = true;
 
         } else if (testCollection.getAnswer_type() == Constants.TEXT_TYPE) {
             String r = right_answers.get(0);
@@ -243,6 +217,7 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
                 }
                 right_tv.setTextColor(Color.BLACK);
                 right_tv.setLayoutParams(params);
+                right_tv.setPadding(10, 0, 10, 0);
                 right_tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
                 right_tv.setMaxLines(1);
                 right_tv.setGravity(Gravity.CENTER);
@@ -273,8 +248,9 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
 
                     user_tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
                     user_tv.setMaxLines(1);
+                    user_tv.setPadding(10, 0, 10, 0);
                     if (isAnswerRight(testCollections.get(i), convertStringToList(testCollections.get(i).getRight_answers()), convertStringToList(testCollections.get(i).getUser_answers()))) {
-                        user_tv.setTextColor(Color.GREEN);
+                        user_tv.setTextColor(getResources().getColor(R.color.colorItems));
                     } else {
                         user_tv.setTextColor(Color.RED);
                     }
@@ -283,6 +259,40 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
                     user_tv.setGravity(Gravity.CENTER);
                     row.addView(user_tv);
                 }
+
+                Button btn = new Button(this);
+                btn.setText("Подробнее");
+
+                final TestCollection collection = testCollections.get(i);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent i = new Intent(ResultsActivity.this, TaskReviewActivity.class);
+                        i.putExtra("answer_type", collection.getAnswer_type());
+                        i.putExtra("task_num", collection.getTask_number());
+                        i.putExtra("subject", collection.getSubject());
+                        i.putExtra("topic_id", collection.getTopic_id());
+                        i.putExtra("time", collection.getTime());
+                        i.putExtra("content", collection.getContent());
+                        i.putExtra("content_html", collection.getContent_html());
+                        i.putExtra("content_image", collection.getContent_image());
+                        i.putExtra("answers", collection.getAnswers());
+                        i.putExtra("right_answers", collection.getRight_answers());
+                        i.putExtra("user_answers", collection.getUser_answers());
+                        startActivity(i);
+                        if (DEBUG)
+                            Toast.makeText(ResultsActivity.this, "Task_number: " + collection.getTask_number(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                btn.setTextColor(getResources().getColor(R.color.colorItems));
+                btn.setBackground(null);
+                btn.setPadding(10, 0, 10, 0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    btn.setElevation(4);
+                }
+                row.addView(btn);
+
                 result_table.addView(row);
                 tableRows.add(row);
 
@@ -307,6 +317,7 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
                 right_tv.setText(right_answers[0]);
                 right_tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
                 right_tv.setMaxLines(1);
+                right_tv.setPadding(10, 0, 10, 0);
                 right_tv.setTextColor(Color.BLACK);
                 right_tv.setLayoutParams(params);
                 right_tv.setGravity(Gravity.CENTER);
@@ -319,14 +330,52 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
                 user_tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
                 user_tv.setMaxLines(1);
                 user_tv.setLayoutParams(params);
+                user_tv.setPadding(10, 0, 10, 0);
                 user_tv.setGravity(Gravity.CENTER);
 
                 if (isAnswerRight(testCollections.get(i), convertStringToList(testCollections.get(i).getRight_answers()), convertStringToList(testCollections.get(i).getUser_answers()))) {
-                    user_tv.setTextColor(Color.GREEN);
+                    user_tv.setTextColor(getResources().getColor(R.color.colorItems));
                 } else {
                     user_tv.setTextColor(Color.RED);
                 }
                 row.addView(user_tv);
+
+                Button btn = new Button(this);
+                btn.setText("Подробнее");
+                final TestCollection collection = testCollections.get(i);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        Intent i = new Intent(ResultsActivity.this, TaskReviewActivity.class);
+                        i.putExtra("answer_type", collection.getAnswer_type());
+                        i.putExtra("subject", collection.getSubject());
+                        i.putExtra("task_num", collection.getTask_number());
+                        i.putExtra("topic_id", collection.getTopic_id());
+                        i.putExtra("time", collection.getTime());
+                        i.putExtra("content", collection.getContent());
+                        i.putExtra("content_html", collection.getContent_html());
+                        i.putExtra("content_image", collection.getContent_image());
+                        i.putExtra("answers", collection.getAnswers());
+                        i.putExtra("right_answers", collection.getRight_answers());
+                        i.putExtra("user_answers", collection.getUser_answers());
+                        startActivity(i);
+
+                        if (DEBUG)
+                            Toast.makeText(ResultsActivity.this, "Task_number: " + collection.getTask_number(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                btn.setTextColor(getResources().getColor(R.color.colorItems));
+                btn.setBackground(null);
+                btn.setPadding(10, 0, 10, 0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    btn.setElevation(4);
+                }
+
+                row.addView(btn);
+
+
                 result_table.addView(row);
                 tableRows.add(row);
             }
@@ -343,15 +392,17 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
         mChart.setRotationEnabled(true);
 
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
+
+        //todo correct for Russian lang
         if (val > 1 && right_answers_count > 1) {
-            entries.add(new PieEntry((float) val, "Неверные ответы"));
             entries.add(new PieEntry((float) right_answers_count, "Верные ответы"));
+            entries.add(new PieEntry((float) val, "Неверные ответы"));
         } else if (val == 1 && right_answers_count == 1) {
-            entries.add(new PieEntry((float) val, "Неверный ответ"));
             entries.add(new PieEntry((float) right_answers_count, "Верный ответ"));
-        }else{
-            entries.add(new PieEntry((float) val, "Неверных ответов"));
+            entries.add(new PieEntry((float) val, "Неверный ответ"));
+        } else {
             entries.add(new PieEntry((float) right_answers_count, "Верных ответов"));
+            entries.add(new PieEntry((float) val, "Неверных ответов"));
         }
         PieDataSet dataSet = new PieDataSet(entries, "");
 
@@ -360,6 +411,7 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
         dataSet.setValueTextColor(Color.WHITE);
 
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+
         PieData data = new PieData(dataSet);
         mChart.setData(data);
         mChart.invalidate();
@@ -383,9 +435,4 @@ public class ResultsActivity extends AbstractActivity  implements View.OnClickLi
         super.onDestroy();
     }
 
-    @Override
-    public void onClick(View view) {
-        int clicked = view.getId();
-
-    }
 }

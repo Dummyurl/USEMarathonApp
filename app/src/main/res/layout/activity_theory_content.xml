@@ -22,10 +22,11 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:background="@color/colorBackground"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-     <WebView
+     <ru.use.marathon.utils.ObservableWebView
          android:layout_width="match_parent"
          android:id="@+id/web_theory_container"
          android:layout_height="match_parent"/>

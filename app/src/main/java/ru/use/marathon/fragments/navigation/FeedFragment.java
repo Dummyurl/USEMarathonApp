@@ -101,6 +101,7 @@ public class FeedFragment extends AbstractFragment {
         return view;
     }
 
+
     private void initFeed() {
 
        AppController.getApi().get_all_feed(1,"getAllFeed",0).enqueue(new Callback<JsonObject>() {
@@ -108,7 +109,8 @@ public class FeedFragment extends AbstractFragment {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 feed = new Feed(response);
                 recyclerView.setAdapter(new FeedAdapter(getActivity().getApplicationContext(),feed));
-                feed_pb.setVisibility(View.GONE);
+                feed_pb.setVisibility(View.INVISIBLE);
+                runLayoutAnimation(recyclerView);
             }
 
             @Override

@@ -19,7 +19,6 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -48,12 +47,11 @@ import static ru.use.marathon.models.Success.success;
  * Created by ilyas on 06-Jul-18.
  */
 
-public class ChatFragment extends AbstractFragment{
+public class ChatFragment extends AbstractFragment {
 
     public static final String TAG = ChatFragment.class.getSimpleName();
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
-    int user_id,utype;
 
     ArrayList<ChatRoom> roomArrayList;
     ChatRoomsAdapter adapter;
@@ -74,13 +72,10 @@ public class ChatFragment extends AbstractFragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        ButterKnife.bind(this, view);
 
-        utype = userType();
-        user_id = user_id();
-
-        updateToken(user_id);
+        updateRegToken();
 
         roomArrayList = new ArrayList<>();
         initRecyclerView();
@@ -88,14 +83,14 @@ public class ChatFragment extends AbstractFragment{
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(Constants.PUSH_NOTIFICATION)){
+                if (intent.getAction().equals(Constants.PUSH_NOTIFICATION)) {
                     int chat_id = Integer.parseInt(intent.getStringExtra("chat_id"));
                     String name = intent.getStringExtra("name");
                     String message = intent.getStringExtra("message");
                     String timestamp = intent.getStringExtra("timestamp");
 
                     for (ChatRoom rc : roomArrayList) {
-                        if(rc.getId() == chat_id){
+                        if (rc.getId() == chat_id) {
                             rc.setLastMessage(message);
                             rc.setUnreadCount(rc.getUnreadCount() + 1);
                             rc.setName(name);
@@ -104,7 +99,7 @@ public class ChatFragment extends AbstractFragment{
                     }
                     adapter.notifyDataSetChanged();
 
-                }else{
+                } else {
                     Toast.makeText(getActivity().getApplicationContext(), "", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -114,10 +109,10 @@ public class ChatFragment extends AbstractFragment{
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity().getApplicationContext(), AllUsersActivity.class);
-                if(utype == STUDENT){
-                    i.putExtra("type",1);
-                }else if(utype == TEACHER){
-                    i.putExtra("type",0);
+                if (userType() == STUDENT) {
+                    i.putExtra("type", 1);
+                } else if (userType() == TEACHER) {
+                    i.putExtra("type", 0);
                 }
                 startActivity(i);
             }
@@ -135,32 +130,51 @@ public class ChatFragment extends AbstractFragment{
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity().getApplicationContext(), resId);
         recyclerView.setLayoutAnimation(animation);
-        adapter = new ChatRoomsAdapter(getActivity().getApplicationContext(),roomArrayList);
+        adapter = new ChatRoomsAdapter(getActivity().getApplicationContext(), roomArrayList);
         recyclerView.setAdapter(adapter);
 
-        showLoadDialog(getContext(),"Пожалуйста подожите","Грузим сообщения..");
-        getChatRooms(user_id);
+        showLoadDialog(getContext(), "Пожалуйста подожите", "Грузим сообщения..");
+        getChatRooms();
 
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    fab.show();
+                }
+
+                super.onScrollStateChanged(recyclerView, newState);
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 || dy < 0 && fab.isShown()) {
+                    fab.hide();
+                }
+            }
+        });
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 
                 int id = roomArrayList.get(position).getId();
                 String title = roomArrayList.get(position).getTitle();
-                String name =  roomArrayList.get(position).getName();
+                String name = roomArrayList.get(position).getName();
                 String time = roomArrayList.get(position).getTimestamp();
                 String message = roomArrayList.get(position).getLastMessage();
 
                 roomArrayList.remove(position);
-                roomArrayList.add(position,new ChatRoom(id,0,title,name,time,"",message));
+                roomArrayList.add(position, new ChatRoom(id, 0, title, name, time, "", message));
 
                 recyclerView.getAdapter().notifyDataSetChanged();
 
                 Intent i = new Intent(getActivity(), ChatRoomActivity.class);
-                i.putExtra("title",title);
-                i.putExtra("chat_id",id);
-                startActivityForResult(i,100);
+                i.putExtra("title", title);
+                i.putExtra("chat_id", id);
+                startActivityForResult(i, 100);
 
 
             }
@@ -171,9 +185,9 @@ public class ChatFragment extends AbstractFragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 100){
+        if (requestCode == 100) {
             roomArrayList.clear();
-            getChatRooms(user_id);
+            getChatRooms();
         }
     }
 
@@ -191,16 +205,16 @@ public class ChatFragment extends AbstractFragment{
         LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(mRegistrationBroadcastReceiver);
     }
 
-    private void getChatRooms(int user_id) {
-        AppController.getApi().getChatRooms(1,"getChatRooms",user_id,utype).enqueue(new Callback<JsonObject>() {
+    private void getChatRooms() {
+        AppController.getApi().getChatRooms(1, "getChatRooms", user_id(), userType()).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 new Success(response);
-                if(!success()){
+                if (!success()) {
                     closeLoadDialog();
                     status.setText("Нажмите на + чтобы создать первый чат!");
                     status.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     Rooms rooms = new Rooms(response);
                     for (int i = 0; i < rooms.size(); i++) {
                         ChatRoom cr = new ChatRoom(rooms.getChatId(i), 0, rooms.getTitle(i), rooms.getName(i), rooms.getTimestamp(i), "", rooms.getLastMessage(i));
@@ -214,6 +228,7 @@ public class ChatFragment extends AbstractFragment{
                     }
                     adapter.notifyDataSetChanged();
                     closeLoadDialog();
+                    runLayoutAnimation(recyclerView);
                 }
             }
 
@@ -225,19 +240,5 @@ public class ChatFragment extends AbstractFragment{
     }
 
 
-    private void updateToken(int user_id) {
-        AppController.getApi().updateRegToken(1,"updateToken",FirebaseInstanceId.getInstance().getToken(),user_id,utype).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-//                new Success(response);
-//                Toast.makeText(getActivity().getApplicationContext(), success() ? "ok": "not ok", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
-    }
 
 }
