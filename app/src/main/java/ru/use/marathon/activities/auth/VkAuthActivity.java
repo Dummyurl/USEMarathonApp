@@ -64,7 +64,7 @@ public class VkAuthActivity extends AppCompatActivity {
     //    @BindView(R.id.button_sign_in)
 //    Button button;
     private String[] scope = new String[]{VKScope.MESSAGES, VKScope.FRIENDS, VKScope.EMAIL, VKScope.WALL};
-
+//tod
     private String vktoken;
     String firs_name; // TODO Соблюдай правила хорошего тона при написании названий переменных, методов и функций.
     String phone_number;

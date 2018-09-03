@@ -63,11 +63,12 @@ public class GoogleSignInActivity extends AbstractActivity implements
         View.OnClickListener {
     final Context context = this;
 
-    @BindView(R.id.prompt_button)
-    Button button;
+
 
 
     ArrayList<String> items = new ArrayList<>();
+    @BindView(R.id.prompt_button)
+    Button button;
     ArrayList<String> cityS = new ArrayList<>();
     SpinnerDialog spinnerDialog;
     SpinnerDialog spinnerDialog2;

@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -45,8 +46,18 @@ public class ForgotPasswordActivity extends AbstractActivity {
     Button ent_btn;
     @BindView(R.id.again_btn)
     Button again_btn;
-    @BindView(R.id.gift_et)
-    EditText gift_et;
+//    @BindView(R.id.gift_et)
+//    EditText gift_et;
+    @BindView(R.id.first_c)
+    EditText firs_c;
+    @BindView(R.id.first_c2)
+    EditText firs_c2;
+    @BindView(R.id.first_c3)
+    EditText firs_c3;
+    @BindView(R.id.first_c4)
+    EditText firs_c4;
+
+
     @BindView(R.id.tv)
     TextView tv_tv;
     @BindView(R.id.email_et)
@@ -67,6 +78,9 @@ public class ForgotPasswordActivity extends AbstractActivity {
         //nameEditText.addTextChangedListener(new MyTextWatcher(nameEditText));
         emailEditText.addTextChangedListener(new MyTextWatcher(emailEditText));
         passwordEditText.addTextChangedListener(new MyTextWatcher(passwordEditText));
+        //firs_c.addTextChangedListener(new MyTextWatcher(firs_c));
+
+
 
         fogt_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +118,7 @@ public class ForgotPasswordActivity extends AbstractActivity {
                                 passwordEditText.setVisibility(View.GONE);
                                 fogt_btn.setVisibility(View.GONE);
                                 tv_tv.setVisibility(View.VISIBLE);
-                                gift_et.setVisibility(View.VISIBLE);
+//                                gift_et.setVisibility(View.VISIBLE);
                                 ent_btn.setVisibility(View.VISIBLE);
 
 
@@ -135,7 +149,6 @@ public class ForgotPasswordActivity extends AbstractActivity {
 
 
 
-
         ent_btn.setOnClickListener(new View.OnClickListener() {
 
 
@@ -143,7 +156,8 @@ public class ForgotPasswordActivity extends AbstractActivity {
 
             @Override
             public void onClick(View view) {
-                String Cod = gift_et.getText().toString();
+//                String Cod = gift_et.getText().toString();
+                String Cod = "1";
                 if(code == Integer.valueOf(Cod)){
                // final String name = nameEditText.getText().toString();
                 final String email = emailEditText.getText().toString();
