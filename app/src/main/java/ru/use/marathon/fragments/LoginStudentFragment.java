@@ -134,7 +134,7 @@ public class LoginStudentFragment extends Fragment {
         if (!checkEmail() && !checkPassword()) {
 
 
-            AppController.getApi().sign_in(1, "sign_in", 0, email, password).enqueue(new Callback<JsonObject>() {
+            AppController.getApi().sign_in(1, "sign_in", 0, email, password,"emailandpass").enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     new Success(response);

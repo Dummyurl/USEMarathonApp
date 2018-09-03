@@ -6,19 +6,5 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".activities.auth.VkAuthActivity">
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@mipmap/logo"
-        android:adjustViewBounds="true"
-        android:layout_gravity="center"
-        app:srcCompat="@mipmap/logo" />
 
-    <Button
-        android:id="@+id/again_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_default"
-        android:textColor="@android:color/background_light"
-        android:text="Попробовать заново" />
 </LinearLayout>

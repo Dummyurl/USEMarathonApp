@@ -15,12 +15,7 @@
         android:layout_weight="3"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:adjustViewBounds="true"
-            android:src="@mipmap/logo"
-            app:srcCompat="@mipmap/logo" />
+
 
 
 
@@ -31,12 +26,13 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             tools:text="Optional Action"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <Button
             android:id="@+id/prompt_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="Button" />
 
 
@@ -47,6 +43,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         android:layout_weight="1">
 
         <com.google.android.gms.common.SignInButton
@@ -54,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="visible"
+            android:visibility="gone"
             tools:visibility="gone" />
 
         <LinearLayout
@@ -75,6 +72,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:background="@drawable/button_default"
                 android:textColor="@android:color/background_light"
                 android:text="disconnect" />

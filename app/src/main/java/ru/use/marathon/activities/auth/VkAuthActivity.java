@@ -61,21 +61,16 @@ public class VkAuthActivity extends AppCompatActivity {
     final Context context = this;
     private static final String TAG = "vkauth";
 
-    //    @BindView(R.id.button_sign_in)
-//    Button button;
+
     private String[] scope = new String[]{VKScope.MESSAGES, VKScope.FRIENDS, VKScope.EMAIL, VKScope.WALL};
-//tod
+
     private String vktoken;
-    String firs_name; // TODO Соблюдай правила хорошего тона при написании названий переменных, методов и функций.
+    String firs_name;
     String phone_number;
     String vkemail;
     String city_home;
     String vkpassword;
-     // TODO Перед коммитом подчищай ненужные комментарии
-    //    @BindView(R.id.editTextName)
-//    EditText editTextName;
-//    @BindView(R.id.buttonadd)
-//    Button buttonadd;
+
     int id_subject = 0;
     String country;
     private FirebaseAuth mAuth;
@@ -117,7 +112,8 @@ public class VkAuthActivity extends AppCompatActivity {
 
                         if (vkemail == null) {
                             //TODO Все отловы данных делай на английском языке полным предложением и не забывай про DEBUG
-                            Toast.makeText(VkAuthActivity.this, "с вк не то", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(VkAuthActivity.this, "с вк не то", Toast.LENGTH_SHORT).show();
+                            finish();
                             alertdial();
                         }
                         if (poste == 1) {
@@ -289,6 +285,7 @@ public class VkAuthActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             signIn(vkemail, vkpassword);
 
+
                         }
 
                     }
@@ -430,7 +427,7 @@ public class VkAuthActivity extends AppCompatActivity {
         if (vkemail != null) {
 
 
-            AppController.getApi().sign_in(1, "sign_in", poste, email, password).enqueue(new Callback<JsonObject>() {
+            AppController.getApi().sign_in(1, "sign_in", poste, email, password,"vk").enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     new Success(response);

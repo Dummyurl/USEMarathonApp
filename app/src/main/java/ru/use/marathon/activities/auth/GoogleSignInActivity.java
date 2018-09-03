@@ -64,8 +64,6 @@ public class GoogleSignInActivity extends AbstractActivity implements
     final Context context = this;
 
 
-
-
     ArrayList<String> items = new ArrayList<>();
     @BindView(R.id.prompt_button)
     Button button;
@@ -74,7 +72,7 @@ public class GoogleSignInActivity extends AbstractActivity implements
     SpinnerDialog spinnerDialog2;
     int id_subject = 0;
     int IDI;
-
+    String googlepass;
     int counter = 0;
     int ctIDI;
 
@@ -127,6 +125,9 @@ public class GoogleSignInActivity extends AbstractActivity implements
 
     }
 
+
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -147,11 +148,13 @@ public class GoogleSignInActivity extends AbstractActivity implements
                 firebaseAuthWithGoogle(account);
                 first_name = account.getGivenName();
                 googleemail = account.getEmail();
+               googlepass= account.getIdToken()+"google";
                 if (DEBUG) Toast.makeText(this, first_name, Toast.LENGTH_SHORT).show();
                 signinSql();
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
                 updateUI(null);
+                finish();
             }
         }
     }
@@ -175,6 +178,7 @@ public class GoogleSignInActivity extends AbstractActivity implements
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             updateUI(null);
+
                         }
 
                         hideProgressDialog();
@@ -254,18 +258,13 @@ public class GoogleSignInActivity extends AbstractActivity implements
             // заголовок
             spiner.setPrompt("Предмет");
             // выделяем элемент
-            //  spiner.setSelection(2);
             // устанавливаем обработчик нажатия
             spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view,
                                            int position, long id) {
                     id_subject = position + 1;
-                    // id_subject = (String)parent.getItemAtPosition(position);
 
-                    // показываем позиция нажатого элемента
-                    //  Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(getBaseContext(), id_subject , Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -362,18 +361,19 @@ public class GoogleSignInActivity extends AbstractActivity implements
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
+                                signOut();
+                                finish();
                             }
                         });
 
 
-
         AlertDialog alertDialog = mDialogBuilder.create();
         alertDialog.show();
-        Button negativeButton = ((AlertDialog)alertDialog).getButton(DialogInterface.BUTTON_NEGATIVE);
-        Button positiveButton = ((AlertDialog)alertDialog).getButton(DialogInterface.BUTTON_POSITIVE);
-            positiveButton.setTextColor(getResources().getColor(R.color.vk_black));
-            negativeButton.setTextColor(getResources().getColor(R.color.vk_black));
-            userInput1.getBackground().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+        Button negativeButton = ((AlertDialog) alertDialog).getButton(DialogInterface.BUTTON_NEGATIVE);
+        Button positiveButton = ((AlertDialog) alertDialog).getButton(DialogInterface.BUTTON_POSITIVE);
+        positiveButton.setTextColor(getResources().getColor(R.color.vk_black));
+        negativeButton.setTextColor(getResources().getColor(R.color.vk_black));
+        userInput1.getBackground().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
 
 
     }
@@ -388,7 +388,7 @@ public class GoogleSignInActivity extends AbstractActivity implements
         if (counter == 2 && phone_number.length() == 11) {
             final int post = getIntent().getIntExtra("post", -1);
             poste = post;
-            AppController.getApi().sign_up(1, "sign_up", post, name, email, "0", num, String.valueOf(IDI), String.valueOf(ctIDI), 0, style_type).enqueue(new Callback<JsonObject>() {
+            AppController.getApi().sign_up(1, "sign_up", post, name, email, googlepass, num, String.valueOf(IDI), String.valueOf(ctIDI), 0, style_type).enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     new Success(response);
@@ -443,11 +443,11 @@ public class GoogleSignInActivity extends AbstractActivity implements
 
     private void signinSql() {
 
-        String password = "0";
+        String password = googlepass;
         final String email = googleemail;
         if (email != null) {
 
-            AppController.getApi().sign_in(1, "sign_in", poste, email, "0").enqueue(new Callback<JsonObject>() {
+            AppController.getApi().sign_in(1, "sign_in", poste, email, password,"google").enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     new Success(response);
@@ -498,6 +498,7 @@ public class GoogleSignInActivity extends AbstractActivity implements
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     Toast.makeText(getApplicationContext(), "Bad error..", Toast.LENGTH_SHORT).show();
+                    signOut();
 
                 }
             });
@@ -508,28 +509,6 @@ public class GoogleSignInActivity extends AbstractActivity implements
     private static boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
-
-//    public boolean checkEmail() {
-//        String text = googleemail;
-//        if (text == null || !isValidEmail(text)) {
-//
-//
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
-//
-//
-//    public boolean checkPhoneN(String phone_et) {
-//
-//        if (phone_et.length() == 11) {
-//            return true;
-//        } else {
-//
-//            return false;
-//        }
-//    }
 
 
     @Override

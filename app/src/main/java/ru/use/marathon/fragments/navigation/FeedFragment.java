@@ -102,6 +102,8 @@ public class FeedFragment extends AbstractFragment {
     }
 
 
+
+
     private void initFeed() {
 
        AppController.getApi().get_all_feed(1,"getAllFeed",0).enqueue(new Callback<JsonObject>() {

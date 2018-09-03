@@ -37,7 +37,9 @@ public interface API {
             @Query("method") String method,
             @Query("type") int type,
             @Query("email") String email,
-            @Query("password") String password
+            @Query("password") String password,
+            @Query("style_type") String style_type
+
     );
 
 
