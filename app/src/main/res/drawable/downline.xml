@@ -1,14 +1,9 @@
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="line" >
 
-    <item >
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimary"/>
-        </shape>
-    </item>
+    <stroke
+        android:dashGap="6px"
+        android:dashWidth="6px"
+        android:color="#be6700" />
 
-    <item android:bottom="10.5dp">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/tab_white"/>
-        </shape>
-    </item>
-</layer-list>
+</shape>

@@ -293,7 +293,7 @@ public class RegisterActivity extends AbstractActivity implements
                 String password = passwordEditText.getText().toString();
                 final String num = phone_et.getText().toString();
                 //checkEmail() && checkPassword() && validateName() && checkPhoneN() && checkbox.isChecked() &&
-                if (checkEmail() && checkPassword() && validateName() && checkPhoneN() && checkbox.isChecked() && counter == 2) {
+                if (checkEmail() && checkPassword() && validateName() && checkPhoneN() && checkbox.isChecked() && counter == 2 && checkmail(post,email)) {
 
 
                     AppController.getApi().sign_up(1, "sign_up", post, name, email, password, num, String.valueOf(IDI), String.valueOf(ctIDI), id_subject,"emailandpass").enqueue(new Callback<JsonObject>() {
@@ -476,6 +476,35 @@ public class RegisterActivity extends AbstractActivity implements
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
+
+
+    private boolean checkmail(int post,String email) {
+        final int[] a = new int[1];
+        AppController.getApi().check_email(1, "check_email", post , email ).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                new Success(response);
+
+                if (success(response)) {
+                    a[0] =1;
+                    Toast.makeText(RegisterActivity.this, "email подходит", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(RegisterActivity.this, "Попробуйте другой email ", Toast.LENGTH_SHORT).show();
+                   a[0] = 0;
+            }
+        });
+        if(a[0]==1){
+        return true;}
+        else return false;
+    }
+
+
+
+
 
 
     public boolean checkEmail() {

@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -85,6 +86,7 @@ public class ForgotPasswordActivity extends AbstractActivity {
         //firs_c.addTextChangedListener(new MyTextWatcher(firs_c));
 
 
+        firs_c.setTransformationMethod(new AsteriskPasswordTransformationMethod());
 
         fogt_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +97,7 @@ public class ForgotPasswordActivity extends AbstractActivity {
                 // final String name = nameEditText.getText().toString();
                 final String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
+                if(checkEmail() && checkPassword()){
                     AppController.getApi().sendPHPMail(1, "sendPHPMail", email).enqueue(new Callback<JsonObject>() {
 
                         @Override
@@ -147,11 +150,14 @@ public class ForgotPasswordActivity extends AbstractActivity {
                         @Override
                         public void onFailure(Call<JsonObject> call, Throwable t) {
                             Log.d(TAG, "onFailure: " + t.getMessage());
+                            showInfoDialog("Ошибка!", "Не удалось загрузить данные с сервера");
 
-                            Toast.makeText(ForgotPasswordActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
                         }
-                    });
-
+                    });}
+                    else {
+                    checkEmail();
+                    Toast.makeText(ForgotPasswordActivity.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -165,8 +171,8 @@ public class ForgotPasswordActivity extends AbstractActivity {
             @Override
             public void onClick(View view) {
                 String Cod = firs_c.getText().toString();
-               // String Cod = "1";
-                if(code == Integer.valueOf(Cod)){
+                if(!Cod.isEmpty())
+                if(code == Integer.valueOf(Cod) ){
                // final String name = nameEditText.getText().toString();
                 final String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
@@ -218,11 +224,14 @@ public class ForgotPasswordActivity extends AbstractActivity {
 
                         @Override
                         public void onFailure(Call<JsonObject> call, Throwable t) {
-                            Toast.makeText(ForgotPasswordActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
+                            showInfoDialog("Ошибка!", "Не удалось загрузить данные с сервера");
                         }
                     });
 
-            }}
+            }
+            else Toast.makeText(ForgotPasswordActivity.this, "код неверный", Toast.LENGTH_SHORT).show();
+                firs_c.setText("");
+            }
         });
 
 
@@ -239,10 +248,33 @@ public class ForgotPasswordActivity extends AbstractActivity {
             requestFocus(emailEditText);
             return false;
         }else{
-            return false;
+            return true;
         }
     }
 
+    public class AsteriskPasswordTransformationMethod extends PasswordTransformationMethod {
+        @Override
+        public CharSequence getTransformation(CharSequence source, View view) {
+            return new PasswordCharSequence(source);
+        }
+
+
+        private class PasswordCharSequence implements CharSequence {
+            private CharSequence mSource;
+            public PasswordCharSequence(CharSequence source) {
+                mSource = source; // Store char sequence
+            }
+            public char charAt(int index) {
+                return '*'; // This is the important part
+            }
+            public int length() {
+                return mSource.length(); // Return default
+            }
+            public CharSequence subSequence(int start, int end) {
+                return mSource.subSequence(start, end); // Return default
+            }
+        }
+    };
 
      public boolean checkPassword(){
         String password = passwordEditText.getText().toString().trim();

@@ -137,6 +137,22 @@ public interface API {
             @Query("type") int type
     );
 
+    @GET("api.php")
+    Call<JsonObject> check_email(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("type") int type,
+            @Query("email") String email
+    );
+
+
+    @GET("api.php")
+    Call<JsonObject> favorites(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("id_topic") String id_topic
+    );
+
 
     @GET("api.php")
     Call<JsonObject> getFeedTextById(

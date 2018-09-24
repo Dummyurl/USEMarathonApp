@@ -83,18 +83,18 @@
         <EditText
             android:id="@+id/first_c"
             android:layout_width="match_parent"
-            android:layout_height="38dp"
+            android:layout_height="93dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginLeft="105dp"
+            android:layout_marginRight="105dp"
             android:layout_marginTop="30dp"
             android:background="@drawable/downline"
-            android:hint="Код"
             android:imeOptions="actionNext"
             android:inputType="numberPassword"
-            android:maxLength="5"
+            android:maxLength="4"
             android:scrollHorizontally="false"
             android:singleLine="true"
+            android:textSize="85sp"
             android:visibility="visible" />
 
         <Button

@@ -33,6 +33,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
+
+import ru.use.marathon.activities.SettingsuseActivity;
 import ru.use.marathon.activities.UserProfileActivity;
 import ru.use.marathon.adapters.StatisticsAdapter;
 import ru.use.marathon.adapters.TeachersStudentsAdapter;
@@ -49,6 +51,11 @@ import ru.use.marathon.utils.ItemClickSupport;
 public class ProfileFragment extends AbstractFragment {
 
     Unbinder unbinder;
+    ////test
+    @BindView(R.id.stv_btn)
+    Button stv_btn;
+    ///test
+
 
     @BindView(R.id.user_image)
     CircleImageView user_image;
@@ -131,7 +138,19 @@ public class ProfileFragment extends AbstractFragment {
                 }
             });
         }
+
+
+        stv_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), SettingsuseActivity.class);
+                startActivity(i);
+            }
+        });
+
         return view;
+
+
     }
 
     private void student_initSubjects() {

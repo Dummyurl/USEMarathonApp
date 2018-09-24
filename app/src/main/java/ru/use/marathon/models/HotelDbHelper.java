@@ -55,6 +55,7 @@ public class HotelDbHelper extends SQLiteOpenHelper {
         //+ GuestEntry.COLUMN_TEXT + " TEXT NOT NULL, "
         // + GuestEntry.COLUMN_ID + " INTEGER NOT NULL, "
 
+
         // Запускаем создание таблицы
         db.execSQL(SQL_CREATE_GUESTS_TABLE);
     }

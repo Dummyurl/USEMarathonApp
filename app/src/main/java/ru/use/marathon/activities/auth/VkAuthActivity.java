@@ -366,7 +366,32 @@ public class VkAuthActivity extends AppCompatActivity {
 
         return valid;
     }
+    public void ischeck_email(String email) {
 
+        AppController.getApi().check_email(1, "check_email", poste , email ).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                new Success(response);
+
+                if (success()) {
+                    signupSql();
+
+                }
+                else {
+                    finish();
+                    Toast.makeText(context, "email занят либо невалидный", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(VkAuthActivity.this, "Попробуйте другой email ", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+    }
 
     private void signupSql() {
         final String name = firs_name;
@@ -419,6 +444,9 @@ public class VkAuthActivity extends AppCompatActivity {
             Toast.makeText(VkAuthActivity.this, "Введите все данные", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
 
     private void signinSql() {
         final String email = vkemail;
@@ -473,7 +501,7 @@ public class VkAuthActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     Toast.makeText(getApplicationContext(), "Bad error..", Toast.LENGTH_SHORT).show();
-                    signupSql();
+                    ischeck_email(vkemail);
                 }
             });
         }

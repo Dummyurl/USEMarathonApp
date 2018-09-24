@@ -37,6 +37,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,8 +128,6 @@ public class GoogleSignInActivity extends AbstractActivity implements
     }
 
 
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -148,9 +148,10 @@ public class GoogleSignInActivity extends AbstractActivity implements
                 firebaseAuthWithGoogle(account);
                 first_name = account.getGivenName();
                 googleemail = account.getEmail();
-               googlepass= account.getIdToken()+"google";
-                if (DEBUG) Toast.makeText(this, first_name, Toast.LENGTH_SHORT).show();
+                googlepass = account.getIdToken() + "google";
                 signinSql();
+                if (DEBUG) Toast.makeText(this, first_name, Toast.LENGTH_SHORT).show();
+
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
                 updateUI(null);
@@ -441,13 +442,42 @@ public class GoogleSignInActivity extends AbstractActivity implements
     }
 
 
+    public void ischeck_email(String email) {
+
+        AppController.getApi().check_email(1, "check_email", poste , email ).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                new Success(response);
+
+                if (success(response)) {
+                    signupSql();
+
+                }
+                else {
+                    finish();
+                    Toast.makeText(context, "email занят либо невалидный", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(GoogleSignInActivity.this, "Попробуйте другой email ", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+    }
+
+
+
     private void signinSql() {
 
         String password = googlepass;
         final String email = googleemail;
         if (email != null) {
 
-            AppController.getApi().sign_in(1, "sign_in", poste, email, password,"google").enqueue(new Callback<JsonObject>() {
+            AppController.getApi().sign_in(1, "sign_in", poste, email, password, "google").enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     new Success(response);
@@ -481,6 +511,7 @@ public class GoogleSignInActivity extends AbstractActivity implements
 
 
                     } else {
+                        Toast.makeText(GoogleSignInActivity.this, "alertdial", Toast.LENGTH_SHORT).show();
                         alertdial();
                         android.app.AlertDialog.Builder b = new android.app.AlertDialog.Builder(GoogleSignInActivity.this);
                         b.setTitle("Ошибка");
@@ -498,7 +529,7 @@ public class GoogleSignInActivity extends AbstractActivity implements
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     Toast.makeText(getApplicationContext(), "Bad error..", Toast.LENGTH_SHORT).show();
-                    signOut();
+                    ischeck_email(googleemail);
 
                 }
             });
@@ -506,9 +537,7 @@ public class GoogleSignInActivity extends AbstractActivity implements
     }
 
 
-    private static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
+
 
 
     @Override
