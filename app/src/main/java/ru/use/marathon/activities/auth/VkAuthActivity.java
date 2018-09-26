@@ -70,13 +70,13 @@ public class VkAuthActivity extends AppCompatActivity {
     String vkemail;
     String city_home;
     String vkpassword;
-
+    private  int b=0;
     int id_subject = 0;
     String country;
     private FirebaseAuth mAuth;
     DatabaseReference databasePersons;
     private int poste;
-
+    String vkuser_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +98,12 @@ public class VkAuthActivity extends AppCompatActivity {
 
                 vktoken = res.accessToken + "vk";
                 vkpassword = vktoken;
+                vkuser_id ="https://vk.com/id" + res.userId;
+
+          //      Toast.makeText(VkAuthActivity.this, vkuser_id, Toast.LENGTH_SHORT).show();
 
 
-                Toast.makeText(VkAuthActivity.this, "Все оке", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(VkAuthActivity.this, "Все оке", Toast.LENGTH_SHORT).show();
                 VKApi.users().get().executeWithListener(new VKRequest.VKRequestListener() {
                     @Override
                     public void onComplete(VKResponse response) {
@@ -108,7 +111,7 @@ public class VkAuthActivity extends AppCompatActivity {
 
                         firs_name = user.first_name;
                         vkemail = res.email;
-                        Toast.makeText(VkAuthActivity.this, vkemail + "toPlustTO", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(VkAuthActivity.this, vkemail + "toPlustTO", Toast.LENGTH_SHORT).show();
 
                         if (vkemail == null) {
                             //TODO Все отловы данных делай на английском языке полным предложением и не забывай про DEBUG
@@ -136,7 +139,7 @@ public class VkAuthActivity extends AppCompatActivity {
                         city_home = String.valueOf(user.city);
                         country = String.valueOf(user.country);
                         if (!Objects.equals(country, "Россия")) {
-                            Toast.makeText(context, country + "  ты не раша", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, country + "  ты не раша", Toast.LENGTH_SHORT).show();
 
                             //TODO в файле Constants есть boolean DEBUG. Используй его чтобы тебе было удобно при отладке.
                             //TODO ставишь if(DEBUG) к тостам, логам, чтобы видеть данные самому, а потом при релизе просто не будет видно юзерам.
@@ -152,7 +155,7 @@ public class VkAuthActivity extends AppCompatActivity {
             @Override
             public void onError(VKError error) {
 // Произошла ошибка авторизации (например, пользователь запретил авторизацию)
-                Toast.makeText(VkAuthActivity.this, "Все не оке", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(VkAuthActivity.this, "Все не оке", Toast.LENGTH_SHORT).show();
                 finish();
             }
         })) {
@@ -281,8 +284,8 @@ public class VkAuthActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(VkAuthActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(VkAuthActivity.this, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
                             signIn(vkemail, vkpassword);
 
 
@@ -311,13 +314,13 @@ public class VkAuthActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(VkAuthActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(VkAuthActivity.this, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
                             createAccount(vkemail, vkpassword);
                         }
 
                         if (!task.isSuccessful()) {
-                            Toast.makeText(context, "fail", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "fail", Toast.LENGTH_SHORT).show();
                             createAccount(vkemail, vkpassword);
                         }
 
@@ -374,12 +377,14 @@ public class VkAuthActivity extends AppCompatActivity {
                 new Success(response);
 
                 if (success()) {
+                 //   Toast.makeText(context, "svoboden", Toast.LENGTH_SHORT).show();
                     signupSql();
 
                 }
                 else {
                     finish();
-                    Toast.makeText(context, "email занят либо невалидный", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, vkemail+'\n' +"занят", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "email занят либо невалидный", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -398,13 +403,13 @@ public class VkAuthActivity extends AppCompatActivity {
         final String email = vkemail;
         final String style_type = "vk";
         final String num = phone_number;
-        if (checkEmail()) {
 
-            AppController.getApi().sign_up(1, "sign_up", poste, name, email, vkpassword, num, "0", city_home, id_subject, style_type).enqueue(new Callback<JsonObject>() {
+
+            AppController.getApi().sign_up(1, "sign_up", poste, name, email, vkpassword, num, "0", city_home, id_subject, style_type,vkuser_id).enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     new Success(response);
-                    Toast.makeText(VkAuthActivity.this, num, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(VkAuthActivity.this, num, Toast.LENGTH_SHORT).show();
                     if (success()) {
                         if (poste == 1) {
                             Teacher t = new Teacher(getApplicationContext(), response);
@@ -416,6 +421,7 @@ public class VkAuthActivity extends AppCompatActivity {
                             s.createFirstSession(s.getID(), name, email); // todo if sign up, image will crush
                             Intent i = new Intent(VkAuthActivity.this, StartQuestionsActivity.class);
                             startActivity(i);
+                            finish();
                         }
 
 
@@ -440,9 +446,7 @@ public class VkAuthActivity extends AppCompatActivity {
             });
 
 
-        } else {
-            Toast.makeText(VkAuthActivity.this, "Введите все данные", Toast.LENGTH_SHORT).show();
-        }
+
     }
 
 
@@ -452,7 +456,7 @@ public class VkAuthActivity extends AppCompatActivity {
         final String email = vkemail;
         String password = vkpassword;
 
-        if (vkemail != null) {
+        if (vkemail != null ) {
 
 
             AppController.getApi().sign_in(1, "sign_in", poste, email, password,"vk").enqueue(new Callback<JsonObject>() {
@@ -485,7 +489,7 @@ public class VkAuthActivity extends AppCompatActivity {
                         finish();
 
                     } else {
-                        signupSql();
+                        ischeck_email(vkemail);
                         android.app.AlertDialog.Builder b = new android.app.AlertDialog.Builder(VkAuthActivity.this);
                         b.setTitle("Ошибка");
                         b.setMessage("Проверьте введенные данные.");
@@ -512,14 +516,39 @@ public class VkAuthActivity extends AppCompatActivity {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public boolean checkEmail() {
-        String text = vkemail;
-        if (text == null || !isValidEmail(text)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+//    public boolean checkEmail() {
+//
+//
+//        AppController.getApi().check_email(1, "check_email", 0, vkemail).enqueue(new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                new Success(response);
+//                // Toast.makeText(VkAuthActivity.this, num, Toast.LENGTH_SHORT).show();
+//                if (success()) {
+//                    b = 1;
+//                    Toast.makeText(context, b, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//                Toast.makeText(VkAuthActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//      //  Toast.makeText(context, "suda doiiilo", Toast.LENGTH_SHORT).show();
+//        if(b==1){
+//            Toast.makeText(context, "VSE NORME", Toast.LENGTH_SHORT).show();
+//            return true;
+//        }
+//        else {
+//        return false;}
+//        }
+
+
+
+
+
 
 
 }

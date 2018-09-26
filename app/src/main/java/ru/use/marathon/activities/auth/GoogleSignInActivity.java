@@ -389,7 +389,7 @@ public class GoogleSignInActivity extends AbstractActivity implements
         if (counter == 2 && phone_number.length() == 11) {
             final int post = getIntent().getIntExtra("post", -1);
             poste = post;
-            AppController.getApi().sign_up(1, "sign_up", post, name, email, googlepass, num, String.valueOf(IDI), String.valueOf(ctIDI), 0, style_type).enqueue(new Callback<JsonObject>() {
+            AppController.getApi().sign_up(1, "sign_up", post, name, email, googlepass, num, String.valueOf(IDI), String.valueOf(ctIDI), 0, style_type,"").enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     new Success(response);

@@ -25,7 +25,8 @@ public interface API {
             @Query("id_region") String id_region,
             @Query("id_city") String id_city,
             @Query("id_subject") int id_subject,
-            @Query("style_type") String style_type
+            @Query("style_type") String style_type,
+            @Query("vkuser_id") String vkuser_id
 
 
     );

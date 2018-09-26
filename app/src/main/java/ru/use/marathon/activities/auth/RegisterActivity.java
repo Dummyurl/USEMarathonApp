@@ -296,7 +296,7 @@ public class RegisterActivity extends AbstractActivity implements
                 if (checkEmail() && checkPassword() && validateName() && checkPhoneN() && checkbox.isChecked() && counter == 2 && checkmail(post,email)) {
 
 
-                    AppController.getApi().sign_up(1, "sign_up", post, name, email, password, num, String.valueOf(IDI), String.valueOf(ctIDI), id_subject,"emailandpass").enqueue(new Callback<JsonObject>() {
+                    AppController.getApi().sign_up(1, "sign_up", post, name, email, password, num, String.valueOf(IDI), String.valueOf(ctIDI), id_subject,"emailandpass","").enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             new Success(response);
