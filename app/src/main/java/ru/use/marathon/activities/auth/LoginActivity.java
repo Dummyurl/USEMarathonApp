@@ -26,8 +26,8 @@ import ru.use.marathon.fragments.LoginTeacherFragment;
 public class LoginActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.tabs)
-    TabLayout tabLayout;
+//    @BindView(R.id.tabs)
+//    TabLayout tabLayout;
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
@@ -41,10 +41,12 @@ public class LoginActivity extends AbstractActivity {
         setSupportActionBar(toolbar);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new LoginStudentFragment(), "Для ученика");
-        adapter.addFragment(new LoginTeacherFragment(), "Для учителя");
+       // adapter.addFragment(new LoginStudentFragment(), "");
+        adapter.addFragment(new LoginStudentFragment(), "");
+//        adapter.addFragment(new LoginStudentFragment(), "Для ученика");
+       // adapter.addFragment(new LoginTeacherFragment(), "Для учителя");
         viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
+//        tabLayout.setupWithViewPager(viewPager);
 
     }
 
