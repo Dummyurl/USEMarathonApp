@@ -1,3 +1,7 @@
+
+/**
+ * Created by Marat on 24-July-18.
+ */
 //package ru.use.marathon.activities;
 //
 //import ru.use.marathon.libstreaming.streaming.Session;

@@ -38,7 +38,9 @@ import ru.use.marathon.models.Teacher;
 import ru.use.marathon.models.chat.Message;
 import ru.use.marathon.models.chat.MessagesResponse;
 import ru.use.marathon.utils.NotificationUtils;
-
+/**
+ * Created by Ilyas on 24-July-18.
+ */
 public class ChatRoomActivity extends AbstractActivity {
 
     public static final String TAG = ChatRoomActivity.class.getSimpleName();

@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
@@ -26,7 +27,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.use.marathon.AppController;
 import ru.use.marathon.R;
+import ru.use.marathon.activities.auth.RegisterActivity;
 import ru.use.marathon.models.FeedText;
+import ru.use.marathon.models.Success;
 
 public class FeedContentActivity extends AbstractActivity {
 
@@ -86,11 +89,31 @@ public class FeedContentActivity extends AbstractActivity {
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Saved", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(final View view) {
+
+
+
+                AppController.getApi().favorites(1, "favorites",id(),feed_id+"",1 ).enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        new Success(response);
+                        if (success(response)) {
+
+                            Snackbar.make(view, "Saved", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                    }
             }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        Toast.makeText(FeedContentActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
+                    }
         });
+            }});
+
+
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {

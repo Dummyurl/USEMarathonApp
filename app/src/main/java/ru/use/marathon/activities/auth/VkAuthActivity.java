@@ -1,11 +1,15 @@
 package ru.use.marathon.activities.auth;
-
+/**
+ * Created by Marat on 24-July-18.
+ */
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -85,7 +89,7 @@ public class VkAuthActivity extends AppCompatActivity {
         VKSdk.login(this, scope);
         ButterKnife.bind(this);
         mAuth = FirebaseAuth.getInstance();
-
+        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         final int post = getIntent().getIntExtra("post", -1);
         poste = post;
     }
@@ -111,6 +115,13 @@ public class VkAuthActivity extends AppCompatActivity {
 
                         firs_name = user.first_name;
                         vkemail = res.email;
+
+                   //     Toast.makeText(VkAuthActivity.this, (CharSequence) user.photo, Toast.LENGTH_SHORT).show();
+
+                        SharedPreferences.Editor editor = mSettings.edit();
+                        editor.putString(APP_PREFERENCES_EMAIL, vkemail);
+                        editor.putString(APP_PREFERENCES_NAME,firs_name );
+                        editor.apply();
 //                        Toast.makeText(VkAuthActivity.this, vkemail + "toPlustTO", Toast.LENGTH_SHORT).show();
 
                         if (vkemail == null) {
@@ -545,8 +556,12 @@ public class VkAuthActivity extends AppCompatActivity {
 //        return false;}
 //        }
 
-
-
+    public static final String APP_PREFERENCES = "student";
+    public static final String APP_PREFERENCES_EMAIL = "email"; // email
+    public static final String APP_PREFERENCES_NAME = "NAME"; // AGE
+    //public static final String APP_PREFERENCES_PHOTO = "PHOTO"; // PHOTO
+  //  public static final Image APP_PREFERENCES_PHOTO;
+    SharedPreferences mSettings;
 
 
 

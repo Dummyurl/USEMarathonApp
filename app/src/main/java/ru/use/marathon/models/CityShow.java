@@ -1,5 +1,7 @@
 package ru.use.marathon.models;
-
+/**
+ * Created by Marat on 24-July-18.
+ */
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 

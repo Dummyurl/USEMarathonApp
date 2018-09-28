@@ -1,5 +1,7 @@
 package ru.use.marathon.activities.auth;
-
+/**
+ * Created by Marat on 24-July-18.
+ */
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;

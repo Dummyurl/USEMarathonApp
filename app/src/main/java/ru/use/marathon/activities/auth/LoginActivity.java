@@ -1,5 +1,7 @@
 package ru.use.marathon.activities.auth;
-
+/**
+ * Created by Marat on 24-July-18.
+ */
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

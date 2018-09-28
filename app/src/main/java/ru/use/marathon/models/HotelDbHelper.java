@@ -1,5 +1,7 @@
 package ru.use.marathon.models;
-
+/**
+ * Created by Marat on 24-July-18.
+ */
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;

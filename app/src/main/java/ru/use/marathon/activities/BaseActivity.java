@@ -1,5 +1,7 @@
 package ru.use.marathon.activities;
-
+/**
+ * Created by Marat on 24-July-18.
+ */
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.VisibleForTesting;

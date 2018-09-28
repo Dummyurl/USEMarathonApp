@@ -1,5 +1,7 @@
 
-
+/**
+ * Created by Marat on 24-July-18.
+ */
 package ru.use.marathon.activities.auth;
 
 import android.app.AlertDialog;

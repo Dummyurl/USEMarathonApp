@@ -29,7 +29,9 @@ import ru.use.marathon.models.Teacher;
 import ru.use.marathon.models.chat.ChatMembers;
 
 import static ru.use.marathon.models.Success.success;
-
+/**
+ * Created by Ilyas on 24-July-18.
+ */
 public class ChatDetailsActivity extends AbstractActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
