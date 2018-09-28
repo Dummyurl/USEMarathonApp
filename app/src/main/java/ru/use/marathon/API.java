@@ -151,7 +151,9 @@ public interface API {
     Call<JsonObject> favorites(
             @Query("v") int v,
             @Query("method") String method,
-            @Query("id_topic") String id_topic
+            @Query("id_user") int id_user,
+            @Query("id_topic") String id_topic,
+            @Query("type") int type
     );
 
 
