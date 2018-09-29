@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:drawableLeft="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <!--<EditText-->
@@ -65,6 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:orientation="horizontal"
             android:gravity="end">
 
             <Button
@@ -76,16 +78,20 @@
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
 
+
             <Button
                 android:id="@+id/s_vk_up_btn"
                 android:layout_width="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/bg_circle"
-                android:text="vkontakte"
+                android:drawableLeft="@drawable/vksocialnetworklogo"
+                android:gravity="left|center"
+                android:padding="10dp"
+                android:text="                ВОЙТИ"
                 android:textColor="@android:color/white" />
         </LinearLayout>
 

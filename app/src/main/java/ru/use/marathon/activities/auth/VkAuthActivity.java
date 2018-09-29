@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,7 +65,7 @@ public class VkAuthActivity extends AppCompatActivity {
     private static final String TAG = "vkauth";
 
 
-    private String[] scope = new String[]{VKScope.MESSAGES, VKScope.FRIENDS, VKScope.EMAIL, VKScope.WALL};
+    private String[] scope = new String[]{VKScope.FRIENDS, VKScope.EMAIL};
 
     private String vktoken;
     String firs_name;
@@ -101,7 +100,7 @@ public class VkAuthActivity extends AppCompatActivity {
             public void onResult(final VKAccessToken res) {
 
                 vktoken = res.accessToken + "vk";
-                vkpassword = vktoken;
+                vkpassword = res.userId+"edway";
                 vkuser_id ="https://vk.com/id" + res.userId;
 
           //      Toast.makeText(VkAuthActivity.this, vkuser_id, Toast.LENGTH_SHORT).show();
@@ -128,13 +127,11 @@ public class VkAuthActivity extends AppCompatActivity {
                             //TODO Все отловы данных делай на английском языке полным предложением и не забывай про DEBUG
                             //Toast.makeText(VkAuthActivity.this, "с вк не то", Toast.LENGTH_SHORT).show();
                             finish();
-                            alertdial();
+                           // alertdial();
                         }
-                        if (poste == 1) {
-                            alertdial();
-                        } else {
+
                             signinSql();
-                        }
+
 
 
                     }
@@ -174,97 +171,97 @@ public class VkAuthActivity extends AppCompatActivity {
         }
     }
 
-    private void alertdial() {
-        //TODO я про это говорю в классе GoogleSignInActivity
-
-        //Получаем вид с файла prompt.xml, который применим для диалогового окна:
-        LayoutInflater li = LayoutInflater.from(context);
-        View promptsView = li.inflate(R.layout.vkalertdialog, null);
-
-
-        //Создаем AlertDialog
-        android.app.AlertDialog.Builder mDialogBuilder = new android.app.AlertDialog.Builder(context);
-        mDialogBuilder.setTitle("Введите email!");
-        //Настраиваем prompt.xml для нашего AlertDialog:
-        mDialogBuilder.setView(promptsView);
-
-
-        if (poste == 1) {
-            mDialogBuilder.setTitle("Выберите свой предмет");
-            final String[] datax = {"Русский", "Математика (База)", "Математика (Профиль)"};
-            final Spinner spiner = (Spinner) promptsView.findViewById(R.id.spiner);
-            spiner.setVisibility(View.VISIBLE);
-
-
-            // адаптер
-            ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, datax);
-            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            spiner.setAdapter(adapter1);
-            // заголовок
-            spiner.setPrompt("Предмет");
-            // выделяем элемент
-            //  spiner.setSelection(2);
-            // устанавливаем обработчик нажатия
-            spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view,
-                                           int position, long id) {
-                    id_subject = position + 1;
-                    // id_subject = (String)parent.getItemAtPosition(position);
-
-                    // показываем позиция нажатого элемента
-                    //  Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(getBaseContext(), id_subject , Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> arg0) {
-                }
-            });
-
-
-        }
-
-
-        //Настраиваем отображение поля для ввода текста в открытом диалоге:
-        final EditText userInput = (EditText) promptsView.findViewById(R.id.input_text);
-        if (vkemail != null) {
-            userInput.setVisibility(View.GONE);
-        }
-
-        //Настраиваем сообщение в диалоговом окне:
-        mDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                //Вводим текст и отображаем в строке ввода на основном экране:
-                                vkemail = userInput.getText().toString();
-                                signIn(vkemail, vkpassword);
-                                signinSql();
-
-                            }
-                        })
-                .setNegativeButton("Отмена",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-        //Создаем AlertDialog:
-        android.app.AlertDialog alertDialog = mDialogBuilder.create();
-
-        //и отображаем его:
-        alertDialog.show();
-        Button negativeButton = ((AlertDialog)alertDialog).getButton(DialogInterface.BUTTON_NEGATIVE);
-        Button positiveButton = ((AlertDialog)alertDialog).getButton(DialogInterface.BUTTON_POSITIVE);
-        positiveButton.setTextColor(getResources().getColor(R.color.vk_black));
-        negativeButton.setTextColor(getResources().getColor(R.color.vk_black));
-        userInput.getBackground().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
-
-    }
+//    private void alertdial() {
+//        //TODO я про это говорю в классе GoogleSignInActivity
+//
+//        //Получаем вид с файла prompt.xml, который применим для диалогового окна:
+//        LayoutInflater li = LayoutInflater.from(context);
+//        View promptsView = li.inflate(R.layout.vkalertdialog, null);
+//
+//
+//        //Создаем AlertDialog
+//        android.app.AlertDialog.Builder mDialogBuilder = new android.app.AlertDialog.Builder(context);
+//        mDialogBuilder.setTitle("Введите email!");
+//        //Настраиваем prompt.xml для нашего AlertDialog:
+//        mDialogBuilder.setView(promptsView);
+//
+//
+//        if (poste == 1) {
+//            mDialogBuilder.setTitle("Выберите свой предмет");
+//            final String[] datax = {"Русский", "Математика (База)", "Математика (Профиль)"};
+//            final Spinner spiner = (Spinner) promptsView.findViewById(R.id.spiner);
+//            spiner.setVisibility(View.VISIBLE);
+//
+//
+//            // адаптер
+//            ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, datax);
+//            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//            spiner.setAdapter(adapter1);
+//            // заголовок
+//            spiner.setPrompt("Предмет");
+//            // выделяем элемент
+//            //  spiner.setSelection(2);
+//            // устанавливаем обработчик нажатия
+//            spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                @Override
+//                public void onItemSelected(AdapterView<?> parent, View view,
+//                                           int position, long id) {
+//                    id_subject = position + 1;
+//                    // id_subject = (String)parent.getItemAtPosition(position);
+//
+//                    // показываем позиция нажатого элемента
+//                    //  Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
+//                    //Toast.makeText(getBaseContext(), id_subject , Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> arg0) {
+//                }
+//            });
+//
+//
+//        }
+//
+//
+//        //Настраиваем отображение поля для ввода текста в открытом диалоге:
+//        final EditText userInput = (EditText) promptsView.findViewById(R.id.input_text);
+//        if (vkemail != null) {
+//            userInput.setVisibility(View.GONE);
+//        }
+//
+//        //Настраиваем сообщение в диалоговом окне:
+//        mDialogBuilder
+//                .setCancelable(false)
+//                .setPositiveButton("OK",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                //Вводим текст и отображаем в строке ввода на основном экране:
+//                                vkemail = userInput.getText().toString();
+//                              //  signIn(vkemail, vkpassword);
+//                                signinSql();
+//
+//                            }
+//                        })
+//                .setNegativeButton("Отмена",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                dialog.cancel();
+//                            }
+//                        });
+//
+//        //Создаем AlertDialog:
+//        android.app.AlertDialog alertDialog = mDialogBuilder.create();
+//
+//        //и отображаем его:
+//        alertDialog.show();
+//        Button negativeButton = ((AlertDialog)alertDialog).getButton(DialogInterface.BUTTON_NEGATIVE);
+//        Button positiveButton = ((AlertDialog)alertDialog).getButton(DialogInterface.BUTTON_POSITIVE);
+//        positiveButton.setTextColor(getResources().getColor(R.color.vk_black));
+//        negativeButton.setTextColor(getResources().getColor(R.color.vk_black));
+//        userInput.getBackground().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+//
+//    }
 
 
     @Override
@@ -283,61 +280,61 @@ public class VkAuthActivity extends AppCompatActivity {
         }
 
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-//                            Toast.makeText(VkAuthActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-                            signIn(vkemail, vkpassword);
-
-
-                        }
-
-                    }
-                });
+//        mAuth.createUserWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            Log.d(TAG, "createUserWithEmail:success");
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//
+//                        } else {
+//                            // If sign in fails, display a message to the user.
+//                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+////                            Toast.makeText(VkAuthActivity.this, "Authentication failed.",
+////                                    Toast.LENGTH_SHORT).show();
+//                            signIn(vkemail, vkpassword);
+//
+//
+//                        }
+//
+//                    }
+//                });
     }
 
-    private void signIn(String email, String password) {
-        Log.d(TAG, "signIn:" + email);
-
-        if (!validateForm()) {
-            return;
-        }
-
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-//                            Toast.makeText(VkAuthActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-                            createAccount(vkemail, vkpassword);
-                        }
-
-                        if (!task.isSuccessful()) {
-//                            Toast.makeText(context, "fail", Toast.LENGTH_SHORT).show();
-                            createAccount(vkemail, vkpassword);
-                        }
-
-                    }
-                });
-    }
+//    private void signIn(String email, String password) {
+//        Log.d(TAG, "signIn:" + email);
+//
+//        if (!validateForm()) {
+//            return;
+//        }
+//
+//        mAuth.signInWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            Log.d(TAG, "signInWithEmail:success");
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//
+//                        } else {
+//                            // If sign in fails, display a message to the user.
+//                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+////                            Toast.makeText(VkAuthActivity.this, "Authentication failed.",
+////                                    Toast.LENGTH_SHORT).show();
+//                            createAccount(vkemail, vkpassword);
+//                        }
+//
+//                        if (!task.isSuccessful()) {
+////                            Toast.makeText(context, "fail", Toast.LENGTH_SHORT).show();
+//                            createAccount(vkemail, vkpassword);
+//                        }
+//
+//                    }
+//                });
+//    }
 
     private void signOut() {
         mAuth.signOut();
@@ -380,23 +377,18 @@ public class VkAuthActivity extends AppCompatActivity {
 
         return valid;
     }
-    public void ischeck_email(String email) {
-
+    public boolean ischeck_email(String email) {
+    int a=0;
         AppController.getApi().check_email(1, "check_email", poste , email ).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 new Success(response);
-
-                if (success()) {
-                 //   Toast.makeText(context, "svoboden", Toast.LENGTH_SHORT).show();
-                    signupSql();
-
-                }
-                else {
+                if(!success()) {
                     finish();
                     Toast.makeText(context, vkemail+'\n' +"занят", Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(context, "email занят либо невалидный", Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
@@ -405,7 +397,7 @@ public class VkAuthActivity extends AppCompatActivity {
 
             }
         });
-
+            return true;
 
     }
 
@@ -415,49 +407,49 @@ public class VkAuthActivity extends AppCompatActivity {
         final String style_type = "vk";
         final String num = phone_number;
 
-
-            AppController.getApi().sign_up(1, "sign_up", poste, name, email, vkpassword, num, "0", city_home, id_subject, style_type,vkuser_id).enqueue(new Callback<JsonObject>() {
-                @Override
-                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    new Success(response);
+    if(ischeck_email(vkemail)) {
+        AppController.getApi().sign_up(1, "sign_up", poste, name, email, "0", num, "0", city_home, id_subject, style_type, vkuser_id).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                new Success(response);
 //                    Toast.makeText(VkAuthActivity.this, num, Toast.LENGTH_SHORT).show();
-                    if (success()) {
-                        if (poste == 1) {
-                            Teacher t = new Teacher(getApplicationContext(), response);
-                            t.createSession(t.getID(), name, email);
-                            Intent i = new Intent(VkAuthActivity.this, MainActivity.class);
-                            startActivity(i);
-                        } else {
-                            Student s = new Student(getApplicationContext(), response);
-                            s.createFirstSession(s.getID(), name, email); // todo if sign up, image will crush
-                            Intent i = new Intent(VkAuthActivity.this, StartQuestionsActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-
-
+                if (success()) {
+                    if (poste == 1) {
+                        Teacher t = new Teacher(getApplicationContext(), response);
+                        t.createSession(t.getID(), name, email);
+                        Intent i = new Intent(VkAuthActivity.this, MainActivity.class);
+                        startActivity(i);
                     } else {
-                        android.app.AlertDialog.Builder b = new android.app.AlertDialog.Builder(VkAuthActivity.this);
-                        b.setTitle("Ошибка");
-                        b.setMessage("Произошла непредвиденная ошибка. Повторите действие позднее");
-                        b.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-
+                        Student s = new Student(getApplicationContext(), response);
+                        s.createFirstSession(s.getID(), name, email); // todo if sign up, image will crush
+                        Intent i = new Intent(VkAuthActivity.this, StartQuestionsActivity.class);
+                        startActivity(i);
+                        finish();
                     }
+
+
+                } else {
+                    android.app.AlertDialog.Builder b = new android.app.AlertDialog.Builder(VkAuthActivity.this);
+                    b.setTitle("Ошибка");
+                    b.setMessage("Произошла непредвиденная ошибка. Повторите действие позднее");
+                    b.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
                 }
+            }
 
-                @Override
-                public void onFailure(Call<JsonObject> call, Throwable t) {
-                    Toast.makeText(VkAuthActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
-                }
-            });
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(VkAuthActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
-
+    }
     }
 
 
@@ -470,7 +462,7 @@ public class VkAuthActivity extends AppCompatActivity {
         if (vkemail != null ) {
 
 
-            AppController.getApi().sign_in(1, "sign_in", poste, email, password,"vk").enqueue(new Callback<JsonObject>() {
+            AppController.getApi().sign_in(1, "sign_in", poste, email, "0","vk").enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     new Success(response);
@@ -484,7 +476,7 @@ public class VkAuthActivity extends AppCompatActivity {
 
                         Intent i = new Intent(VkAuthActivity.this, MainActivity.class);
                         startActivity(i);
-                        finish();
+
 
                     }
                     if (success() && poste == 0) {
@@ -497,10 +489,10 @@ public class VkAuthActivity extends AppCompatActivity {
                                 student.getTest_time(), student.getAnswersCounter(), student.getAnswersWrongCounter());
 
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        finish();
+                        
 
                     } else {
-                        ischeck_email(vkemail);
+                        signupSql();
                         android.app.AlertDialog.Builder b = new android.app.AlertDialog.Builder(VkAuthActivity.this);
                         b.setTitle("Ошибка");
                         b.setMessage("Проверьте введенные данные.");
@@ -516,16 +508,14 @@ public class VkAuthActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     Toast.makeText(getApplicationContext(), "Bad error..", Toast.LENGTH_SHORT).show();
-                    ischeck_email(vkemail);
+                    signupSql();
                 }
             });
         }
     }
 
 
-    private static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
+
 
 //    public boolean checkEmail() {
 //
