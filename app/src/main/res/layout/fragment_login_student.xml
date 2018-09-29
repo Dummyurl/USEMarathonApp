@@ -36,66 +36,24 @@
         <!--android:textColorHint="@android:color/white"-->
         <!--android:textColorLink="@android:color/white" />-->
 
-    <LinearLayout
-        android:layout_width="339dp"
-        android:layout_height="246dp"
-        android:layout_alignParentBottom="true"
+    <Button
+        android:id="@+id/s_vk_up_btn"
+        android:layout_width="354dp"
+        android:layout_height="47dp"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="53dp"
         android:layout_marginRight="40dp"
-        android:layout_marginBottom="174dp"
-        android:orientation="vertical">
-
-        <!--<Button-->
-        <!--android:id="@+id/s_sign_in_btn"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="35dp"-->
-        <!--android:layout_marginLeft="5dp"-->
-        <!--android:background="@drawable/button_default"-->
-        <!--android:text="Войти"-->
-        <!--android:textColor="@android:color/white" />-->
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Войдите через ВК ,\nчтобы участвовать в играх."
-            android:textColor="@color/cardview_light_background" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:gravity="end">
-
-            <Button
-                android:id="@+id/s_google_up_btn"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/googlegreen"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
-
-
-            <Button
-                android:id="@+id/s_vk_up_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/bg_circle"
-                android:drawableLeft="@drawable/vksocialnetworklogo"
-                android:gravity="left|center"
-                android:padding="10dp"
-                android:text="                ВОЙТИ"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
-
-    </LinearLayout>
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_circle"
+        android:drawableLeft="@drawable/vksocialnetworklogo"
+        android:foregroundGravity="center"
+        android:gravity="left|center"
+        android:paddingLeft="30sp"
+        android:text="    Продолжить через VK"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/s_sign_up_btn"

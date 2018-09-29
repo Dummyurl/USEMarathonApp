@@ -57,8 +57,8 @@ public class LoginStudentFragment extends Fragment {
     TextView fogt;
     @BindView(R.id.s_vk_up_btn)
     Button vk_up;
-    @BindView(R.id.s_google_up_btn)
-    Button google_up;
+//    @BindView(R.id.s_google_up_btn)
+//    Button google_up;
 
 
 
@@ -109,14 +109,14 @@ public class LoginStudentFragment extends Fragment {
                 startActivity(i);
             }
         });
-        google_up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), GoogleSignInActivity.class);
-                i.putExtra("post",0);
-                startActivity(i);
-            }
-        });
+//        google_up.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent i = new Intent(getActivity(), GoogleSignInActivity.class);
+//                i.putExtra("post",0);
+//                startActivity(i);
+//            }
+//        });
 
 
 //        emailEditText.addTextChangedListener(new MyTextWatcher(emailEditText));

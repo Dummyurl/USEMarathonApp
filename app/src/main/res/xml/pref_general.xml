@@ -8,6 +8,12 @@
 
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+String b;
+    if(mSettings.contains(APP_PREFERENCES_NAME)) {
+    b= mSettings.getString(APP_PREFERENCES_NAME, "");
+    }
+    <!--android:defaultValue="@string/pref_default_display_name"-->
+
     <EditTextPreference
         android:capitalize="words"
         android:defaultValue="@string/pref_default_display_name"

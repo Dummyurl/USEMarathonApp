@@ -18,15 +18,15 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="200dp"
             android:gravity="center">
 
             <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="0dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
@@ -35,14 +35,14 @@
 
             <TextView
                 android:id="@+id/logo_text"
-                android:layout_width="wrap_content"
+                android:layout_width="234dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
                 android:fontFamily="sans-serif"
-                android:gravity="center"
-                android:text="EDWAY "
+                android:gravity="left|center"
+                android:text="  EDWAY "
                 android:textColor="@android:color/white"
-                android:textSize="56sp"
+                android:textSize="42sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
