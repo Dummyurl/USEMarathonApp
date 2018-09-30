@@ -5,3 +5,5 @@ public class AppConfig {
 	public static final String PUBLISHER_USERNAME = "ravi";
 	public static final String PUBLISHER_PASSWORD = "passtemp";
 }
+
+// Daria`s here!
