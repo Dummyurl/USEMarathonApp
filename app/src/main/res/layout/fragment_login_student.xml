@@ -40,20 +40,20 @@
         android:id="@+id/s_vk_up_btn"
         android:layout_width="354dp"
         android:layout_height="47dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="53dp"
-        android:layout_marginRight="40dp"
         android:layout_marginBottom="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="53dp"
         android:background="@drawable/bg_circle"
-        android:drawableLeft="@drawable/vksocialnetworklogo"
+        android:drawableLeft="@drawable/ic_vk_logo"
         android:foregroundGravity="center"
         android:gravity="left|center"
         android:paddingLeft="30sp"
         android:text="    Продолжить через VK"
-        android:textStyle="bold"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/s_sign_up_btn"

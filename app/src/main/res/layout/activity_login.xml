@@ -38,7 +38,6 @@
                 android:layout_width="234dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:fontFamily="sans-serif"
                 android:gravity="left|center"
                 android:text="  EDWAY "
                 android:textColor="@android:color/white"
