@@ -17,6 +17,7 @@ import ru.use.marathon.R;
 import ru.use.marathon.activities.StartQuestionsActivity;
 import ru.use.marathon.activities.TestsByCollectionsActivity;
 import ru.use.marathon.activities.TopicsActivity;
+import ru.use.marathon.activities.TypeformFormsActivity;
 import ru.use.marathon.fragments.AbstractFragment;
 
 import static ru.use.marathon.Constants.DEBUG;
@@ -32,6 +33,9 @@ public class SNavTestsFragment extends AbstractFragment {
 
     @BindView(R.id.by_topics)
     Button by_topics;
+
+    @BindView(R.id.btn_typeform) Button typeform;
+
     @BindView(R.id.tests_layout)
     LinearLayout layout;
 
@@ -62,6 +66,13 @@ public class SNavTestsFragment extends AbstractFragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), TopicsActivity.class));
+            }
+        });
+
+        typeform.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), TypeformFormsActivity.class));
             }
         });
 

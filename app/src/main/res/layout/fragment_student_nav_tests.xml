@@ -39,6 +39,19 @@
             android:text="По темам"
             android:textColor="@color/colorItems" />
 
+        <Button
+            android:id="@+id/btn_typeform"
+            android:layout_width="189dp"
+            android:layout_height="44dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_white"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="Игро тесты"
+            android:textColor="@color/colorItems" />
+
     </LinearLayout>
 
 </LinearLayout>
