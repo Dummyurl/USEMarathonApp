@@ -60,8 +60,8 @@ public class LoginActivity extends AbstractActivity {
 //        tabLayout.setupWithViewPager(viewPager);
 
 
-        String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
-        Log.d(TAG, "onCreate: " + Arrays.toString(fingerprints));
+//        String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
+//        Log.d(TAG, "onCreate: " + Arrays.toString(fingerprints));
 
     }
 
