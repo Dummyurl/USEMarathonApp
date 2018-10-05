@@ -3,13 +3,16 @@ package ru.use.marathon.activities;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
@@ -22,6 +25,7 @@ import ru.use.marathon.AppController;
 import ru.use.marathon.R;
 import ru.use.marathon.models.Collection;
 import ru.use.marathon.models.Collections;
+import ru.use.marathon.models.Success;
 import ru.use.marathon.utils.ObservableWebView;
 
 
@@ -120,6 +124,48 @@ public class TheoryContentActivity extends AbstractActivity {
         getMenuInflater().inflate(R.menu.theory_content_menu,menu);
         return true;
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+
+        switch (id) {
+            case R.id.saved:
+                favorite(topic_id);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+
+    private void favorite(int id_fav){
+
+
+       // Toast.makeText(this, topic_id, Toast.LENGTH_SHORT).show();
+
+            AppController.getApi().favorites(1, "favorites",id(),id_fav+"",3 ).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    new Success(response);
+                    if (success(response)) {
+                        Toast.makeText(TheoryContentActivity.this, "saved", Toast.LENGTH_SHORT).show();
+//                        Snackbar.make(view, "Saved", Snackbar.LENGTH_LONG)
+//                                .setAction("Action", null).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Toast.makeText(TheoryContentActivity.this, "Big problem ", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
 
     private class MyBrowser extends WebViewClient {
         @Override

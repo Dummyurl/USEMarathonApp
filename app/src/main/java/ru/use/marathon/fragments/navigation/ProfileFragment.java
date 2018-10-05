@@ -1,9 +1,13 @@
 package ru.use.marathon.fragments.navigation;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,6 +54,8 @@ import ru.use.marathon.utils.ItemClickSupport;
 
 public class ProfileFragment extends AbstractFragment {
 
+    public static final int REQUEST_CODE_GET_PHOTO = 101;
+
     Unbinder unbinder;
     ////test
     @BindView(R.id.stv_btn)
@@ -83,7 +89,7 @@ public class ProfileFragment extends AbstractFragment {
     RelativeLayout teacher_relative;
     @BindView(R.id.my_students_rv)
     GridRecyclerView my_students_rv;
-
+    private Uri photoUri;
     UsersResponse users;
 
     public ProfileFragment() {
@@ -98,15 +104,28 @@ public class ProfileFragment extends AbstractFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
+
+
         View view = inflater.inflate(R.layout.fragment_profile, parent, false);
         unbinder = ButterKnife.bind(this, view);
 
+
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String photoUri = preferences.getString("image", null);
+
+
+        if (photoUri != null) {
+            user_image.setImageURI(Uri.parse(photoUri));
+        } else {
+            user_image.setImageResource(R.drawable.user_default);
+        }
 
         user_id_tv.setText(String.valueOf(user_id()));
         user_email_tv.setText(String.valueOf(email()));
         user_name_tv.setText(String.valueOf(name()));
 
-        Picasso.get().load(R.drawable.user_default).into(user_image);
+       // Picasso.get().load(R.drawable.user_default).into(user_image);
 
         user_name_tv.setTextSize(28);
         Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/gilroy.otf");
@@ -116,6 +135,8 @@ public class ProfileFragment extends AbstractFragment {
 
         student_layout.setVisibility(View.GONE);
         teacher_relative.setVisibility(View.GONE);
+
+
 
         if (userType() == STUDENT) {
             student_layout.setVisibility(View.VISIBLE);
@@ -148,6 +169,14 @@ public class ProfileFragment extends AbstractFragment {
             }
         });
 
+
+        user_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
+
         return view;
 
 
@@ -168,6 +197,40 @@ public class ProfileFragment extends AbstractFragment {
             }
         });
     }
+
+    private void openGallery(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, REQUEST_CODE_GET_PHOTO);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_CODE_GET_PHOTO
+                && resultCode == Activity.RESULT_OK
+                && data !=null){
+            photoUri = data.getData();
+            user_image.setImageURI(photoUri);
+
+
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("image", String.valueOf(photoUri));
+            editor.commit();
+
+
+            user_image.setImageURI(photoUri);
+            user_image.invalidate();
+        }
+        else{
+        super.onActivityResult(requestCode, resultCode, data);}
+    }
+
+
+
 
     private void initTeacherStudents() {
 

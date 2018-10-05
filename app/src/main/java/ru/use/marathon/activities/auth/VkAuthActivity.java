@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -115,6 +116,7 @@ public class VkAuthActivity extends AppCompatActivity {
                         firs_name = user.first_name;
                         vkemail = res.email;
 
+
                    //     Toast.makeText(VkAuthActivity.this, (CharSequence) user.photo, Toast.LENGTH_SHORT).show();
 
                         SharedPreferences.Editor editor = mSettings.edit();
@@ -158,6 +160,9 @@ public class VkAuthActivity extends AppCompatActivity {
                 });
 
 
+
+
+
             }
 
             @Override
@@ -165,6 +170,7 @@ public class VkAuthActivity extends AppCompatActivity {
 // Произошла ошибка авторизации (например, пользователь запретил авторизацию)
 //                Toast.makeText(VkAuthActivity.this, "Все не оке", Toast.LENGTH_SHORT).show();
                 finish();
+
             }
         })) {
             super.onActivityResult(requestCode, resultCode, data);

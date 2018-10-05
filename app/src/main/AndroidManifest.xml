@@ -170,7 +170,8 @@
 
         <activity
             android:name=".activities.SettingsuseActivity"
-            android:label="@string/title_activity_settingsuse"></activity>
+            android:label="@string/title_activity_settingsuse" />
+        <activity android:name=".activities.FavoritesActivity"></activity>
     </application>
 
 </manifest>
