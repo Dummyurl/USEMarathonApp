@@ -29,6 +29,7 @@ import ru.use.marathon.activities.auth.VkAuthActivity;
 import ru.use.marathon.fragments.LoginStudentFragment;
 import ru.use.marathon.utils.InternetConnectionListener;
 import ru.use.marathon.utils.NetworkConnectionInterceptor;
+import ru.use.marathon.utils.typeform.TypeformManager;
 
 /**
  * Created by ilyas on 09-Jun-18.
@@ -36,8 +37,9 @@ import ru.use.marathon.utils.NetworkConnectionInterceptor;
 
 public class AppController extends MultiDexApplication{
 
-    public static final int DISK_CACHE_SIZE = 10 * 1024 * 1024; // 10 MB
+    public static final int DISK_CACHE_SIZE = 10 * 1024 * 1024;
 
+    private static TypeformManager typeformManager;
     private static AppController mInstance;
     private Retrofit retrofit;
     private static API api;
@@ -69,6 +71,7 @@ public class AppController extends MultiDexApplication{
     public void onCreate() {
         super.onCreate();
 
+        typeformManager = TypeformManager.getInstance();
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
 

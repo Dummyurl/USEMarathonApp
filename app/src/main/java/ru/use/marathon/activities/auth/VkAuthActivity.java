@@ -115,6 +115,8 @@ public class VkAuthActivity extends AppCompatActivity {
 
                         firs_name = user.first_name;
                         vkemail = res.email;
+                        Student student = new Student(getApplicationContext());
+                        student.getVkSessionData(user.id,user.first_name,user.last_name);
 
 
                    //     Toast.makeText(VkAuthActivity.this, (CharSequence) user.photo, Toast.LENGTH_SHORT).show();
