@@ -171,9 +171,9 @@
         <activity
             android:name=".activities.SettingsuseActivity"
             android:label="@string/title_activity_settingsuse" />
-<<<<<<< HEAD
+
         <activity android:name=".activities.FavoritesActivity"></activity>
-=======
+
         <activity android:name=".activities.TypeformFormsActivity" />
         <activity
             android:name=".activities.TypeformQuizActivity"
@@ -184,7 +184,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.use.marathon.activities.TypeformFormsActivity" />
         </activity>
->>>>>>> typeform_integration
+
     </application>
 
 </manifest>
