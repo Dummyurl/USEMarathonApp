@@ -66,7 +66,7 @@ public class VkAuthActivity extends AppCompatActivity {
     private static final String TAG = "vkauth";
 
 
-    private String[] scope = new String[]{VKScope.FRIENDS, VKScope.EMAIL};
+    private String[] scope = new String[]{VKScope.FRIENDS, VKScope.EMAIL, VKScope.MESSAGES};
 
     private String vktoken;
     String firs_name;

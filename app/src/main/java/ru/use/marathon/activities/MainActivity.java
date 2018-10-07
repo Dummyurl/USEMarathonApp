@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.use.marathon.R;
 import ru.use.marathon.activities.auth.LoginActivity;
+import ru.use.marathon.fragments.ChatRoomFragment;
 import ru.use.marathon.fragments.navigation.ChatFragment;
 import ru.use.marathon.fragments.navigation.FeedFragment;
 import ru.use.marathon.fragments.navigation.ProfileFragment;
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                             transaction.replace(R.id.use_container, new TheoryFragment()).commit();
                             break;
                         case 3:
-                            transaction.replace(R.id.use_container, new ChatFragment()).commit();
+                            transaction.replace(R.id.use_container, new ChatRoomFragment()).commit();
                             break;
                         case 4:
                             transaction.replace(R.id.use_container, new ProfileFragment()).commit();
