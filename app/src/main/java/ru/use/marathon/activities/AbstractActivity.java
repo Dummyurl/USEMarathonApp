@@ -116,6 +116,21 @@ public class AbstractActivity extends AppCompatActivity implements InternetConne
         return "null";
     }
 
+    public int vk_id(){
+        int ut = userType();
+        if (ut == STUDENT) {
+            return Integer.valueOf(user_data.get(student.KEY_VK_ID));
+        }
+        return -1;
+    }
+
+    public String surname() {
+        int ut = userType();
+        if (ut == STUDENT) {
+            return user_data.get(student.KEY_SURNAME);
+        }
+        return "null";
+    }
 
     public String email() {
         int ut = userType();

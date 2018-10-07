@@ -42,7 +42,7 @@ public class TypeformManager  {
         }).addInterceptor(logging).build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.typeform.com/")
+                .baseUrl("https://api.typeform.com/workspaces/5wVUCw/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

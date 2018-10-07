@@ -19,6 +19,8 @@ public class Student {
     public static final String PREF_NAME = "student";
     public static final String KEY_ID = "id";
     public static final String KEY_NAME =                   "name";
+    public static final String KEY_SURNAME =                   "surname";
+    public static final String KEY_VK_ID =                   "vk_id";
     public static final String KEY_EMAIL =                  "email";
     public static final String KEY_IMAGE =                  "image";
     public static final String KEY_TEACHER_ID =             "teacher_id";
@@ -89,6 +91,12 @@ public class Student {
         return sharedPreferences.getString(KEY_NAME,"");
     }
 
+    public void getVkSessionData(int id,String name,String surname){
+        editor.putString(KEY_NAME,name);
+        editor.putString(KEY_SURNAME,surname);
+        editor.putInt(KEY_VK_ID,id);
+        editor.commit();
+    }
 
     public void createSession(int id, String name,String email,String image,int teacher_id, int tests_counter, double tests_time,int answers_counter,int answers_wrong_counter) {
         editor.putInt(KEY_ID,id);
@@ -149,6 +157,7 @@ public class Student {
         HashMap<String,String> data = new HashMap<>();
         data.put(KEY_ID,String.valueOf(sharedPreferences.getInt(KEY_ID,0)));
         data.put(KEY_NAME,sharedPreferences.getString(KEY_NAME,null));
+        data.put(KEY_SURNAME,sharedPreferences.getString(KEY_SURNAME,null));
         data.put(KEY_EMAIL,sharedPreferences.getString(KEY_EMAIL,null));
         data.put(KEY_IMAGE,sharedPreferences.getString(KEY_IMAGE,null));
         data.put(KEY_TEACHER_ID, String.valueOf(sharedPreferences.getInt(KEY_TEACHER_ID,0)));
@@ -156,6 +165,7 @@ public class Student {
         data.put(KEY_TESTS_TIME, String.valueOf(sharedPreferences.getFloat(KEY_TESTS_TIME,0)));
         data.put(KEY_ANSWERS_COUNTER, String.valueOf(sharedPreferences.getInt(KEY_ANSWERS_COUNTER,0)));
         data.put(KEY_WRONG_ANSWERS_COUNTER, String.valueOf(sharedPreferences.getInt(KEY_WRONG_ANSWERS_COUNTER,0)));
+        data.put(KEY_VK_ID,String.valueOf(sharedPreferences.getInt(KEY_VK_ID,0)));
         return data;
     }
 

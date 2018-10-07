@@ -1,5 +1,6 @@
 package ru.use.marathon.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,11 +21,16 @@ import retrofit2.Response;
 import ru.use.marathon.R;
 import ru.use.marathon.adapters.TypeformFormsAdapter;
 import ru.use.marathon.models.typeform.Forms;
+import ru.use.marathon.utils.ItemClickSupport;
 import ru.use.marathon.utils.typeform.TypeformManager;
+
+import static ru.use.marathon.Constants.DEBUG;
 
 public class TypeformFormsActivity extends AbstractActivity {
 
     public static final String TAG = TypeformFormsActivity.class.getSimpleName();
+
+    private Forms forms;
 
     @BindView(R.id.typeform_rv)
     RecyclerView recyclerView;
@@ -42,7 +48,7 @@ public class TypeformFormsActivity extends AbstractActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful()) {
-                    Forms forms = new Forms(response);
+                    forms = new Forms(response);
                     recyclerView.setAdapter(new TypeformFormsAdapter(forms));
                     progressBar.setVisibility(View.GONE);
                 }else{
@@ -58,6 +64,17 @@ public class TypeformFormsActivity extends AbstractActivity {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 showInfoDialog("Ошибка", "Ошибка при загрузке со стороннего сервера. Сообщение: " + t.getMessage());
+            }
+        });
+
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Intent i = new Intent(TypeformFormsActivity.this,TypeformQuizActivity.class);
+                i.putExtra("title",forms.itemTitle(position));
+                i.putExtra("id",forms.itemId(position));
+                startActivity(i);
+                if(DEBUG)Toast.makeText(TypeformFormsActivity.this, "Data: " + forms.itemTitle(position)+"\n link: https://edway.typeform.com/to/" + forms.itemId(position), Toast.LENGTH_LONG).show();
             }
         });
 
