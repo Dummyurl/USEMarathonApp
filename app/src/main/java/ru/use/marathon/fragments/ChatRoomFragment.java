@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -53,7 +54,8 @@ public static final String TAG = ChatRoomFragment.class.getSimpleName();
 
     @BindView(R.id.chat_messages_rv) RecyclerView chat_messages_rv;
     @BindView(R.id.chat_message_write_et) EditText chat_message_write_et;
-    @BindView(R.id.chat_message_send_btn) Button chat_message_send_btn;
+    @BindView(R.id.chat_message_send_btn) ImageButton chat_message_send_btn;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
 
     @Nullable
@@ -61,6 +63,7 @@ public static final String TAG = ChatRoomFragment.class.getSimpleName();
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.activity_chat_room,container,false);
         ButterKnife.bind(this, view);
+        toolbar.setTitle("Чат с учителем");
         messages =  new Messages();
         refreshMessages(0);
         Log.d(TAG, "onCreateView: " + messages.size());
@@ -120,13 +123,13 @@ public static final String TAG = ChatRoomFragment.class.getSimpleName();
                     messages.setup();
                     if(flag==1) {
                         adapter.notifyDataSetChanged();
-                        chat_messages_rv.scrollToPosition(adapter.getItemCount() - 1);
                     }
                     else {
                         chat_messages_rv.setLayoutManager(new LinearLayoutManager(getActivity()));
                         adapter = new VkChatAdapter(getActivity(), messages);
                         chat_messages_rv.setAdapter(adapter);
                     }
+                    chat_messages_rv.scrollToPosition(adapter.getItemCount() - 1);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

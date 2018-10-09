@@ -3,6 +3,7 @@ package ru.use.marathon.adapters.chat;
 import android.arch.lifecycle.HolderFragment;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import ru.use.marathon.models.chat.Messages;
 public class VkChatAdapter extends RecyclerView.Adapter<VkChatAdapter.VkVievHolder> {
     private Context context;
     private Messages msgs;
+
     @NonNull
     @Override
     public VkVievHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -28,18 +30,25 @@ public class VkChatAdapter extends RecyclerView.Adapter<VkChatAdapter.VkVievHold
         return new VkVievHolder(v);
     }
 
+// TODO: Реализовать ввод имени
     @Override
     public void onBindViewHolder(@NonNull VkVievHolder holder, int position) {
         Message message = msgs.getMessage(position);
         holder.text.setText(message.getMsg());
         if(message.isOut()){
             holder.layout.setGravity(Gravity.RIGHT);
-            holder.name.setText("Вы:");
+            holder.name.setVisibility(View.GONE);
+            holder.cardView.setBackgroundColor(context.getResources().getColor(R.color.tab_white));
+            holder.text.setTextColor(context.getResources().getColor(R.color.cardview_dark_background));
         }else{
             holder.layout.setGravity(Gravity.LEFT);
             holder.name.setText("Имя учителя");
+            holder.name.setVisibility(View.VISIBLE);
+            holder.name.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+            holder.text.setTextColor(context.getResources().getColor(R.color.tab_white));
+            holder.cardView.setBackgroundColor(context.getResources().getColor(R.color.chatCard));
         }
-        holder.time.setText(" ");
+        holder.time.setVisibility(View.GONE);
     }
 
     @Override
@@ -57,6 +66,7 @@ public class VkChatAdapter extends RecyclerView.Adapter<VkChatAdapter.VkVievHold
         @BindView(R.id.chat_messages_tv) TextView text;
         @BindView(R.id.chat_timestamp) TextView time;
         @BindView(R.id.message_item_layout) LinearLayout layout;
+        @BindView(R.id.msg_card) LinearLayout cardView;
 
 
     public VkVievHolder(View itemView) {
