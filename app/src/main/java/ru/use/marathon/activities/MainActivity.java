@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import ru.use.marathon.R;
 import ru.use.marathon.activities.auth.LoginActivity;
 import ru.use.marathon.fragments.ChatRoomFragment;
+import ru.use.marathon.fragments.RatingFragment;
 import ru.use.marathon.fragments.navigation.ChatFragment;
 import ru.use.marathon.fragments.navigation.FeedFragment;
 import ru.use.marathon.fragments.navigation.ProfileFragment;
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 if (student.isLoggedIn() && !teacher.isLoggedIn()) {
                     switch (y) {
                         case 2:
-                            transaction.replace(R.id.use_container, new FeedFragment()).commit();
+                            transaction.replace(R.id.use_container, new RatingFragment()).commit();
                             break;
                         case 1:
                             transaction.replace(R.id.use_container, new SNavTestsFragment()).commit();
