@@ -42,7 +42,7 @@ public class VkChatAdapter extends RecyclerView.Adapter<VkChatAdapter.VkVievHold
             holder.text.setTextColor(context.getResources().getColor(R.color.cardview_dark_background));
         }else{
             holder.layout.setGravity(Gravity.LEFT);
-            holder.name.setText("Имя учителя");
+            holder.name.setText(message.getUser_name());
             holder.name.setVisibility(View.VISIBLE);
             holder.name.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
             holder.text.setTextColor(context.getResources().getColor(R.color.tab_white));

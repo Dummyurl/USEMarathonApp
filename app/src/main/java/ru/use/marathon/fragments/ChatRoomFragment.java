@@ -96,6 +96,29 @@ public class ChatRoomFragment extends AbstractFragment {
                     teacher_id = teacherId();
                     teacher_name = teacherName();
 
+                    toolbar.setTitle("Чат с учителем");
+                    messages = new Messages();
+                    refreshMessages(0);
+                    Log.d(TAG, "onCreateView: " + messages.size());
+
+
+                    chat_message_send_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            VKRequest request = new VKRequest("messages.send", VKParameters.from(VKApiConst.USER_ID, Integer.valueOf(teacher_id),
+                                    VKApiConst.MESSAGE, chat_message_write_et.getText().toString()));
+
+                            request.executeWithListener(new VKRequest.VKRequestListener() {
+                                @Override
+                                public void onComplete(VKResponse response) {
+                                    super.onComplete(response);
+                                    chat_message_write_et.setText("");
+                                    refreshMessages(1);
+                                }
+                            });
+                        }
+                    });
+
                 }else{
                     chat_layout.setVisibility(View.GONE);
                     status_layout.setVisibility(View.VISIBLE);
@@ -108,33 +131,6 @@ public class ChatRoomFragment extends AbstractFragment {
 
             }
         });
-
-        if(isSubscribed){
-            toolbar.setTitle("Чат с учителем");
-            messages = new Messages();
-            refreshMessages(0);
-            Log.d(TAG, "onCreateView: " + messages.size());
-
-
-            chat_message_send_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    VKRequest request = new VKRequest("messages.send", VKParameters.from(VKApiConst.USER_ID, Integer.valueOf(teacher_id),
-                            VKApiConst.MESSAGE, chat_message_write_et.getText().toString()));
-
-                    request.executeWithListener(new VKRequest.VKRequestListener() {
-                        @Override
-                        public void onComplete(VKResponse response) {
-                            super.onComplete(response);
-                            chat_message_write_et.setText("");
-                            refreshMessages(1);
-                        }
-                    });
-                }
-            });
-        }else{
-            toolbar.setTitle("Чат с учителем");
-        }
 
         return view;
     }
