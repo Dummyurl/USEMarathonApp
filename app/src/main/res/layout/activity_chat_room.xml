@@ -19,13 +19,15 @@
             android:background="@color/colorPrimary"
             android:visibility="visible"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            tools:title="@string/chat_text" />
+            tools:title=" " />
 
     </android.support.design.widget.AppBarLayout>
 
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:id="@+id/chat_layout"
+        android:visibility="gone"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -45,7 +47,8 @@
             android:layout_above="@+id/send_layout"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            android:visibility="visible" />
 
         <View
             android:layout_width="match_parent"
@@ -59,7 +62,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@android:color/white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <EditText
                 android:id="@+id/chat_message_write_et"
@@ -96,5 +100,28 @@
 
 
     </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/status_layout"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/infomation_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

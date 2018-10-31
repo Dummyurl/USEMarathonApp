@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (student.isLoggedIn() && !teacher.isLoggedIn()) {
             user_type = 0;
-            ft.add(R.id.use_container, new FeedFragment()).commit();
+            ft.add(R.id.use_container, new RatingFragment()).commit();
         } else if (!student.isLoggedIn() && teacher.isLoggedIn()) {
             user_type = 1;
-            ft.add(R.id.use_container, new FeedFragment()).commit();
+            ft.add(R.id.use_container, new RatingFragment()).commit();
         } else {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Теория", R.drawable.ic_theory_24dp);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Тесты", R.drawable.ic_tests_black_24dp);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Новости", R.drawable.ic_explore_black_24dp);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Рейтинг", R.drawable.ic_explore_black_24dp);
         AHBottomNavigationItem item4 = new AHBottomNavigationItem("Чат", R.drawable.ic_chat);
         AHBottomNavigationItem item5 = new AHBottomNavigationItem("Профиль", R.drawable.ic_account);
 
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                             transaction.replace(R.id.use_container, new ProfileFragment()).commit();
                             break;
                         case 2:
-                            transaction.replace(R.id.use_container, new FeedFragment()).commit();
+                            transaction.replace(R.id.use_container, new RatingFragment()).commit();
                             break;
                         case 1:
                             transaction.replace(R.id.use_container, new TNavTestsFragment()).commit();

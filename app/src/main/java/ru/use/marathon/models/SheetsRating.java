@@ -1,14 +1,16 @@
 package ru.use.marathon.models;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by ilyas on 10-Oct-18.
  */
 
-public class SheetsRating {
+public class SheetsRating implements Comparable<SheetsRating> {
 
-    String fullname;
-    String vk_id;
-    int total;
+    public String fullname;
+    public String vk_id;
+    public int total;
 
     public SheetsRating(String fullname, String vk_id, int total) {
         this.fullname = fullname;
@@ -26,5 +28,15 @@ public class SheetsRating {
 
     public int getTotal() {
         return total;
+    }
+
+    public String toString(){
+        return ("rating:("+ fullname + ", "+vk_id+", "+total+")");
+
+    }
+
+    @Override
+    public int compareTo(@NonNull SheetsRating sheetsRating) {
+        return  getTotal() - sheetsRating.getTotal();
     }
 }

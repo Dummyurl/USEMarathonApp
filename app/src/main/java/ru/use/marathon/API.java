@@ -348,4 +348,17 @@ public interface API {
             @Query("uid") int uid
     );
 
+
+
+
+
+    @GET("api.php")
+    Call<JsonObject> checkSubscription(
+            @Query("v") int v,
+            @Query("method") String method,
+            @Query("token") String  token
+    );
+
+
+
 }
